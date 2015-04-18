@@ -1,104 +1,34 @@
 #!/bin/bash
+#Glog
+#Parametro1 (obligatorio):comando (nombre del comando o funcion que genera el mensaje)
+#Parametro2 (obligatorio): mensaje
+#Parametro3 (opcional):tipo de mensaje [INFO,WAR,ERR]
 
-# Comando "glog"
+#FALTA HACER QUE SI ES DEL INSTALADOR LO LOGUEA EN OTRO LADO (PONERLE LOS DIRECTORIOS CDO ESTE TERMINADO EL INSTALADOR)
 
-# Output
-# 	Archivo de log
-#
-# Opciones y Parámetros
-#	Parámetro 1 (obligatorio): comando
-#	Parámetro 2 (opcional): tipo de mensaje
-#	Parámetro 3 (obligatorio): mensaje
-
-# No pueden ser más de 3 ni menos de 2 parámetros
-
-if [ $# -gt 3 -o $# -lt 2 ]
-then
-	./glog.sh glog es "$1: Cantidad de parámetros inválida."
-	exit 1
+#VALIDAMOS QUE EL SCRIPT RECIBA 2 O 3 PARAMETROS
+if [ $# -gt 3 ] || [ $# -lt 2 ]; then
+	echo "No se pudo loguear mensaje, cantidad de parametros incorrecta: $# " >> log
+	exit
 fi
 
-# Si es del instalador va en otro lado
-if [ -z $LOGDIR ]
-then
-	logdir="../log"
-else
-	logdir="$GRUPO/$LOGDIR"
-fi
-
-# Que la dirección no sea un archivo
-
-if [ -f $logdir ]
-then
-	./glog.sh glog es "$1: La dirección del directorio de destino es un archivo."
-	exit 1
-fi
-
-# Si no existe lo crea.
-if [ ! -d $logdir ]
-then
-	mkdir $logdir
-fi
-
-log=$logdir/$1.log
-
-# Si el archivo no existe lo crea
-touch $log  
-
-tipoMensaje="  "
-mensaje=""
-
-# Si hay dos parámetros no tengo tipo de mensaje
-
-if [ $# -eq 2 ]
-then
-	mensaje=$2
-fi
-
-# Si hay tres parámetros tengo tipo
-
-if [ $# -eq 3 ]
-then
-	tipoMensaje=$(echo $2 | tr "[:lower:]" "[:upper:]")
-	mensaje=$3
-fi
-
-# Si el tipo de mensaje es inválido lo pone en el log del glog
-if [ $tipoMensaje != i -a $tipoMensaje != I -a $tipoMensaje != w -a $tipoMensaje != W -a $tipoMensaje != e -a $tipoMensaje != E -a $tipoMensaje != es -a $tipoMensaje != ES ]
-then
-	tipoMensaje="  "
-	./glog.sh glog w "$1: Tipo de error inválido."
-else
-	if [ $tipoMensaje != es -a $tipoMensaje != ES ]
-	then
-		tipoMensaje=$tipoMensaje" "
-		
+#VALIDAMOS QUE EL TERCER PARAMETRO SEA DEL TIPO INFO,WAR,ERR
+if [ ! $3 ]; then # no existe el tercer parametro
+	echo "Tipo de mensaje no ingresado: Se toma el valor por defautl [INFO]" >> log
+	tipoMensaje="INFO"
+else # existe el tercer parametro
+	if [ $3 = "INFO" ] || [ $3 = "WAR" ] || [ $3 = "ERR" ]; then
+		tipoMensaje=$3
+	else
+		echo "Tipo de mensaje invalido: Se toma el valor por defautl [INFO]" >> log
+		tipoMensaje="INFO"	
 	fi
 fi
 
-unaCadena=$tipoMensaje/
+#FALTA HACER QUE NO SEA UN LOG INFINITO
 
-tamanioArchivo=`stat -c%s $log`
-
-# Si el tamaño es menor a $maxlog y no es instalacion puede haber que recortar
-if [ $MAXLOG ]
-then
-	if [ $tamanioArchivo -eq $MAXLOG ] || [ $tamanioArchivo -gt $MAXLOG ]
-	then
-		# Lo paso a un archivo nuevo, borro el viejo y renombro
-		lineas=`wc -l $log | cut -d ' ' -f 1`
-		if [ $lineas -gt 50 ]
-		then
-			logtemp=$log.temp
-			touch $logtemp
-			tail -q -n 50 $log > $logtemp
-			rm $log
-			mv $logtemp $log
-		fi
-	fi
-fi
-# Escribo el archivo
+#Escribo el archivo
 fecha=`date +"%X %x"`
-echo "$fecha $1 $tipoMensaje $mensaje" >> $log
-
-exit 0 
+comando=$1
+mensaje=$2
+echo $fecha $USER $comando $mensaje $tipoMensaje >> log
