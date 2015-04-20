@@ -33,4 +33,4 @@ fi
 fecha=`date +"%X %x"`
 comando=$1
 mensaje=$2
-echo $fecha $USER "["$comando"]" $mensaje "["$tipoMensaje"]" >> LOGDIR/propro
+echo $fecha $USER $comando $mensaje $tipoMensaje >> LOGDIR/propro

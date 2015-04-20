@@ -1,3 +1,3 @@
-21:50:01 19/04/15 jorge MOVER este es el mensaje de prueba INFO
-21:53:06 19/04/15 jorge [MOVER] este es el mensaje de prueba INFO
-21:54:10 19/04/15 jorge [MOVER] este es el mensaje de prueba [INFO]
+22:20:06 19/04/15 jorge MOVER Archivo propro duplicado, movido a ./PROCDIR/dup WAR
+22:40:58 19/04/15 jorge MOVER El origen no existe ERR
+22:41:21 19/04/15 jorge MOVER Archivo movido correctamente INFO
