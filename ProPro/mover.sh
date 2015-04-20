@@ -43,11 +43,8 @@ else
 fi
 
 #Chequear si origen y destino son distintos
-if [ "$1" == "$2" ]; then
-	if [ $# -eq 3 ]; then
+if [ "$1" = "$2" ]; then
 		sh glog.sh MOVER "No se hizo nada porque el origen es igual al destino" ERR
-	fi
-	exit 0
 fi
 
 mv "$1" "$2"
