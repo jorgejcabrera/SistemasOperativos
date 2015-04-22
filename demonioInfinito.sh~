@@ -1,0 +1,9 @@
+#!/bin/bash
+INF=1
+> input_while.dat
+
+while [ 0 -lt 1 ] 
+do  
+	INF = INF+1
+done < input_while.dat
+exit
