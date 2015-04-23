@@ -21,7 +21,9 @@ fi
 
 
 #El demonio no debe estar corriendo previamente
+#TODO arreglar esto, por terminal funciona correctamente
 CORRIENDO=$(ps aux | grep R.*/$1$)
+echo $CORRIENDO
 if ! [ -z "$CORRIENDO" ]; then
 	echo "El demonio ya se encuentra corriendo"
 	sh glog.sh START "El demonio ya se encuentra corriendo" ERR
