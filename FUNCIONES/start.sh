@@ -6,10 +6,14 @@ GRUPO=/home/nico/SistemasOperativos
 # Parametro 1
 # demonio a arrancar
 
+#TODO centralizar el uso de glog, sino busca en los multiples archivos glog y falla
+#PATH_GLOG=$(find . -name *glog.sh)
+
+
 #Debe ser un solo parametro
 if [ $# -gt 1 -o $# -lt 1 ]; then
 	echo "Cantidad de parametros inválida"
-	sh glog.sh START "Cantidad de parametros inválida" ERR
+#	sh glog.sh START "Cantidad de parametros inválida" ERR
 	exit 1
 fi
 
@@ -24,21 +28,19 @@ fi
 CORRIENDO=$(ps aux | grep R.*/$1$)
 if ! [ -z "$CORRIENDO" ]; then
 	echo "El demonio ya se encuentra corriendo"
-	sh glog.sh START "El demonio ya se encuentra corriendo" ERR
+#	sh glog.sh START "El demonio ya se encuentra corriendo" ERR
 	exit 1
 fi
 
 #Debe existir el demonio
-#TODO QUE BUSQUE EN TODOS LOS DIRECTORIOS, SOLO BUSCA EN EL ACTUAL
-if [ ! -f "$1" ]; then
+PATH_DAEMON=$(find . -name *$1)
+if [ -z "$PATH_DAEMON" ]; then
 	echo "Funcion inexistente"
-	sh glog.sh START "Funcion inexistente" ERR
+#	sh glog.sh START "Funcion inexistente" ERR
 	exit 1
+else 	"$PATH_DAEMON" &
+	echo "Arranco el demonio"
+#	sh "$PATH_GLOG" START "Arranco el demonio" INFO
 fi
-
-#Arranco el demonio
-"./$1" & 
-echo "Arranco el demonio"
-sh glog.sh START "Arranco el demonio" INFO
 
 exit 0
