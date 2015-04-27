@@ -2,10 +2,10 @@ EXIT=0
 SLEEP=600
 MSG_FILE_ACCEPTED="El archivo es válido. Ha sido movido al directorio de archivos aceptados."
 MSG_FILE_REJECTED="El archivo no es válido. Ha sido movido al directorio archivos rechazados."
-MAEDIR="/home/facundo/Escritorio/Pruebas/Maestros" #PARA PRUEBAS UNICAMENTE
-NOVEDIR="/home/facundo/Escritorio/Pruebas/Novedades" #PARA PRUEBAS UNICAMENTE
-ACEPDIR="/home/facundo/Escritorio/Pruebas/Aceptados" #PARA PRUEBAS UNICAMENTE
-RECHDIR="/home/facundo/Escritorio/Pruebas/Rechazados" #PARA PRUEBAS UNICAMENTE
+MAEDIR="/home/facundo/Escritorio/RecProPruebas/Maestros" #PARA PRUEBAS UNICAMENTE
+NOVEDIR="/home/facundo/Escritorio/RecProPruebas/Novedades" #PARA PRUEBAS UNICAMENTE
+ACEPDIR="/home/facundo/Escritorio/RecProPruebas/Aceptados" #PARA PRUEBAS UNICAMENTE
+RECHDIR="/home/facundo/Escritorio/RecProPruebas/Rechazados" #PARA PRUEBAS UNICAMENTE
 ARCH_MAE_GEST="/gestiones.mae"
 ARCH_MAE_NORM="/normas.mae"
 ARCH_MAE_EMI="/emisores.mae"
@@ -116,14 +116,24 @@ do
 				#Se verifica que la fecha este dentro de un rango valido
 				FECHA_INICIO=$( cut -d ';' -f 2 <<< "$RESULT_GEST" )
 				FECHA_FIN=$( cut -d ';' -f 3 <<< "$RESULT_GEST" )
-		
+
+				#Se modifica el formato de las fechas
+				FECHA_INICIO=$( echo $FECHA_INICIO | sed 's/\//\-/g' )
+				FECHA_FIN=$( echo $FECHA_FIN | sed 's/\//\-/g' )
+
+				#Se verifica que FECHA_FIN no sea nula. Si lo es, se carga la fecha del sistema
+				if [ ! -n "$FECHA_FIN" ]
+				then
+					FECHA_FIN="$(date +'%d-%m-%Y')"
+				fi
+
 				#Parseo de las fechas
-				DIA_INICIO=$( cut -d '/' -f 1 <<< "$FECHA_INICIO" )
-				MES_INICIO=$( cut -d '/' -f 2 <<< "$FECHA_INICIO" )
-				ANIO_INICIO=$( cut -d '/' -f 3 <<< "$FECHA_INICIO" )
-				DIA_FIN=$( cut -d '/' -f 1 <<< "$FECHA_FIN" )
-				MES_FIN=$( cut -d '/' -f 2 <<< "$FECHA_FIN" )
-				ANIO_FIN=$( cut -d '/' -f 3 <<< "$FECHA_FIN" )
+				DIA_INICIO=$( cut -d '-' -f 1 <<< "$FECHA_INICIO" )
+				MES_INICIO=$( cut -d '-' -f 2 <<< "$FECHA_INICIO" )
+				ANIO_INICIO=$( cut -d '-' -f 3 <<< "$FECHA_INICIO" )
+				DIA_FIN=$( cut -d '-' -f 1 <<< "$FECHA_FIN" )
+				MES_FIN=$( cut -d '-' -f 2 <<< "$FECHA_FIN" )
+				ANIO_FIN=$( cut -d '-' -f 3 <<< "$FECHA_FIN" )
 				DIA_ARCH=$( cut -d '-' -f 1 <<< "$FECHA" )
 				MES_ARCH=$( cut -d '-' -f 2 <<< "$FECHA" )
 				ANIO_ARCH=$( cut -d '-' -f 3 <<< "$FECHA" )
