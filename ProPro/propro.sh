@@ -6,7 +6,9 @@ for filename in `ls ./ACEPDIR/Alfonsin/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 
 do 
 	#protocolizar cada archivo
  	fileName=$(find ./ACEPDIR/$codGestion -type f -name "*$filename")
- 	anioGestion=$(ls $fileName | cut -d '-' -f 3 | cut -d '.' -f 1)
+ 	anioGestion=$(echo $fileName | cut -d '-' -f 3 | cut -d '.' -f 1)
+ 	codigoNorma=$(echo $fileName | cut -d '_' -f 2)
+ 	echo $codigoNorma
  	currentFileName=$( echo $fileName | cut -d '/' -f 4 )
  	sh glog.sh PROPRO "Archivo a procesar $currentFileName" INFO
 done;
