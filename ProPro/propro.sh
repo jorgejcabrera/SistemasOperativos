@@ -19,6 +19,8 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)
 
+ 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)
+
  		fileDocketedName="$yearNorm.$codeNorm"
 
  		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
