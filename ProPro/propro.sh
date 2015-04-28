@@ -15,8 +15,22 @@ do
 
  	fileDocketedName="$yearNorm.$codeNorm"
 
- 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$fileDocketedName" | cut -d '/' -f 4)
+ 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)
+
+ 	echo $fileAlreadyDocketed
+
+ 	if [ -z $fileAlreadyDocketed ]; then
+
+ 		sh glog.sh PROPRO "Archivo a procesar $currentCompleteFileName" INFO
+
+ 		#sh mover.sh ./ACEPDIR/$codeGestion/$currentCompleteFileName ./PROCDIR/proc PROPRO
+
+ 	else
+
+ 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" WAR
+
+ 	fi
  	
- 	sh glog.sh PROPRO "Archivo a procesar $currentCompleteFileName" INFO
- 	#sh mover.sh ./ACEPDIR/$codeGestion/$currentCompleteFileName ./PROCDIR/proc PROPRO
+ 	
+ 	
 done;
