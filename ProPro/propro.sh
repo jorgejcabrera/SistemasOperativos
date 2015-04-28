@@ -25,16 +25,15 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then
 
- 			echo $existCodeNormAndCodEmisorCombination
-
  			fileDocketedName="$yearNorm.$codeNorm"
 
- 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
 
  		else
 
- 			sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" WAR
+ 			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
  		
+ 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  		fi
 
  	else
