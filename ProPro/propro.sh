@@ -27,13 +27,17 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			fileDocketedName="$yearNorm.$codeNorm"
 
- 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
+
+ 			echo $date
+
+ 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
 
  		else
 
  			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
  		
- 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  		fi
 
  	else
