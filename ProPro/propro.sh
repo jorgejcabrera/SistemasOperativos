@@ -13,9 +13,9 @@ verifyValidDate ()
 	local year=$(echo $date | cut -d '-' -f 3)
 
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
-		echo 0
+		echo 0	#la fecha es invalida
 	else
-		echo 1
+		echo 1	#la fecha es valida
 	fi
 }
 
@@ -49,15 +49,26 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			validDate=$(verifyValidDate $date)
 
- 			echo $validDate
+ 			if [ $validDate -eq 1 ]; then
+
+ 				#una vez que valide la fecha lo que tengo que hacer es Que la fecha de la norma se encuentre dentro del rango de gestión a la que pertenece
+ 				sh glog.sh PROPRO "la fecha es valida a protocolizar" INFO
  			
- 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 				sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 			
+ 			else
+
+ 				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR
+
+ 				sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+
+ 			fi
 
  		else
 
  			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
  		
- 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  		fi
 
  	else
