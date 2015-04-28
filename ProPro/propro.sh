@@ -17,13 +17,11 @@ do
 
  	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)
 
- 	echo $fileAlreadyDocketed
-
  	if [ -z $fileAlreadyDocketed ]; then
 
- 		sh glog.sh PROPRO "Archivo a procesar $currentCompleteFileName" INFO
+ 		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
 
- 		#sh mover.sh ./ACEPDIR/$codeGestion/$currentCompleteFileName ./PROCDIR/proc PROPRO
+ 		sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
 
  	else
 
