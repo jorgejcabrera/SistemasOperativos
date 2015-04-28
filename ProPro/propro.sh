@@ -1,4 +1,9 @@
 #!/bin/bash
+
+archivoMaestro="MAEDIR/gestiones.mae"
+
+MAE_GEST=$archivoMaestro
+
 codeGestion="Alfonsin"
 
 verifyValidDate () 
@@ -19,9 +24,43 @@ verifyValidDate ()
 	fi
 }
 
+verifyDateGest () 
+{
+	local dayBegin=$(echo $1 | cut -d '/' -f 1)
+
+	local monthBegin=$(echo $1 | cut -d '/' -f 2)
+
+	local yearBegin=$(echo $1 | cut -d '/' -f 3)
+
+	local dayEnd=$(echo $2 | cut -d '/' -f 1)
+
+	local monthEnd=$(echo $2 | cut -d '/' -f 2)
+
+	local yearEnd=$(echo $2 | cut -d '/' -f 3)
+
+	local day=$(echo $3 | cut -d '-' -f 1)
+
+	local month=$(echo $3 | cut -d '-' -f 2)
+
+	local year=$(echo $3 | cut -d '-' -f 3)
+
+	#Comparacion de las fechas
+
+	if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
+		#sh mover.sh "$PATH_ARCH" "$RECHDIR" PROPRO
+		sh glog.sh PROPRO "La fecha del archivo está fuera de rango." ERR
+		sh glog.sh PROPRO "archivo rechazado" ERR
+		echo 0
+		break
+	fi
+	echo 1
+}
+
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+
+RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)
 
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
@@ -49,18 +88,29 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			validDate=$(verifyValidDate $date)
 
+ 			#if echo "$1" | grep -q '^[0-3][0-9]/[0-1][0-9]/[0-9]\{4\}$'
+
  			if [ $validDate -eq 1 ]; then
 
  				#una vez que valide la fecha lo que tengo que hacer es Que la fecha de la norma se encuentre dentro del rango de gestión a la que pertenece
+ 				
+ 				firstDate=$(echo $RESULT_GEST | cut -d ';' -f 2)
+
+ 				secondDate=$(echo $RESULT_GEST | cut -d ';' -f 3)
+
+ 				#echo $date
+
+ 				echo $(verifyDateGest $firstDate $secondDate $date)
+
  				sh glog.sh PROPRO "la fecha es valida a protocolizar" INFO
  			
- 				sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  			
  			else
 
  				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR
 
- 				sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 
  			fi
 
@@ -68,7 +118,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
  		
- 			sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  		fi
 
  	else
