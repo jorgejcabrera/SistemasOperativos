@@ -1,6 +1,24 @@
 #!/bin/bash
 codeGestion="Alfonsin"
 
+verifyValidDate () 
+{
+
+	local date=$1
+
+	local day=$(echo $date | cut -d '-' -f 1)
+	
+	local month=$(echo $date | cut -d '-' -f 2)
+	
+	local year=$(echo $date | cut -d '-' -f 3)
+
+	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
+		echo 0
+	else
+		echo 1
+	fi
+}
+
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
@@ -29,8 +47,10 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
 
- 			echo $date
+ 			validDate=$(verifyValidDate $date)
 
+ 			echo $validDate
+ 			
  			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
 
  		else
@@ -46,6 +66,5 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  	fi
  	
- 	
- 	
 done;
+
