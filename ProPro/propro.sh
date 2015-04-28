@@ -15,8 +15,6 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
 
- 		yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)
-
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)
 
  		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)
@@ -24,6 +22,8 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")
 
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then
+
+ 			yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)
 
  			fileDocketedName="$yearNorm.$codeNorm"
 
@@ -38,7 +38,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  	else
 
- 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" WAR
+ 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" ERR
 
  	fi
  	
