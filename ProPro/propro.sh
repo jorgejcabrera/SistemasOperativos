@@ -8,6 +8,7 @@ codeGestion="Alfonsin"
 
 verifyValidDate () 
 {
+	#TODO usar regular expresion para 
 
 	local date=$1
 
@@ -24,7 +25,7 @@ verifyValidDate ()
 	fi
 }
 
-verifyDateGest () 
+verifyValidDateGest () 
 {
 	local dayBegin=$(echo $1 | cut -d '/' -f 1)
 
@@ -47,9 +48,6 @@ verifyDateGest ()
 	#Comparacion de las fechas
 
 	if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
-		#sh mover.sh "$PATH_ARCH" "$RECHDIR" PROPRO
-		sh glog.sh PROPRO "La fecha del archivo está fuera de rango." ERR
-		sh glog.sh PROPRO "archivo rechazado" ERR
 		echo 0
 		break
 	fi
@@ -88,43 +86,43 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			validDate=$(verifyValidDate $date)
 
- 			#if echo "$1" | grep -q '^[0-3][0-9]/[0-1][0-9]/[0-9]\{4\}$'
-
  			if [ $validDate -eq 1 ]; then
-
- 				#una vez que valide la fecha lo que tengo que hacer es Que la fecha de la norma se encuentre dentro del rango de gestión a la que pertenece
  				
  				firstDate=$(echo $RESULT_GEST | cut -d ';' -f 2)
 
  				secondDate=$(echo $RESULT_GEST | cut -d ';' -f 3)
 
- 				#echo $date
+ 				verifyValidDateGest=$(verifyValidDateGest $firstDate $secondDate $date)
 
- 				echo $(verifyDateGest $firstDate $secondDate $date)
+ 				if [ $verifyValidDateGest -eq 1 ]; then
 
- 				sh glog.sh PROPRO "la fecha es valida a protocolizar" INFO
+ 					sh glog.sh PROPRO "la fecha es es valida, corresponde al codigo de gestion" INFO
  			
- 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+ 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
+
+ 				else
+ 					sh glog.sh PROPRO "La fecha del archivo está fuera de rango." ERR
+					sh glog.sh PROPRO "archivo rechazado" ERR
+					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+					continue
+ 				fi
  			
  			else
-
  				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR
-
  				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
-
+ 				continue
  			fi
 
  		else
 
  			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
- 		
  			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 			continue
  		fi
 
  	else
-
  		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" ERR
-
+ 		continue
  	fi
  	
 done;
