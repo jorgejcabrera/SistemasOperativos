@@ -7,7 +7,6 @@ codeGestion="Alfonsin"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)																				#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
-echo $RESULT_GEST
 
 #PRE: recibe como parametro una fecha con el formato dia-mes-anio
 #POST: devuelve 0 si la fecha tiene un formato invalido y 1 si el formato es valido
@@ -49,9 +48,6 @@ validateDateOnGest ()
 	fi
 }
 
-
-
-
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
@@ -74,26 +70,26 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  				dateEnd=$(echo $RESULT_GEST | cut -d ';' -f 3)																	#obtengo la fecha de finalizacion de la gestion
  				if [ $(validateDateOnGest $dateBegin $dateEnd $date) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
 
- 					sh glog.sh PROPRO "la fecha es es valida, corresponde al codigo de gestion" INFO
+ 					sh glog.sh PROPRO "La fecha $date está dentro del rango de la gestion $codeGestion" INFO
  					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  				else
- 					sh glog.sh PROPRO "La fecha del archivo está fuera del rango de la gestion." ERR
-					sh glog.sh PROPRO "archivo rechazado" ERR
+ 					sh glog.sh PROPRO "La fecha $date está fuera del rango de la gestion $codeGestion" ERR
+					sh glog.sh PROPRO "Archivo rechazado" ERR
 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 					continue
  				fi 			
  			else
- 				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR											#la fecha tiene un formato invalido: loggeamos el evento
+ 				sh glog.sh PROPRO "La fecha $date tiene un formato invalido. Se rechaza el archivo" ERR							#la fecha tiene un formato invalido: loggeamos el evento
  				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 											#rechazamos el archivo moviendolo a ./RECHDIR
  				continue
  			fi
  		else
- 			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
+ 			sh glog.sh PROPRO "Emisor $codeEmisor no habilitado para la norma $codeNorm. Se rechaza el archivo" ERR
  			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  			continue
  		fi
  	else
- 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" ERR														#el archivo que se recibe como parametro ya fue protocolizado
+ 		sh glog.sh PROPRO "Se rechaza el archivo $completeFileName por estar DUPLICADO" ERR														#el archivo que se recibe como parametro ya fue protocolizado
  		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 													#rechazamos el archivo moviendolo a ./RECHDIR
  		continue
  	fi
