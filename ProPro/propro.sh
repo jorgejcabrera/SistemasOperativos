@@ -1,129 +1,101 @@
 #!/bin/bash
 
+countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
-
 MAE_GEST=$archivoMaestro
-
 codeGestion="Alfonsin"
 
-verifyValidDate () 
+sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)																				#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
+echo $RESULT_GEST
+
+#PRE: recibe como parametro una fecha con el formato dia-mes-anio
+#POST: devuelve 0 si la fecha tiene un formato invalido y 1 si el formato es valido
+validateDate () 
 {
-	#TODO usar regular expresion para 
-
-	local date=$1
-
-	local day=$(echo $date | cut -d '-' -f 1)
-	
-	local month=$(echo $date | cut -d '-' -f 2)
-	
-	local year=$(echo $date | cut -d '-' -f 3)
+	#TODO usar regular expresion para validar la fecha
+	local date=$1 																											#la fecha tiene forma dia-mes-anio
+	local day=$(echo $date | cut -d '-' -f 1)																				#parseo para obtener el dia de la fecha
+	local month=$(echo $date | cut -d '-' -f 2) 																			#parseo para obtener el mes de la fecha
+	local year=$(echo $date | cut -d '-' -f 3) 																				#parseo para obtener el anio de la fecha
 
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
-		echo 0	#la fecha es invalida
+		echo 0																												#la fecha no es valida
 	else
-		echo 1	#la fecha es valida
+		echo 1																												#la fecha es valida
 	fi
 }
 
-verifyValidDateGest () 
+#PRE: recibe como parametro la fecha de comienzo y fin de la gestion que se esta procesando, y la fecha que esta en el nombre del archivo
+#POST: devuelve 0 si la fecha no esta dentro del periodo de la gestion(invalida), devuelve 1 si la fecha esta dentro de la gestion(valida)
+validateDateOnGest () 
 {
-	local dayBegin=$(echo $1 | cut -d '/' -f 1)
-
+	#la fecha de inicio de gestion, que es la que esta en gestiones.mae tiene formato dia/mes/anio, pero la fecha que esta
+	#en el nombre del archivo a protocolizar tiene formato dia-mes-anio con lo cual se parsean distinto
+	local dayBegin=$(echo $1 | cut -d '/' -f 1)			
 	local monthBegin=$(echo $1 | cut -d '/' -f 2)
-
 	local yearBegin=$(echo $1 | cut -d '/' -f 3)
-
 	local dayEnd=$(echo $2 | cut -d '/' -f 1)
-
 	local monthEnd=$(echo $2 | cut -d '/' -f 2)
-
 	local yearEnd=$(echo $2 | cut -d '/' -f 3)
-
 	local day=$(echo $3 | cut -d '-' -f 1)
-
 	local month=$(echo $3 | cut -d '-' -f 2)
-
 	local year=$(echo $3 | cut -d '-' -f 3)
-
-	#Comparacion de las fechas
 
 	if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
 		echo 0
-		break
+	else 
+		echo 1
 	fi
-	echo 1
 }
 
-countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 
-sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 
-RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)
 
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
-
- 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)
-
- 	if [ -z $fileAlreadyDocketed ]; then
+ 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)								#me fijo si el archivo ya fue protocolizado
+ 	if [ -z $fileAlreadyDocketed ]																								#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+ 	then
 
  		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
+ 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	#obtengo el codigo de norma del nombre del archivo
+ 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	#obtengo el codigo de emisor del nombre del archivo
+ 		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
+ 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then																	#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
- 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)
-
- 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)
-
- 		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")
-
- 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then
-
- 			yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)
-
- 			fileDocketedName="$yearNorm.$codeNorm"
-
+ 			yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)												#obtengo el año que esta en el nombre del archivo
+ 			fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
  			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
-
- 			validDate=$(verifyValidDate $date)
-
- 			if [ $validDate -eq 1 ]; then
+ 			if [ $(validateDate $date) -eq 1 ]; then																			#me fijo si la fecha en el nombre del archivo a protocolizar es valida
  				
- 				firstDate=$(echo $RESULT_GEST | cut -d ';' -f 2)
-
- 				secondDate=$(echo $RESULT_GEST | cut -d ';' -f 3)
-
- 				verifyValidDateGest=$(verifyValidDateGest $firstDate $secondDate $date)
-
- 				if [ $verifyValidDateGest -eq 1 ]; then
+ 				dateBegin=$(echo $RESULT_GEST | cut -d ';' -f 2)																#obtengo la fecha de comienzo de la gesiton
+ 				dateEnd=$(echo $RESULT_GEST | cut -d ';' -f 3)																	#obtengo la fecha de finalizacion de la gestion
+ 				if [ $(validateDateOnGest $dateBegin $dateEnd $date) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
 
  					sh glog.sh PROPRO "la fecha es es valida, corresponde al codigo de gestion" INFO
- 			
  					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
-
  				else
- 					sh glog.sh PROPRO "La fecha del archivo está fuera de rango." ERR
+ 					sh glog.sh PROPRO "La fecha del archivo está fuera del rango de la gestion." ERR
 					sh glog.sh PROPRO "archivo rechazado" ERR
 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 					continue
- 				fi
- 			
+ 				fi 			
  			else
- 				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR
- 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 				sh glog.sh PROPRO "Se rechaza el archivo por tener fecha invalida" ERR											#la fecha tiene un formato invalido: loggeamos el evento
+ 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 											#rechazamos el archivo moviendolo a ./RECHDIR
  				continue
  			fi
-
  		else
-
  			sh glog.sh PROPRO "Se rechaza el archivo. Emisor no habilitado en este tipo de norma" ERR
  			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  			continue
  		fi
-
  	else
- 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" ERR
+ 		sh glog.sh PROPRO "Se rechaza el archivo por estar DUPLICADO" ERR														#el archivo que se recibe como parametro ya fue protocolizado
+ 		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 													#rechazamos el archivo moviendolo a ./RECHDIR
  		continue
  	fi
- 	
 done;
 
