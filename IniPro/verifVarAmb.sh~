@@ -1,0 +1,9 @@
+#! /bin/bash
+
+VARNAME=$1
+
+if [ -n "$VARNAME" ]; then
+	echo "Se encontraron Variables que ya han sido inicializadas. Es probable que el programa ya se esté ejecutando. Si desea reiniciar, termine su sesión e ingrese nuevamente."
+	sh glog.sh IniPro "La variable de ambiente $VARNAME, ya ha sido inicializada" ERR
+	return
+fi
