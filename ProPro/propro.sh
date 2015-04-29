@@ -2,10 +2,14 @@
 
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
+archivoDeContadores="MAEDIR/tab/axg.tab"
 MAE_GEST=$archivoMaestro
+MAE_COUNT_FILE=$archivoDeContadores
+ZERO=0
 codeGestion="Alfonsin"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+
 RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)																				#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
 #PRE: recibe como parametro una fecha con el formato dia-mes-anio
@@ -70,7 +74,20 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  				dateEnd=$(echo $RESULT_GEST | cut -d ';' -f 3)																	#obtengo la fecha de finalizacion de la gestion
  				if [ $(validateDateOnGest $dateBegin $dateEnd $date) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
 
- 					sh glog.sh PROPRO "La fecha $date está dentro del rango de la gestion $codeGestion" INFO
+ 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)																#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+ 					if [ $typeGest -eq 0 ]; then																				#proceso un tipo de registro historico: tengo que validarlo
+
+ 						resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
+ 						numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)													#parseo la linea para quedarme solo con el numero de norma
+ 						if [ $numberNorm -lt 0 ]; then
+ 							echo "enta aca"
+ 							sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
+ 							#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 						fi
+ 					#else
+
+ 					fi																				
+ 					#sh glog.sh PROPRO "La fecha $date está dentro del rango de la gestion $codeGestion" INFO
  					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  				else
  					sh glog.sh PROPRO "La fecha $date está fuera del rango de la gestion $codeGestion" ERR
