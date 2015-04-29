@@ -74,7 +74,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  				else
  					sh glog.sh PROPRO "La fecha $date está fuera del rango de la gestion $codeGestion" ERR
-					sh glog.sh PROPRO "Archivo rechazado" ERR
+					sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 					continue
  				fi 			
@@ -89,7 +89,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  			continue
  		fi
  	else
- 		sh glog.sh PROPRO "Se rechaza el archivo $completeFileName por estar DUPLICADO" ERR														#el archivo que se recibe como parametro ya fue protocolizado
+ 		sh glog.sh PROPRO "Se rechaza el archivo $completeFileName por estar DUPLICADO" ERR										#el archivo que se recibe como parametro ya fue protocolizado
  		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 													#rechazamos el archivo moviendolo a ./RECHDIR
  		continue
  	fi
