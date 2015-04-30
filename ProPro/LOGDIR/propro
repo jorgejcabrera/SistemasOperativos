@@ -864,3 +864,379 @@
 19:03:09 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
 19:03:09 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
 19:03:09 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:07:18 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:07:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:07:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:07:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:07:18 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:07:18 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:07:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:07:18 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:07:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:07:18 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:15:08 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:15:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:15:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:15:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:15:08 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:15:08 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:15:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:15:08 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:15:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:15:08 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:15:18 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:15:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:15:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:15:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:15:18 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:15:18 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:15:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:15:18 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:15:18 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:15:18 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:15:37 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:15:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:15:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:15:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:15:37 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:15:37 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:15:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:15:37 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:15:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:15:37 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:16:14 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:16:14 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:16:14 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:16:14 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:16:14 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:16:14 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:16:14 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:16:14 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:16:14 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:16:14 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:18:25 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:18:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:18:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:18:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:18:25 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:18:25 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:18:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:18:25 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:18:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:18:25 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:18:42 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:18:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:18:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:18:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:18:42 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:18:42 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:18:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:18:42 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:18:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:18:42 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:19:37 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:19:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:19:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:19:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:19:37 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:19:37 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:19:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:19:37 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:19:37 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:19:37 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:21:16 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:21:16 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:21:16 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:21:16 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:21:16 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:21:16 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:21:16 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:21:16 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:21:16 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:21:16 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:21:54 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:21:54 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:21:54 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:21:54 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:21:54 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:21:54 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:21:54 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:21:54 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:21:54 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:21:54 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:23:02 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:23:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:23:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:23:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:23:02 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:23:02 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:23:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:23:02 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:23:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:23:02 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:26:43 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:26:43 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:26:43 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:26:43 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:26:43 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:26:43 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:26:43 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:26:43 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:26:43 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:26:43 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:27:50 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:27:50 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:27:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:27:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:27:51 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:27:51 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:27:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:27:51 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:27:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:27:51 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:30:30 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:30:30 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:30:30 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:30:30 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:30:30 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:30:30 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:30:30 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:30:30 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:30:30 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:30:30 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:30:55 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:30:55 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:30:55 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:30:55 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:30:55 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:30:55 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:30:55 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:30:55 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:30:55 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:30:55 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:31:25 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:31:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:31:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:31:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:31:25 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:31:25 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:31:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:31:25 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:31:25 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:31:25 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:34:38 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:34:38 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:34:38 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:34:38 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:34:38 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:34:38 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:34:38 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:34:38 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:34:38 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:34:38 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:35:44 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:35:44 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:35:44 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:35:44 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:35:44 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:35:44 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:35:44 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:35:44 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:35:44 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:35:44 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:36:21 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:36:21 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:36:21 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:36:21 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:36:21 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:36:21 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:36:21 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:36:21 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:36:21 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:36:21 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:36:31 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:36:31 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:36:31 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:36:31 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:36:31 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:36:31 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:36:31 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:36:31 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:36:31 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:36:31 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:37:15 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:37:15 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:37:15 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:37:15 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:37:15 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:37:15 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:37:15 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:37:15 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:37:15 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:37:15 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:37:42 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:37:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:37:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:37:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:37:42 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:37:42 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:37:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:37:42 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:37:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:37:42 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:38:04 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:38:04 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:38:04 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:38:04 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:38:04 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:38:04 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:38:04 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:38:04 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:38:04 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:38:04 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:39:51 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:39:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:39:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:39:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:39:51 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:39:51 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:39:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:39:51 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:39:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:39:51 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:40:02 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:40:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:40:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:40:02 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:40:02 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:40:02 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:40:03 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:40:03 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:40:03 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:40:03 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:40:40 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:40:40 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:40:40 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:40:40 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:40:40 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:40:40 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:40:40 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:40:40 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:40:40 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:40:40 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:41:22 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:41:22 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:41:22 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:41:22 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:41:23 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:41:23 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:41:23 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:41:23 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:41:23 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:41:23 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:42:42 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:42:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:42:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:42:42 30/04/15 jorge PROPRO El numero de norma 1 es invalido. Se rechaza el archivo ERR
+19:42:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:42:42 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:42:42 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:42:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:42:42 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:42:42 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:42:42 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:42:51 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:42:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:42:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:42:51 30/04/15 jorge PROPRO El numero de norma 1 es invalido. Se rechaza el archivo ERR
+19:42:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:42:51 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:42:51 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:42:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:42:51 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:42:51 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:42:51 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:44:08 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:44:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:44:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:44:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:44:08 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:44:08 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:44:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:44:08 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:44:08 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:44:08 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:44:27 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:44:27 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:44:27 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:44:27 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:44:27 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:44:27 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:44:27 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:44:27 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:44:27 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:44:27 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:44:57 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:44:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:44:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:44:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:44:57 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:44:57 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:44:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:44:57 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:44:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:44:57 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:45:10 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:45:10 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:45:11 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:45:11 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:45:11 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:45:11 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:45:11 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:45:11 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:45:11 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:45:11 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
+19:45:57 30/04/15 jorge PROPRO Inicio de propro 
+ 			 Cantidad de archivos a procesar: 5 INFO
+19:45:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_24-02-1988.txt INFO
+19:45:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_CON_1001_388_22-05-1989.txt INFO
+19:45:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_25-09-1989.txt INFO
+19:45:57 30/04/15 jorge PROPRO La fecha 25-09-1989 está fuera del rango de la gestion Alfonsin ERR
+19:45:57 30/04/15 jorge PROPRO Archivo Alfonsin_RES_1001_388_25-09-1989.txt rechazado ERR
+19:45:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1001_388_35-09-1989.txt INFO
+19:45:57 30/04/15 jorge PROPRO La fecha 35-09-1989 tiene un formato invalido. Se rechaza el archivo ERR
+19:45:57 30/04/15 jorge PROPRO Archivo a procesar Alfonsin_RES_1002_388_23-04-1990.txt INFO
+19:45:57 30/04/15 jorge PROPRO Emisor 1002 no habilitado para la norma RES. Se rechaza el archivo ERR
