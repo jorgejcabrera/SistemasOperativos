@@ -45,6 +45,7 @@ fi
 #Chequear si origen y destino son distintos
 if [ "$1" = "$2" ]; then
 		sh glog.sh MOVER "No se hizo nada porque el origen es igual al destino" ERR
+		exit 4
 fi
 
 mv "$1" "$2"
