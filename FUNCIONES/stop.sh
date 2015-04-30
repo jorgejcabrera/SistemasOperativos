@@ -3,6 +3,7 @@
 # 
 # Parametro 1
 # demonio a detener
+#TODO que el iniciador permita que stop pueda ser corrido por linea de comando
 
 #Debe ser un solo parametro
 if [ $# -gt 1 -o $# -lt 1 ]; then
@@ -10,8 +11,12 @@ if [ $# -gt 1 -o $# -lt 1 ]; then
 	exit 1
 fi
 
-#TODO como garantizo que se pueda correr por consola? lo tendria que realizar la instalacion ?
-#TODO debe chequear que este corriendo el demonio
+#El demonio no debe estar corriendo
+CORRIENDO=$(ps aux | grep R.*/$1$)
+if [ -z "$CORRIENDO" ]; then
+	echo "El demonio no se encuentra corriendo"
+	exit 1
+fi
 
 #mato al demonio
 killall "$1"

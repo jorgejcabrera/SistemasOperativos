@@ -13,14 +13,14 @@ GRUPO=/home/nico/SistemasOperativos
 #Debe ser un solo parametro
 if [ $# -gt 1 -o $# -lt 1 ]; then
 	echo "Cantidad de parametros inválida"
-#	sh glog.sh START "Cantidad de parametros inválida" ERR
+	sh glog.sh START "Cantidad de parametros inválida" FUNCIONES ERR
 	exit 1
 fi
 
 #Chequeo que esten inicializadas las variables de ambiente
 #TODO hacer esto cuando este implementado el INIPRO
 
-#TODO como garantizo que se pueda correr por consola? lo tendria que realizar la instalacion ?
+#TODO Que el iniciador permita que start pueda ser corrido por linea de comando
 #TODO como hago para que el script se de cuenta si fue invocado por consola o por otro script ?
 
 
@@ -28,7 +28,7 @@ fi
 CORRIENDO=$(ps aux | grep R.*/$1$)
 if ! [ -z "$CORRIENDO" ]; then
 	echo "El demonio ya se encuentra corriendo"
-#	sh glog.sh START "El demonio ya se encuentra corriendo" ERR
+	sh glog.sh START "El demonio ya se encuentra corriendo" FUNCIONES ERR
 	exit 1
 fi
 
@@ -36,11 +36,13 @@ fi
 PATH_DAEMON=$(find . -name *$1)
 if [ -z "$PATH_DAEMON" ]; then
 	echo "Funcion inexistente"
-#	sh glog.sh START "Funcion inexistente" ERR
+	sh glog.sh START "Funcion inexistente" FUNCIONES ERR
 	exit 1
 else 	"$PATH_DAEMON" &
 	echo "Arranco el demonio"
 #	sh "$PATH_GLOG" START "Arranco el demonio" INFO
+	sh glog.sh START "Arranco el demonio" FUNCIONES INFO
+
 fi
 
 exit 0
