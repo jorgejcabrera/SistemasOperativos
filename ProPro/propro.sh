@@ -79,8 +79,11 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  						resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
  						numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)													#parseo la linea para quedarme solo con el numero de norma
- 						if [ $numberNorm -lt \( 0 \) ]; then																			#si el numero de norma es menor a 0 es invalido
+
+ 						if [ $numberNorm -lt 0 ]; then																			#si el numero de norma es menor a 0 es invalido
+ 							
  							echo "enta aca"
+ 							numberNorm=1
  							sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
  							#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
  						fi
