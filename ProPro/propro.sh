@@ -4,7 +4,6 @@ archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
-ZERO=0
 codeGestion="Alfonsin"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
@@ -75,17 +74,20 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)																#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
  					if [ $typeGest -eq 0 ]; then																				#proceso un tipo de registro historico: tengo que validarlo
- 						resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
- 						numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)													#parseo la linea para quedarme solo con el numero de norma
  						
- 						if [ ! -z $numberNorm ]; then																			#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso number norm estaria vacio
- 							if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido
-
-
+ 						resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
+ 						if [ ! -z $resultNumberNorm ]; then																		#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+ 							numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)												#parseo la linea para quedarme solo con el numero de norma
+ 							typeRegister=$(echo $RESULT_GEST | cut -d ';' -f 5)
+ 							echo $typeRegister
+ 							
+ 							if [ $numberNorm -lt 0 -a $typeRegister -eq 0 ]; then																		#si el numero de norma es menor a 0 es invalido
  								sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
  								#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 								continue
+ 							#else
+ 																																#el numero de norma es mayor a 0 y se considera valido
  							fi
- 						#else
  						fi
  					fi																				
  					#sh glog.sh PROPRO "La fecha $date está dentro del rango de la gestion $codeGestion" INFO
