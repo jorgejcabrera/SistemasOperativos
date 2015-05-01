@@ -1,4 +1,5 @@
 #!/bin/bash
+codeGestion="Alfonsin"
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
@@ -6,7 +7,6 @@ archivoDeEmisores="MAEDIR/emisores.mae"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
 MAE_EMISOR=$archivoDeEmisores
-codeGestion="Alfonsin"
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 
@@ -17,10 +17,10 @@ RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)																				#obtengo de ges
 validateDate () 
 {
 	#TODO usar regular expresion para validar la fecha
-	local date=$1 																											#la fecha tiene forma dia-mes-anio
-	local day=$(echo $date | cut -d '-' -f 1)																				#parseo para obtener el dia de la fecha
-	local month=$(echo $date | cut -d '-' -f 2) 																			#parseo para obtener el mes de la fecha
-	local year=$(echo $date | cut -d '-' -f 3) 																				#parseo para obtener el anio de la fecha
+	local dateFromFileName=$1 																											#la fecha tiene forma dia-mes-anio
+	local day=$(echo $dateFromFileName | cut -d '-' -f 1)																				#parseo para obtener el dia de la fecha
+	local month=$(echo $dateFromFileName | cut -d '-' -f 2) 																			#parseo para obtener el mes de la fecha
+	local year=$(echo $dateFromFileName | cut -d '-' -f 3) 																				#parseo para obtener el anio de la fecha
 
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
 		echo 0																												#la fecha no es valida
@@ -80,7 +80,7 @@ protocolize ()
 processHistoricalRegister ()
 {	
 	#echo "6"
-	if [ ! -z $resultNumberNorm ]; then																		#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+	if [ ! -z $completeLineWithNumberNorm ]; then																		#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
 		#echo "7"
 		if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
 			sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
@@ -94,10 +94,9 @@ processHistoricalRegister ()
 
 processCurrentRegister ()
 {
-	local codeEmisor=$1
 	codFirma=$(grep "^$codeEmisor" $MAE_EMISOR | cut -d ';' -f 3)											#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
 	codFirmaIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
-	resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
+	completeLineWithNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
 
  	#echo "8"
  	if [ -z $codFirmaIntoFile ]; then
@@ -110,7 +109,6 @@ processCurrentRegister ()
 		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 		continue
 	else
-		echo "empezo a protocolizar"
 		protocolize $numberNorm
 	fi
 }
@@ -124,43 +122,41 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  	then
 
  		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
- 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	#obtengo el codigo de norma del nombre del archivo
- 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	#obtengo el codigo de emisor del nombre del archivo
+ 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
+ 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	
  		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
  		#echo "2"
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then																	#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
  			yearNormFromFileName=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)												#obtengo el año que esta en el nombre del archivo
- 			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
+ 			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
- 			if [ $(validateDate $date) -eq 1 ]; then																			#me fijo si la fecha en el nombre del archivo a protocolizar es valida
+ 			if [ $(validateDate $dateFromFileName) -eq 1 ]; then																
  				
- 				dateBegin=$(echo $RESULT_GEST | cut -d ';' -f 2)																#obtengo la fecha de comienzo de la gesiton
- 				dateEnd=$(echo $RESULT_GEST | cut -d ';' -f 3)																	#obtengo la fecha de finalizacion de la gestion
+ 				dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)																#obtengo la fecha de comienzo de la gesiton
+ 				dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)																	#obtengo la fecha de finalizacion de la gestion
  				#echo "4"
- 				if [ $(validateDateOnGest $dateBegin $dateEnd $date) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
+ 				if [ $(validateDateOnGest $dateBeginning $dateEnded $dateFromFileName) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
 
  					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)																#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
- 					resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)										#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
- 					numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)														#parseo la linea para quedarme solo con el numero de norma
+ 					completeLineWithNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)										#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
+ 					numberNorm=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)														#parseo la linea para quedarme solo con el numero de norma
  					#echo "5" 					
- 					#PROCESANDO REGISTRO HISTORICO
- 					if [ $typeGest -eq 0 ]; then																				#proceso un tipo de registro historico: tengo que validarlo 						
- 						processHistoricalRegister $codeGestion $codeNorm $RESULT_GEST
- 					#PROCESANDO ARCHIVO CORRIENTE
- 					elif [ $typeGest -eq 1 ]; then
- 						processCurrentRegister	$codeEmisor
+ 					if [ $typeGest -eq 0 ]; then																				#proceso tipo de registro historico						
+ 						processHistoricalRegister
+ 					elif [ $typeGest -eq 1 ]; then																				#proceso tipo de archivo corriente
+ 						processCurrentRegister
  					fi																				
- 					#sh glog.sh PROPRO "La fecha $date está dentro del rango de la gestion $codeGestion" INFO
+ 					#sh glog.sh PROPRO "La fecha $dateFromFileName está dentro del rango de la gestion $codeGestion" INFO
  					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  				else
- 					sh glog.sh PROPRO "La fecha $date está fuera del rango de la gestion $codeGestion" ERR
+ 					sh glog.sh PROPRO "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion" ERR
 					sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 					continue
  				fi 			
  			else
- 				sh glog.sh PROPRO "La fecha $date tiene un formato invalido. Se rechaza el archivo" ERR							#la fecha tiene un formato invalido: loggeamos el evento
+ 				sh glog.sh PROPRO "La fecha $dateFromFileName tiene un formato invalido. Se rechaza el archivo" ERR							#la fecha tiene un formato invalido: loggeamos el evento
  				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 											#rechazamos el archivo moviendolo a ./RECHDIR
  				continue
  			fi
