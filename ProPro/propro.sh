@@ -125,14 +125,25 @@ increaseCouter ()
 	local Cod_Norma=$(echo $completeLineWithNumberNorm | cut -d ';' -f 5)
 	local Numero=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
+	
+	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	
 	sed -i "s/$currentIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$incrementIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/g" $MAE_COUNT_FILE
 }
 
 createCounter ()
 {
-	echo "15"
+	auxNumberNorm=`expr $auxNumberNorm + 1`
+	echo "$auxNumberNorm"
 }
 
+createAllDirectories ()
+{
+	echo "esta funcion se fija si existen todos los directorios que se van a usar si alguno no existe lo crea"
+}
+auxNumberNorm="0"
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
