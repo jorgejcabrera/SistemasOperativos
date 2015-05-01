@@ -52,12 +52,10 @@ validateDateOnGest ()
 	fi
 }
 
-Extracto=""
 protocolize ()
 {
 	fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
 	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-		echo $completeFileName
 		local Fecha_Norma=$(echo "$line" | cut -d ';' -f 1);
 		local Nro_Norma=$(echo "$line" | cut -d ';' -f 2)
 		local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)
@@ -68,6 +66,9 @@ protocolize ()
 		local ExpedienteAnio=$(echo "$line" | cut -d ';' -f 7)
 		local Cod_Firma=$(echo "$line" | cut -d ';' -f 7)
 		local Id_Registro=$(echo "$line" | cut -d ';' -f 8)
+		if [ $typeGest -eq 1 ]; then																		#si vamos a protocolizar un registro corriente el numero de norma es distinto
+			Nro_Norma=""
+		fi
 		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> $fileDocketedName
 		done
 		
