@@ -52,10 +52,26 @@ validateDateOnGest ()
 	fi
 }
 
+Extracto=""
 protocolize ()
 {
 	fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
-	echo "$codeGestion;$codeNorm;$codeEmisor;$yearNorm" >> $fileDocketedName
+	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
+		echo $completeFileName
+		local Fecha_Norma=$(echo "$line" | cut -d ';' -f 1);
+		local Nro_Norma=$(echo "$line" | cut -d ';' -f 2)
+		local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)
+		local Causante=$(echo "$line" | cut -d ';' -f 3)
+		Extracto=$(echo "$line" | cut -d ';' -f 4)
+		local Cod_Tema=$(echo "$line" | cut -d ';' -f 5)
+		local ExpedienteId=$(echo "$line" | cut -d ';' -f 6)
+		local ExpedienteAnio=$(echo "$line" | cut -d ';' -f 7)
+		local Cod_Firma=$(echo "$line" | cut -d ';' -f 7)
+		local Id_Registro=$(echo "$line" | cut -d ';' -f 8)
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> $fileDocketedName
+		done
+		
+
 }
 
 processHistoricalRegister ()
