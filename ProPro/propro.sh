@@ -82,7 +82,9 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  							numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)												#parseo la linea para quedarme solo con el numero de norma
  							typeRegister=$(echo $RESULT_GEST | cut -d ';' -f 5)													#me fijo si es un archivo historico y corriente obteniendo el campo autoenumera de gestiones.mae
  							codFirma=$(grep "^$codeEmisor" $MAE_EMISOR | cut -d ';' -f 3)										#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
- 							codFirmaIntoFile=$(tail -n +2 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
+ 							codFirmaIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
+ 							echo $completeFileName
+ 							echo $codFirmaIntoFile
 
  							if [ $numberNorm -lt 0 -a $typeRegister -eq 0 ]; then												#si el numero de norma es menor a 0 es invalido
  								sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
