@@ -135,11 +135,19 @@ increaseCouter ()
 
 createCounter ()
 {
-	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`
-	local lasIdContador
-	echo $lastLineInFile
-	local auxNumberNorm=`expr $auxNumberNorm + 1`
-	#completeLineWithNumberNorm=$($auxNumberNorm;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$auxNumberNorm;;)
+	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`															#obtengo el ultimo registro de la tabla axg.tab
+	local lasIdContador=$(echo $lastLineInFile | cut -d ';' -f 1)
+	local newIdContador=`expr $lasIdContador + 1`
+	local currentDate=`date +%d/%m/%Y`
+	local userName=`echo $USER`
+	numberNorm="1"
+	completeLineWithNumberNorm="$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate"
+	
+	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+
+	echo $completeLineWithNumberNorm >> $MAE_COUNT_FILE
 }
 
 createAllDirectories ()
