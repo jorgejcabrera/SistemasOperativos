@@ -70,12 +70,18 @@ protocolize ()
 		local ExpedienteAnio=$(echo "$line" | cut -d ';' -f 7)
 		local Cod_Firma=$(echo "$line" | cut -d ';' -f 7)
 		local Id_Registro=$(echo "$line" | cut -d ';' -f 8)";"
+		
 		if [ $typeGest -eq 1 ]; then																#si vamos a protocolizar un registro corriente el numero de norma es distinto
 			Nro_Norma=$1
 			completeFileName=""
 			Id_Registro=$(echo "$line" | cut -d ';' -f 1)
 		fi
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> $fileDocketedName
+
+		if [ ! -d "PROCDIR/$codeGestion" ]; then
+			mkdir PROCDIR/$codeGestion
+		fi
+
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> PROCDIR/$codeGestion/$fileDocketedName
 		done
 }
 
