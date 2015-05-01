@@ -77,23 +77,20 @@ protocolize ()
 		fi
 		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> $fileDocketedName
 		done
-		
-
 }
 
 processHistoricalRegister ()
 {	
-	#echo "6"
-	if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
-		#echo "7"
-		if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
-			sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
-			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
-			continue
-		else
-			echo "protocolizando registro historico"
-			protocolize																						#el numero de norma es mayor a 0 y se considera valido
-		fi
+	echo "8"
+	if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
+		echo "9"
+		sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
+		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+		continue
+	else
+		echo "10"
+		echo "protocolizando registro historico"
+		protocolize																						#el numero de norma es mayor a 0 y se considera valido
 	fi
 }
 
@@ -117,13 +114,31 @@ processCurrentRegister ()
 	fi
 }
 
+increaseCouter ()
+{
+	local currentIdCounter=$(echo $completeLineWithNumberNorm | cut -d ';' -f 1)
+	local incrementIdCounter=`expr $currentIdCounter + 1`
+	codeNorm=$incrementIdCounter																			#tomamos como numero de norma el contador incrementado
+	local Cod_Gestion=$(echo $completeLineWithNumberNorm | cut -d ';' -f 2)
+	local Anio=$(echo $completeLineWithNumberNorm | cut -d ';' -f 3)
+	local Cod_Emisor=$(echo $completeLineWithNumberNorm | cut -d ';' -f 4)
+	local Cod_Norma=$(echo $completeLineWithNumberNorm | cut -d ';' -f 5)
+	local Numero=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)
+	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
+	sed -i "s/$currentIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$incrementIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/g" $MAE_COUNT_FILE
+}
+
+createCounter ()
+{
+	echo "15"
+}
+
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
  	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)			#me fijo si el archivo ya fue protocolizado
  	#echo "1"
- 	if [ -z $fileAlreadyDocketed ]																			#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
- 	then
+ 	if [ -z $fileAlreadyDocketed ]; then																	#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
 
  		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
@@ -134,19 +149,25 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
- 			if [ $(validateDate $dateFromFileName) -eq 1 ]; then																
- 				
+ 			if [ $(validateDate $dateFromFileName) -eq 1 ]; then																 				
  				#echo "4"
  				if [ $(validateDateOnGest $dateFromFileName) -eq 1 ]; then									#me fijo si la fecha esta dentro del rango de la gestion												
 
  					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
  					currentYear=$(date +'%Y')
  					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)		#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
- 					numberNorm=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)						#parseo la linea para quedarme solo con el numero de norma
+ 					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+						numberNorm=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)					#parseo la linea para quedarme solo con el numero de norma
+ 						increaseCouter
+ 					else
+ 						createCounter
+ 					fi
  					#echo "5" 					
  					if [ $typeGest -eq 0 ]; then															#proceso tipo de registro historico						
+ 						echo "6"
  						processHistoricalRegister
  					elif [ $typeGest -eq 1 ]; then															#proceso tipo de archivo corriente
+ 						echo "7"
  						processCurrentRegister
  					fi																				
  					#sh glog.sh PROPRO "La fecha $dateFromFileName está dentro del rango de la gestion $codeGestion" INFO
