@@ -173,6 +173,16 @@ createAllDirectories ()
 	fi
 }
 
+#POST: la funcion movera el archivo que se intentaba protocolizar a la carpeta RECHDIR informando sobre los motivos
+#del evento.
+rejectFile ()
+{
+	local message=$1
+	sh glog.sh PROPRO $1 ERR
+	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
+	sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+}
+
 createAllDirectories
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
@@ -211,24 +221,19 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  						processCurrentRegister
  					fi																				
  				else
- 					sh glog.sh PROPRO "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion" ERR
-					sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
-					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 					rejectFile "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion"
 					continue
  				fi 			
  			else
- 				sh glog.sh PROPRO "La fecha $dateFromFileName tiene un formato invalido. Se rechaza el archivo" ERR		#la fecha tiene un formato invalido: loggeamos el evento
- 				#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 									#rechazamos el archivo moviendolo a ./RECHDIR
+ 				rejectFile "La fecha $dateFromFileName tiene un formato invalido. Se rechaza el archivo" 
  				continue
  			fi
  		else
- 			sh glog.sh PROPRO "Emisor $codeEmisor no habilitado para la norma $codeNorm. Se rechaza el archivo" ERR
- 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+ 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm. Se rechaza el archivo"
  			continue
  		fi
  	else
- 		sh glog.sh PROPRO "Se rechaza el archivo $completeFileName por estar DUPLICADO" ERR										#el archivo que se recibe como parametro ya fue protocolizado
- 		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO 													#rechazamos el archivo moviendolo a ./RECHDIR
+ 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
  		continue
  	fi
 done;
