@@ -54,9 +54,9 @@ validateDateOnGest ()
 
 protocolize ()
 {
-	fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
+	fileDocketedName="$yearNormFromFileName.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
 	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-		local Fecha_Norma=$(echo "$line" | cut -d ';' -f 1);
+		local Fecha_Norma=$(echo "$line" | cut -d ';' -f 1)
 		local Nro_Norma=$(echo "$line" | cut -d ';' -f 2)
 		local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)
 		local Causante=$(echo "$line" | cut -d ';' -f 3)
@@ -65,11 +65,13 @@ protocolize ()
 		local ExpedienteId=$(echo "$line" | cut -d ';' -f 6)
 		local ExpedienteAnio=$(echo "$line" | cut -d ';' -f 7)
 		local Cod_Firma=$(echo "$line" | cut -d ';' -f 7)
-		local Id_Registro=$(echo "$line" | cut -d ';' -f 8)
+		local Id_Registro=$(echo "$line" | cut -d ';' -f 8)";"
 		if [ $typeGest -eq 1 ]; then																		#si vamos a protocolizar un registro corriente el numero de norma es distinto
-			Nro_Norma=""
+			Nro_Norma=$1
+			completeFileName=""
+			Id_Registro=$(echo "$line" | cut -d ';' -f 1)
 		fi
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> $fileDocketedName
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> $fileDocketedName
 		done
 		
 
@@ -79,14 +81,13 @@ processHistoricalRegister ()
 {	
 	#echo "6"
 	if [ ! -z $resultNumberNorm ]; then																		#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
-		numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)												#parseo la linea para quedarme solo con el numero de norma
 		#echo "7"
 		if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
 			sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
 			#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 			continue
 		else
-			protocolize $1																					#el numero de norma es mayor a 0 y se considera valido
+			protocolize																						#el numero de norma es mayor a 0 y se considera valido
 		fi
 	fi
 }
@@ -110,7 +111,7 @@ processCurrentRegister ()
 		continue
 	else
 		echo "empezo a protocolizar"
-		protocolize
+		protocolize $numberNorm
 	fi
 }
 
@@ -129,7 +130,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  		#echo "2"
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then																	#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
- 			yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)												#obtengo el año que esta en el nombre del archivo
+ 			yearNormFromFileName=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)												#obtengo el año que esta en el nombre del archivo
  			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
  			if [ $(validateDate $date) -eq 1 ]; then																			#me fijo si la fecha en el nombre del archivo a protocolizar es valida
@@ -140,10 +141,9 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  				if [ $(validateDateOnGest $dateBegin $dateEnd $date) -eq 1 ]; then												#me fijo si la fecha esta dentro del rango de la gestion												
 
  					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)																#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
- 					resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)									#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
-
- 					#echo "5"
- 					
+ 					resultNumberNorm=$(grep "\<$codeGestion.*\<$codeNorm" $MAE_COUNT_FILE)										#obtengo de la tabla de contadores por año de gestion la linea correspondiente al codigo de gestion y codigo de norma
+ 					numberNorm=$(echo $resultNumberNorm | cut -d ';' -f 6)														#parseo la linea para quedarme solo con el numero de norma
+ 					#echo "5" 					
  					#PROCESANDO REGISTRO HISTORICO
  					if [ $typeGest -eq 0 ]; then																				#proceso un tipo de registro historico: tengo que validarlo 						
  						processHistoricalRegister $codeGestion $codeNorm $RESULT_GEST
