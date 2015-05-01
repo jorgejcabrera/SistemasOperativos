@@ -76,7 +76,6 @@ protocolize ()
 			completeFileName=""
 			Id_Registro=$(echo "$line" | cut -d ';' -f 1)
 		fi
-
 		if [ ! -d "PROCDIR/$codeGestion" ]; then
 			mkdir PROCDIR/$codeGestion
 		fi
@@ -129,7 +128,7 @@ increaseCouter ()
 	local Cod_Norma=$(echo $completeLineWithNumberNorm | cut -d ';' -f 5)
 	local Numero=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)
 	local incrementCounter=`expr $Numero + 1`
-	numberNorm=$incrementCounter																			#tomamos como numero de norma el contador incrementado
+	numberNorm=$incrementCounter																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	
 	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
@@ -141,7 +140,7 @@ increaseCouter ()
 
 createCounter ()
 {
-	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`															#obtengo el ultimo registro de la tabla axg.tab
+	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`														#obtengo el ultimo registro de la tabla axg.tab
 	local lasIdContador=$(echo $lastLineInFile | cut -d ';' -f 1)
 	local newIdContador=`expr $lasIdContador + 1`
 	local currentDate=`date +%d/%m/%Y`
@@ -156,32 +155,44 @@ createCounter ()
 	echo $completeLineWithNumberNorm >> $MAE_COUNT_FILE
 }
 
+#PRE: se supone que los archivos maestros estan cargados con lo cual no es necesario verificar la existencia de esos archivos
+#lo mismo ocurre con los el directorio ACEPDIR, se supone que llamaremos a propro para protocolizar los archivos que alli se
+#encuentran con lo cual tampoco es necesario su creacion
 createAllDirectories ()
 {
-	echo "esta funcion se fija si existen todos los directorios que se van a usar si alguno no existe lo crea"
+	if [ ! -d "PROCDIR" ]; then
+		mkdir PROCDIR
+	fi
+	if [ ! -d "RECHDIR" ]; then
+		mkdir RECHDIR
+	fi
+	if [ ! -d "PROCDIR/proc" ]; then
+		mkdir PROCDIR/proc
+	fi
 }
-auxNumberNorm="0"
+
+createAllDirectories
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
- 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)			#me fijo si el archivo ya fue protocolizado
+ 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
  	#echo "1"
- 	if [ -z $fileAlreadyDocketed ]; then																	#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+ 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
 
  		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
  		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	
  		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
  		#echo "2"
- 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then												#si existe la combinacion, levanta la linea entera y el string no esto vacio
+ 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then											#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
  			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
  			if [ $(validateDate $dateFromFileName) -eq 1 ]; then																 				
  				#echo "4"
- 				if [ $(validateDateOnGest $dateFromFileName) -eq 1 ]; then									#me fijo si la fecha esta dentro del rango de la gestion												
+ 				if [ $(validateDateOnGest $dateFromFileName) -eq 1 ]; then								#me fijo si la fecha esta dentro del rango de la gestion												
 
- 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+ 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
  					currentYear=$(date +'%Y')
  					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)		#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
  					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
@@ -190,15 +201,13 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  						createCounter
  					fi
  					#echo "5" 					
- 					if [ $typeGest -eq 0 ]; then															#proceso tipo de registro historico						
+ 					if [ $typeGest -eq 0 ]; then														#proceso tipo de registro historico						
  						echo "6"
  						processHistoricalRegister
- 					elif [ $typeGest -eq 1 ]; then															#proceso tipo de archivo corriente
+ 					elif [ $typeGest -eq 1 ]; then														#proceso tipo de archivo corriente
  						echo "7"
  						processCurrentRegister
  					fi																				
- 					#sh glog.sh PROPRO "La fecha $dateFromFileName está dentro del rango de la gestion $codeGestion" INFO
- 					#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./PROCDIR/proc PROPRO
  				else
  					sh glog.sh PROPRO "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion" ERR
 					sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
