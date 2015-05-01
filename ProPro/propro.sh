@@ -116,27 +116,30 @@ processCurrentRegister ()
 
 increaseCouter ()
 {
-	local currentIdCounter=$(echo $completeLineWithNumberNorm | cut -d ';' -f 1)
-	local incrementIdCounter=`expr $currentIdCounter + 1`
-	codeNorm=$incrementIdCounter																			#tomamos como numero de norma el contador incrementado
+	local idContador=$(echo $completeLineWithNumberNorm | cut -d ';' -f 1)
 	local Cod_Gestion=$(echo $completeLineWithNumberNorm | cut -d ';' -f 2)
 	local Anio=$(echo $completeLineWithNumberNorm | cut -d ';' -f 3)
 	local Cod_Emisor=$(echo $completeLineWithNumberNorm | cut -d ';' -f 4)
 	local Cod_Norma=$(echo $completeLineWithNumberNorm | cut -d ';' -f 5)
 	local Numero=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)
+	local incrementCounter=`expr $Numero + 1`
+	numberNorm=$incrementCounter																			#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	
 	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 	
-	sed -i "s/$currentIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$incrementIdCounter;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/g" $MAE_COUNT_FILE
+	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
 
 createCounter ()
 {
-	auxNumberNorm=`expr $auxNumberNorm + 1`
-	echo "$auxNumberNorm"
+	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`
+	local lasIdContador
+	echo $lastLineInFile
+	local auxNumberNorm=`expr $auxNumberNorm + 1`
+	#completeLineWithNumberNorm=$($auxNumberNorm;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$auxNumberNorm;;)
 }
 
 createAllDirectories ()
@@ -168,7 +171,6 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  					currentYear=$(date +'%Y')
  					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)		#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
  					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
-						numberNorm=$(echo $completeLineWithNumberNorm | cut -d ';' -f 6)					#parseo la linea para quedarme solo con el numero de norma
  						increaseCouter
  					else
  						createCounter
