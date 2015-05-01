@@ -81,19 +81,21 @@ protocolize ()
 		fi
 
 		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> PROCDIR/$codeGestion/$fileDocketedName
+		sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+		sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO
 		done
 }
 
 processHistoricalRegister ()
 {	
-	echo "8"
+	#echo "8"
 	if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
-		echo "9"
+		#echo "9"
 		sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
 		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 		continue
 	else
-		echo "10"
+		#echo "10"
 		echo "protocolizando registro historico"
 		protocolize																						#el numero de norma es mayor a 0 y se considera valido
 	fi
@@ -202,10 +204,10 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  					fi
  					#echo "5" 					
  					if [ $typeGest -eq 0 ]; then														#proceso tipo de registro historico						
- 						echo "6"
+ 						#echo "6"
  						processHistoricalRegister
  					elif [ $typeGest -eq 1 ]; then														#proceso tipo de archivo corriente
- 						echo "7"
+ 						#echo "7"
  						processCurrentRegister
  					fi																				
  				else
