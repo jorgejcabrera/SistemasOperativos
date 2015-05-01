@@ -52,6 +52,12 @@ validateDateOnGest ()
 	fi
 }
 
+protocolize ()
+{
+	fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
+	echo "$codeGestion;$codeNorm;$codeEmisor;$yearNorm" >> $fileDocketedName
+}
+
 processHistoricalRegister ()
 {	
 	local codeGestion=$1
@@ -78,6 +84,7 @@ processCurrentRegister ()
 	local codeEmisor=$1
 	codFirma=$(grep "^$codeEmisor" $MAE_EMISOR | cut -d ';' -f 3)											#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
 	codFirmaIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
+
  	#echo "8"
  	if [ -z $codFirmaIntoFile ]; then
  		codFirmaIntoFile="valorPorDefecto"																	#le clavo un valor por defecto a la variable para que no me moleste en el if cuando comparo el valor de ambas variables
@@ -88,6 +95,9 @@ processCurrentRegister ()
 		sh glog.sh PROPRO "El numero de firma es invalido. Se rechaza el archivo"
 		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 		continue
+	else
+		echo "empezo a protocolizar"
+		protocolize 
 	fi
 }
 
@@ -107,7 +117,6 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then																	#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
  			yearNorm=$(echo $completeFileName | cut -d '-' -f 3 | cut -d '.' -f 1)												#obtengo el año que esta en el nombre del archivo
- 			fileDocketedName="$yearNorm.$codeNorm"																				#concateno el año de la norma con el codigo de norma para generar el nombre del archivo a protocolizar
  			date=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
  			if [ $(validateDate $date) -eq 1 ]; then																			#me fijo si la fecha en el nombre del archivo a protocolizar es valida
