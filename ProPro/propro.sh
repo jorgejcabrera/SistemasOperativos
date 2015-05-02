@@ -1,12 +1,14 @@
 #!/bin/bash
-codeGestion="Alfonsin"
+codeGestion="Peron1"
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
 archivoDeEmisores="MAEDIR/emisores.mae"
+archivoDeNormasPorEmisor="MAEDIR/tab/nxe.tab"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
-MAE_EMISOR=$archivoDeEmisores
+MAE_TRANSMITTER=$archivoDeEmisores
+MAE_NORM_BY_TRANSMITTER=$archivoDeNormasPorEmisor
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 
@@ -103,7 +105,7 @@ processHistoricalRegister ()
 
 processCurrentRegister ()
 {
-	codFirma=$(grep "^$codeEmisor" $MAE_EMISOR | cut -d ';' -f 3)											#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
+	codFirma=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)											#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
 	codFirmaIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
  	#echo "8"
  	if [ -z $codFirmaIntoFile ]; then
@@ -191,10 +193,10 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  	#echo "1"
  	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
 
- 		sh glog.sh PROPRO "Archivo a procesar $completeFileName" INFO
+ 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
  		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	
- 		existCodeNormAndCodEmisorCombination=$(find ./MAEDIR/tab/nxe.tab -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
+ 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
  		#echo "2"
  		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then											#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
