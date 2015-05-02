@@ -22,17 +22,17 @@ validateDate ()
 	#TODO usar regular expresion para validar la fecha
 	if [ -z $dateFromFileName ]; then
 		echo 0
-		break
+		return
 	fi 
 	local day=$(echo $dateFromFileName | cut -d '-' -f 1)											#parseo para obtener el dia de la fecha
 	local month=$(echo $dateFromFileName | cut -d '-' -f 2) 										#parseo para obtener el mes de la fecha
 	local year=$(echo $dateFromFileName | cut -d '-' -f 3) 											#parseo para obtener el anio de la fecha
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
 		echo 0																					#la fecha no es valida
-		break
+		return
 	else
 		echo 1																					#la fecha es valida
-		break
+		return
 	fi
 }
 
@@ -124,22 +124,15 @@ processHistoricalRegister ()
 
 processCurrentRegister ()
 {
-	codFirma=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)											#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
-	codFirmaIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codFirma | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
- 	#echo "8"
- 	if [ -z $codFirmaIntoFile ]; then
- 		codFirmaIntoFile="valorPorDefecto"																	#le clavo un valor por defecto a la variable para que no me moleste en el if cuando comparo el valor de ambas variables
- 	fi
- 	#echo "9"
-	if [ ! -z $codFirma ] && [ ! -z $codFirmaIntoFile ] && [ $codFirma != $codFirmaIntoFile ]; then			#el codigo de norma es invalido
-		#echo "10"
-		sh glog.sh PROPRO "El numero de firma es invalido. Se rechaza el archivo"
-		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
-		continue
+	echo "protocolizando registro actual"
+	currentYear=$(date +'%Y')
+	completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)	#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
+	if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+		increaseCouter
 	else
-		echo "protocolizando registro actual"
-		protocolize $numberNorm
+		createCounter
 	fi
+	protocolize $numberNorm
 }
 
 increaseCouter ()
@@ -224,8 +217,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  			if [ $(validateDate) -eq 1 ]; then																 				
  				
  				typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
- 				if [ $(validateDateOnGest) -eq 1 ]; then											#me fijo si la fecha esta dentro del rango de la gestion												
- 		
+ 				if [ $(validateDateOnGest) -eq 1 ]; then											#me fijo si la fecha esta dentro del rango de la gestion												 		
  					#echo "4" 					
  					if [ $typeGest -eq 0 ]; then													#proceso tipo de registro historico						
  						#echo "5"
@@ -234,15 +226,15 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  						processHistoricalRegister
  					elif [ $typeGest -eq 1 ]; then													#proceso tipo de archivo corriente
  						#echo "6"
- 						currentYear=$(date +'%Y')
-	 					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)	#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
-	 					echo $completeLineWithNumberNorm
-	 					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
-	 						increaseCouter
-	 					else
-	 						createCounter
-	 					fi
- 						processCurrentRegister
+						codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)		#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
+						codSignatureIntoFile=$(head -n 1 "ACEPDIR/$codeGestion/$completeFileName" | grep $codSignature | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
+						if [ ! -z $codSignature ] && [ ! -z $codSignatureIntoFile ] && [ $codSignature != $codSignatureIntoFile ]; then	#el codigo de firma es invalido
+							#echo "10"
+							rejectFile "El codigo de firma es invalido"
+							continue
+						else
+							processCurrentRegister
+						fi					 						
  					fi																				
  				
  				else
