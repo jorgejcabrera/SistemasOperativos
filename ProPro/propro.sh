@@ -9,6 +9,7 @@ MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
 MAE_TRANSMITTER=$archivoDeEmisores
 MAE_NORM_BY_TRANSMITTER=$archivoDeNormasPorEmisor
+FILE_HISTORY=$historialDeArchivos
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 
@@ -20,14 +21,19 @@ validateDate ()
 {
 	#TODO usar regular expresion para validar la fecha
 	local dateFromFileName=$1 																		#la fecha tiene forma dia-mes-anio
+	if [ -z $dateFromFileName ]; then
+		echo 0
+		break
+	fi 
 	local day=$(echo $dateFromFileName | cut -d '-' -f 1)											#parseo para obtener el dia de la fecha
 	local month=$(echo $dateFromFileName | cut -d '-' -f 2) 										#parseo para obtener el mes de la fecha
 	local year=$(echo $dateFromFileName | cut -d '-' -f 3) 											#parseo para obtener el anio de la fecha
-
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
-		echo 0																						#la fecha no es valida
+		echo 0																					#la fecha no es valida
+		break
 	else
-		echo 1																						#la fecha es valida
+		echo 1																					#la fecha es valida
+		break
 	fi
 }
 
@@ -50,10 +56,25 @@ validateDateOnGest ()
 	local month=$(echo $1 | cut -d '-' -f 2)
 	local year=$(echo $1 | cut -d '-' -f 3)
 
-	if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
+	if [ $typeGest -eq 0 ]; then																	#valido la fecha para un registro historico
+		if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
+			echo 0																					#la fecha no esta dentro del periodo de la gestion
+			return
+		else 
+			echo 1 																					#la fecha esta dentro del periodo de la gestion
+			return
+		fi
+	elif [ $typeGest -eq 1 ]; then
+		if [ $yearBegin -gt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) ]; then
+			echo 0
+			return
+		else
+			echo 1
+			return
+		fi
+	elif [ $typeGest -gt 1 ]; then
 		echo 0
-	else 
-		echo 1
+		return	
 	fi
 }
 
@@ -82,9 +103,9 @@ protocolize ()
 			mkdir PROCDIR/$codeGestion
 		fi
 
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> PROCDIR/$codeGestion/$fileDocketedName
-		sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
-		sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO
+		#echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> PROCDIR/$codeGestion/$fileDocketedName
+		#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+		#sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO
 		done
 }
 
@@ -135,11 +156,11 @@ increaseCouter ()
 	numberNorm=$incrementCounter																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	
-	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
-	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	#sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	#sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	#cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 	
-	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
+	#sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
 
 createCounter ()
@@ -152,11 +173,11 @@ createCounter ()
 	numberNorm="1"
 	completeLineWithNumberNorm="$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate"
 	
-	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
-	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	#sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	#sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	#cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 
-	echo $completeLineWithNumberNorm >> $MAE_COUNT_FILE
+	#echo $completeLineWithNumberNorm >> $MAE_COUNT_FILE
 }
 
 #PRE: se supone que los archivos maestros estan cargados con lo cual no es necesario verificar la existencia de esos archivos
@@ -179,8 +200,8 @@ createAllDirectories ()
 #del evento.
 rejectFile ()
 {
-	local message=$1
-	sh glog.sh PROPRO $1 ERR
+	local reasonForRejection="$1"
+	sh glog.sh PROPRO $reasonForRejection ERR
 	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
 	sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
 }
@@ -195,18 +216,22 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
  		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
- 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)																	
+ 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
  		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
  		#echo "2"
- 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then											#si existe la combinacion, levanta la linea entera y el string no esto vacio
+ 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
 
  			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
- 			if [ $(validateDate $dateFromFileName) -eq 1 ]; then																 				
- 				#echo "4"
- 				if [ $(validateDateOnGest $dateFromFileName) -eq 1 ]; then								#me fijo si la fecha esta dentro del rango de la gestion												
-
- 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+ 			if [ $(validateDate "$dateFromFileName") -eq 1 ]; then																 				
+ 				
+ 				typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+ 				dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)
+				dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)
+ 				echo $dateBeginning
+ 				echo $dateEnded
+ 				if [ $(validateDateOnGest "$dateFromFileName" "$typeGest") -eq 1 ]; then				#me fijo si la fecha esta dentro del rango de la gestion												
+ 					
  					currentYear=$(date +'%Y')
  					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)		#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
  					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
@@ -215,7 +240,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  						createCounter
  					fi
  					#echo "5" 					
- 					if [ $typeGest -eq 0 ]; then														#proceso tipo de registro historico						
+ 					if [ $typeGest -eq 0 ]; then													#proceso tipo de registro historico						
  						#echo "6"
  						processHistoricalRegister
  					elif [ $typeGest -eq 1 ]; then														#proceso tipo de archivo corriente
@@ -223,19 +248,23 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
  						processCurrentRegister
  					fi																				
  				else
- 					rejectFile "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion"
+		 			echo "rechaza"
+					#rejectFile "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion"
 					continue
  				fi 			
  			else
- 				rejectFile "La fecha $dateFromFileName tiene un formato invalido. Se rechaza el archivo" 
+ 				echo "rechaza"
+ 				#rejectFile "La fecha $dateFromFileName tiene un formato invalido" 
  				continue
  			fi
  		else
- 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm. Se rechaza el archivo"
+ 			echo "rechaza"
+ 			#rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
  			continue
  		fi
  	else
- 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
+		echo "rechaza"
+ 		#rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
  		continue
  	fi
 done;
