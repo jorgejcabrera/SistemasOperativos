@@ -1,5 +1,5 @@
 #!/bin/bash
-codeGestion="Peron1"
+codeGestion="Fernandez2"
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
@@ -20,7 +20,6 @@ RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)														#obtengo de gestiones
 validateDate () 
 {
 	#TODO usar regular expresion para validar la fecha
-	local dateFromFileName=$1 																		#la fecha tiene forma dia-mes-anio
 	if [ -z $dateFromFileName ]; then
 		echo 0
 		break
@@ -52,9 +51,9 @@ validateDateOnGest ()
 	local dayEnd=$(echo $dateEnded | cut -d '/' -f 1)
 	local monthEnd=$(echo $dateEnded | cut -d '/' -f 2)
 	local yearEnd=$(echo $dateEnded | cut -d '/' -f 3)
-	local day=$(echo $1 | cut -d '-' -f 1)
-	local month=$(echo $1 | cut -d '-' -f 2)
-	local year=$(echo $1 | cut -d '-' -f 3)
+	local day=$(echo $dateFromFileName | cut -d '-' -f 1)
+	local month=$(echo $dateFromFileName | cut -d '-' -f 2)
+	local year=$(echo $dateFromFileName | cut -d '-' -f 3)
 
 	if [ $typeGest -eq 0 ]; then																	#valido la fecha para un registro historico
 		if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
@@ -114,9 +113,8 @@ processHistoricalRegister ()
 	#echo "8"
 	if [ $numberNorm -lt 0 ]; then																		#si el numero de norma es menor a 0 es invalido			
 		#echo "9"
-		sh glog.sh PROPRO "El numero de norma $numberNorm es invalido. Se rechaza el archivo" ERR
-		#sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
-		continue
+		rejectFile "El numero de norma invalido"
+		return
 	else
 		#echo "10"
 		echo "protocolizando registro historico"
@@ -223,45 +221,48 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
- 			if [ $(validateDate "$dateFromFileName") -eq 1 ]; then																 				
+ 			if [ $(validateDate) -eq 1 ]; then																 				
  				
  				typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
- 				dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)
-				dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)
- 				echo $dateBeginning
- 				echo $dateEnded
- 				if [ $(validateDateOnGest "$dateFromFileName" "$typeGest") -eq 1 ]; then				#me fijo si la fecha esta dentro del rango de la gestion												
- 					
- 					currentYear=$(date +'%Y')
- 					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)		#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
- 					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
- 						increaseCouter
- 					else
- 						createCounter
- 					fi
- 					#echo "5" 					
+ 				if [ $(validateDateOnGest) -eq 1 ]; then											#me fijo si la fecha esta dentro del rango de la gestion												
+ 		
+ 					#echo "4" 					
  					if [ $typeGest -eq 0 ]; then													#proceso tipo de registro historico						
- 						#echo "6"
+ 						#echo "5"
+ 						yearNormFromFileName=$(echo $dateFromFileName | cut -d '-' -f 3)
+ 						numberNorm=$(grep "$codeGestion;$yearNormFromFileName;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 6) 	#si tenemos un archivo historico obtenemos el numero de norma de la tabla axg.tab
  						processHistoricalRegister
- 					elif [ $typeGest -eq 1 ]; then														#proceso tipo de archivo corriente
- 						#echo "7"
+ 					elif [ $typeGest -eq 1 ]; then													#proceso tipo de archivo corriente
+ 						#echo "6"
+ 						currentYear=$(date +'%Y')
+	 					completeLineWithNumberNorm=$(grep "$codeGestion;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)	#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
+	 					echo $completeLineWithNumberNorm
+	 					if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+	 						increaseCouter
+	 					else
+	 						createCounter
+	 					fi
  						processCurrentRegister
  					fi																				
+ 				
  				else
 		 			echo "rechaza"
 					#rejectFile "La fecha $dateFromFileName está fuera del rango de la gestion $codeGestion"
 					continue
  				fi 			
+ 			
  			else
  				echo "rechaza"
  				#rejectFile "La fecha $dateFromFileName tiene un formato invalido" 
  				continue
  			fi
+ 		
  		else
  			echo "rechaza"
  			#rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
  			continue
  		fi
+ 	
  	else
 		echo "rechaza"
  		#rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
