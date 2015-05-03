@@ -1,6 +1,4 @@
 #!/bin/bash
-codeGestion="Peron1"
-codeCurrentGest="Fernandez2"
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
@@ -13,8 +11,6 @@ MAE_NORM_BY_TRANSMITTER=$archivoDeNormasPorEmisor
 FILE_HISTORY=$historialDeArchivos
 
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
-
-RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)														#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
 #PRE: recibe como parametro una fecha con el formato dia-mes-anio
 #POST: devuelve 0 si la fecha tiene un formato invalido y 1 si el formato es valido
@@ -108,32 +104,28 @@ protocolize ()
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
 	local Id_Registro=$(echo $currentLine | cut -d ';' -f 9)
 	local Fuente="$completeFileName"
-		
+	local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)	
 	if [ $typeGest -eq 1 ]; then																#si vamos a protocolizar un registro corriente el numero de norma es distinto
-		Nro_Norma=$1
+		Nro_Norma="$2"
 	fi
-	if [ ! -d "PROCDIR/$codeGestion" ]; then
-		mkdir PROCDIR/$codeGestion
-	fi
-
-	if [ $typeGest -eq 0 ]; then
-		local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)
+	if [ $typeGest -eq 0 ]; then		
 		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
 	else
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro" >> "$Anio_Norma.$codeNorm"
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
 	fi
 }
 
 processCurrentRegister ()
 {
+	local currentLine="$1"
 	currentYear=$(date +'%Y')
 	completeLineWithNumberNorm=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)	#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
-	if [ ! -z $completeLineWithNumberNorm ]; then															#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+	if [ ! -z $completeLineWithNumberNorm ]; then														#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
 		increaseCouter
 	else
 		createCounter
 	fi
-	protocolize $numberNorm
+	protocolize "$currentLine" "$numberNorm"
 }
 
 increaseCouter ()
@@ -229,12 +221,12 @@ processRegisterFromCurrentFile ()
 		if [ $(validateDate) -eq 1 ]; then
 			if [ $(validateDateOnGest) -eq 1 ]; then
 				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
-					if [ $codSignature != $codSignatureIntoFile ]; then	#el codigo de firma es invalido
+					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
+					if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
 						rejectRegister "$line" "codigo de firma invalido"
 					else 
 						echo "protocolizando registro corriente"
-						processCurrentRegister
+						processCurrentRegister "$line"
 					fi
 				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
 					numberNorm=$(echo $line | cut -d ';' -f 2)
@@ -257,34 +249,44 @@ processRegisterFromCurrentFile ()
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
-createAllDirectories
-for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
- 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
- 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
- 	#echo "1"
- 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+#
+#	
+#
+codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 2)
 
- 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
- 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
- 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
- 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
- 		#echo "2"
- 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
+cat MAEDIR/gestiones.mae | while read line; do
+	codeGestion=$(echo $line | cut -d ';' -f 1)
+	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)														#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
+	createAllDirectories
+	
+	if [ -d ACEPDIR/$codeGestion ]; then
+		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
+		 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
+		 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
+		 	
+		 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+		 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
+		 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
+		 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
+		 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
 
- 			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
- 			#echo "3"
-			typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
-			codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
-			processRegisterFromCurrentFile
- 		else
- 			echo "rechazar archivo"
- 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
- 			continue
- 		fi	
- 	else
-		echo "rechazar archivo"
- 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
- 		continue
- 	fi
+		 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
+					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+					codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
+					processRegisterFromCurrentFile
+		 		else
+		 			echo "rechazar archivo"
+		 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
+		 			continue
+		 		fi	
+		 	else
+				echo "rechazar archivo"
+		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
+		 		continue
+		 	fi
+		done;
+	else
+		continue
+	fi
 done;
 
