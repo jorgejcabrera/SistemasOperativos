@@ -240,7 +240,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 						elif [ $typeGest -eq 0 ]; then												#se trata de una gestion historica
 							numberNorm=$(echo $line | cut -d ';' -f 2)
 							if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-								rejectFile "$line" "El numero de norma invalido"
+								rejectRegister "$line" "El numero de norma invalido"
 							else 
 								echo "protocolizando registro historico"
 								protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
