@@ -255,8 +255,9 @@ processRegisterFromCurrentFile ()
 #
 codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 2)
 
-cat MAEDIR/gestiones.mae | while read line; do
-	codeGestion=$(echo $line | cut -d ';' -f 1)
+#cat MAEDIR/gestiones.mae | while read line; do
+	#codeGestion=$(echo $line | cut -d ';' -f 1)
+	codeGestion="Alfonsin"
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 	createAllDirectories
 	
@@ -290,5 +291,5 @@ cat MAEDIR/gestiones.mae | while read line; do
 	else
 		continue
 	fi
-done;
+#done;
 
