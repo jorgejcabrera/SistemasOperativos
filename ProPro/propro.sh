@@ -118,7 +118,7 @@ protocolize ()
 
 	if [ $typeGest -eq 0 ]; then
 		local Anio_Norma=$(echo $Fecha_Norma | cut -d '/' -f 3)
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro$completeFileName" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
 	else
 		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro" >> "$Anio_Norma.$codeNorm"
 	fi
