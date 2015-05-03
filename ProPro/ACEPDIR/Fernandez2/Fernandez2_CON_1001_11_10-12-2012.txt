@@ -1,1 +1,1 @@
-02/05/2015;nroNorma;causante;extracto;224;4713;2012;12EE5E9;90
+02/05/2012;nroNorma;causante;extracto;224;4713;2012;12EE5E9;90

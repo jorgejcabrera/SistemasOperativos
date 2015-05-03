@@ -120,7 +120,7 @@ processCurrentRegister ()
 	local currentLine="$1"
 	currentYear=$(date +'%Y')
 	completeLineWithNumberNorm=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE)	#obtengo de axg.tab la linea correspondiente al codigo de gestion y codigo de norma
-	if [ ! -z $completeLineWithNumberNorm ]; then														#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
+	if [ ! -z $completeLineWithNumberNorm ]; then												#puede ocurrir que no se encuntre la linea que combina el codigo de norma y gestion y en ese caso el string estaria vacio
 		increaseCouter
 	else
 		createCounter
@@ -256,7 +256,7 @@ codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MA
 
 cat MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
-	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)														#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
+	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 	createAllDirectories
 	
 	if [ -d ACEPDIR/$codeGestion ]; then
@@ -281,7 +281,7 @@ cat MAEDIR/gestiones.mae | while read line; do
 		 		fi	
 		 	else
 				echo "rechazar archivo"
-		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"									#rechazamos el archivo moviendolo a ./RECHDIR
+		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"					#rechazamos el archivo moviendolo a ./RECHDIR
 		 		continue
 		 	fi
 		done;
