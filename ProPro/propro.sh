@@ -1,5 +1,5 @@
 #!/bin/bash
-codeGestion="Fernandez2"
+codeGestion="Peron1"
 codeCurrentGest="Fernandez2"
 countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
@@ -45,27 +45,38 @@ validateDateOnGest ()
 	#en el nombre del archivo a protocolizar tiene formato dia-mes-anio con lo cual se parsean distinto
 	local dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)										#obtengo la fecha de comienzo de la gesiton que se esta por protocolizar
  	local dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)											#obtengo la fecha de finalizacion de la gestion que se esta por protocolizar
-
 	local dayBegin=$(echo $dateBeginning | cut -d '/' -f 1)			
 	local monthBegin=$(echo $dateBeginning | cut -d '/' -f 2)
 	local yearBegin=$(echo $dateBeginning | cut -d '/' -f 3)
 	local dayEnd=$(echo $dateEnded | cut -d '/' -f 1)
 	local monthEnd=$(echo $dateEnded | cut -d '/' -f 2)
 	local yearEnd=$(echo $dateEnded | cut -d '/' -f 3)
-	local day=$(echo $dateFromFileName | cut -d '-' -f 1)
-	local month=$(echo $dateFromFileName | cut -d '-' -f 2)
-	local year=$(echo $dateFromFileName | cut -d '-' -f 3)
+	local dayFromRegister=$(echo $dateFromRegister | cut -d '/' -f 1)
+	local monthFromRegister=$(echo $dateFromRegister | cut -d '/' -f 2)
+	local yearFromRegister=$(echo $dateFromRegister | cut -d '/' -f 3)
 
 	if [ $typeGest -eq 0 ]; then																	#valido la fecha para un registro historico
-		if [ $yearBegin -gt $year -o $yearEnd -lt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $yearEnd -eq $year -a $monthEnd -lt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) -o \( $monthEnd -eq $month -a $dayEnd -lt $day \) ]; then
+		if [ $yearFromRegister -gt $yearEnd -o $yearFromRegister -lt $yearBegin ]; then
 			echo 0																					#la fecha no esta dentro del periodo de la gestion
 			return
-		else 
+		elif [ $yearBegin -eq $yearFromRegister -a $monthFromRegister -lt $monthBegin ]; then
+			echo 0																					#la fecha no esta dentro del periodo de la gestion
+			return
+		elif [ $yearEnd -eq $yearFromRegister -a $monthFromRegister -gt $monthEnd ]; then
+			echo 0																					#la fecha no esta dentro del periodo de la gestion
+			return
+		elif [ $monthBegin -eq $monthFromRegister -a $yearBegin -eq $yearFromRegister -a $dayBegin -gt $dayFromRegister ]; then
+			echo 0																					#la fecha no esta dentro del periodo de la gestion
+			return
+		elif [ $monthEnd -eq $monthFromRegister -a $yearEnd -eq $yearFromRegister -a $dayEnd -lt $dayFromRegister ]; then
+			echo 0
+			return
+		else
 			echo 1 																					#la fecha esta dentro del periodo de la gestion
 			return
 		fi
 	elif [ $typeGest -eq 1 ]; then
-		if [ $yearBegin -gt $year -o \( $yearBegin -eq $year -a $monthBegin -gt $month \) -o \( $monthBegin -eq $month -a $dayBegin -gt $day \) ]; then
+		if [ $yearBegin -gt $yearFromRegister -o \( $yearBegin -eq $yearFromRegister -a $monthBegin -gt $monthFromRegister \) -o \( $monthBegin -eq $monthFromRegister -a $dayBegin -gt $dayFromRegister \) ]; then
 			echo 0
 			return
 		else
@@ -204,13 +215,13 @@ rejectRegister ()
 	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> PROCDIR/$codeGestion.rech
 }
 
-proccessAllFileFromCurrentGestion ()
+#POST: procesa todos los registros del archivo que se esta protocolizando
+processRegisterFromCurrentFile ()
 {
 	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
 		dateFromRegister=$(echo $line | cut -d ';' -f 1)
 		if [ $(validateDate) -eq 1 ]; then
 			if [ $(validateDateOnGest) -eq 1 ]; then
-				
 				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
 					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
 					if [ $codSignature != $codSignatureIntoFile ]; then	#el codigo de firma es invalido
@@ -229,17 +240,19 @@ proccessAllFileFromCurrentGestion ()
 					fi
 				fi
 			else
+				echo "se rechaza el registro"
 				rejectRegister "$line" "fecha fuera del rango de la gestion"
 			fi
 		else
 			rejectRegister "$line" "fecha invalida"
 		fi
 	done;
+	#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
 createAllDirectories
-for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
- 	
+for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
  	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
  	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
  	#echo "1"
@@ -254,13 +267,9 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 
  			dateFromFileName=$(echo $completeFileName | cut -d '_' -f 5 | cut -d '.' -f 1)
  			#echo "3"
-			typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
-			codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)		#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
-
-			proccessAllFileFromCurrentGestion
-
-			#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
-			sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO			
+			typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
+			codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
+			processRegisterFromCurrentFile
  		else
  			echo "rechazar archivo"
  			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"

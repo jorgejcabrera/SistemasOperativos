@@ -1,2 +1,2 @@
-05/06/1947;9999;causante;extracto;224;idExpediente;1947;12EE5E9;89
-05/06/1948;9999;causante;extracto;224;idExpediente;1947;12EE5E9;89
+04/07/1952;9999;causante;extracto;224;idExpediente;1947;12EE5E9;89
+04/05/1946;9999;causante;extracto;224;idExpediente;1947;12EE5E9;89
