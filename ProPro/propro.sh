@@ -246,7 +246,7 @@ processRegisterFromCurrentFile ()
 			rejectRegister "$line" "fecha invalida"
 		fi
 	done;
-	#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+	sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
@@ -255,16 +255,16 @@ processRegisterFromCurrentFile ()
 #
 codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 2)
 
-cat MAEDIR/gestiones.mae | while read line; do
-	codeGestion=$(echo $line | cut -d ';' -f 1)
-#	codeGestion="Fernandez2"
+#cat MAEDIR/gestiones.mae | while read line; do
+#	codeGestion=$(echo $line | cut -d ';' -f 1)
+	codeGestion="Fernandez"
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 	createAllDirectories
 	
 	if [ -d ACEPDIR/$codeGestion ]; then
+		echo "protocolizando $codeGestion"
 		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
 		 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
-		 	echo "protocolizando $completeFileName"
 		 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
 		 	
 		 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
@@ -287,5 +287,5 @@ cat MAEDIR/gestiones.mae | while read line; do
 		 	fi
 		done;
 	fi
-done;
+#done;
 
