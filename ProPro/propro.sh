@@ -204,6 +204,39 @@ rejectRegister ()
 	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> PROCDIR/$codeGestion.rech
 }
 
+proccessAllFileFromCurrentGestion ()
+{
+	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
+		dateFromRegister=$(echo $line | cut -d ';' -f 1)
+		if [ $(validateDate) -eq 1 ]; then
+			if [ $(validateDateOnGest) -eq 1 ]; then
+				
+				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
+					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
+					if [ $codSignature != $codSignatureIntoFile ]; then	#el codigo de firma es invalido
+						rejectRegister "$line" "codigo de firma invalido"
+					else 
+						echo "protocolizando registro corriente"
+						processCurrentRegister
+					fi
+				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
+					numberNorm=$(echo $line | cut -d ';' -f 2)
+					if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
+						rejectRegister "$line" "El numero de norma invalido"
+					else 
+						echo "protocolizando registro historico"
+						protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
+					fi
+				fi
+			else
+				rejectRegister "$line" "fecha fuera del rango de la gestion"
+			fi
+		else
+			rejectRegister "$line" "fecha invalida"
+		fi
+	done;
+}
+
 createAllDirectories
 for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do 
  	
@@ -224,35 +257,7 @@ for completeFileName in `ls ./ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t 
 			typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)										#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
 			codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)		#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
 
-			cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-				dateFromRegister=$(echo $line | cut -d ';' -f 1)
-				if [ $(validateDate) -eq 1 ]; then
-					if [ $(validateDateOnGest) -eq 1 ]; then
-						
-						if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-							codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) #busco el codigo de firma dentro del archivo
-							if [ $codSignature != $codSignatureIntoFile ]; then	#el codigo de firma es invalido
-								rejectRegister "$line" "codigo de firma invalido"
-							else 
-								echo "protocolizando registro corriente"
-								processCurrentRegister
-							fi
-						elif [ $typeGest -eq 0 ]; then												#se trata de una gestion historica
-							numberNorm=$(echo $line | cut -d ';' -f 2)
-							if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-								rejectRegister "$line" "El numero de norma invalido"
-							else 
-								echo "protocolizando registro historico"
-								protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
-							fi
-						fi
-					else
-						rejectRegister "$line" "fecha fuera del rango de la gestion"
-					fi
-				else
-					rejectRegister "$line" "fecha invalida"
-				fi
-			done;
+			proccessAllFileFromCurrentGestion
 
 			#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
 			sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO			
