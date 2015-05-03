@@ -220,13 +220,14 @@ processRegisterFromCurrentFile ()
 		dateFromRegister=$(echo $line | cut -d ';' -f 1)
 		if [ $(validateDate) -eq 1 ]; then
 			if [ $(validateDateOnGest) -eq 1 ]; then
+				Causante=""
+				Extracto=""
 				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
 					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
 					if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
 						rejectRegister "$line" "codigo de firma invalido"
 					else 
-						Causante=""
-						Extracto=""
+
 						processCurrentRegister "$line"
 					fi
 				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
