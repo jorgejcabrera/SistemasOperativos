@@ -98,7 +98,7 @@ protocolize ()
 	local Nro_Norma=$(echo $currentLine | cut -d ';' -f 2)
 	Causante=$(echo $currentLine | cut -d ';' -f 3)
 	Extracto=$(echo $currentLine | cut -d ';' -f 4)
-	local Cod_Tema=$(echo $currentLine | cut -d ';' -f 5)
+	Cod_Tema=$(echo $currentLine | cut -d ';' -f 5)
 	local ExpedienteId=$(echo $currentLine | cut -d ';' -f 6)
 	local ExpedienteAnio=$(echo $currentLine | cut -d ';' -f 7)
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
@@ -204,7 +204,7 @@ rejectRegister ()
 	local Nro_Norma=$(echo $currentLine | cut -d ';' -f 2)
 	Causante=$(echo $currentLine | cut -d ';' -f 3)
 	Extracto=$(echo $currentLine | cut -d ';' -f 4)
-	local Cod_Tema=$(echo $currentLine | cut -d ';' -f 5)
+	Cod_Tema=$(echo $currentLine | cut -d ';' -f 5)
 	local ExpedienteId=$(echo $currentLine | cut -d ';' -f 6)
 	local ExpedienteAnio=$(echo $currentLine | cut -d ';' -f 7)
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
@@ -220,6 +220,7 @@ processRegisterFromCurrentFile ()
 		dateFromRegister=$(echo $line | cut -d ';' -f 1)
 		if [ $(validateDate) -eq 1 ]; then
 			if [ $(validateDateOnGest) -eq 1 ]; then
+				Cod_Tema=""
 				Causante=""
 				Extracto=""
 				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
@@ -255,9 +256,8 @@ processRegisterFromCurrentFile ()
 #
 codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 2)
 
-#cat MAEDIR/gestiones.mae | while read line; do
-	#codeGestion=$(echo $line | cut -d ';' -f 1)
-	codeGestion="Alfonsin"
+cat MAEDIR/gestiones.mae | while read line; do
+	codeGestion=$(echo $line | cut -d ';' -f 1)
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 	createAllDirectories
 	
@@ -291,5 +291,5 @@ codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MA
 	else
 		continue
 	fi
-#done;
+done;
 
