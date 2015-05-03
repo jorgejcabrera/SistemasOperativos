@@ -76,7 +76,13 @@ validateDateOnGest ()
 			return
 		fi
 	elif [ $typeGest -eq 1 ]; then
-		if [ $yearBegin -gt $yearFromRegister -o \( $yearBegin -eq $yearFromRegister -a $monthBegin -gt $monthFromRegister \) -o \( $monthBegin -eq $monthFromRegister -a $dayBegin -gt $dayFromRegister \) ]; then
+		if [ $yearFromRegister -lt $yearBegin ]; then
+			echo 0
+			return
+		elif [ $yearBegin -eq $yearFromRegister -a $monthFromRegister -lt $monthBegin ]; then
+			echo 0
+			return
+		elif [ $monthBegin -eq $monthFromRegister -a $yearBegin -eq $yearFromRegister -a $dayBegin -gt $dayFromRegister ]; then
 			echo 0
 			return
 		else
