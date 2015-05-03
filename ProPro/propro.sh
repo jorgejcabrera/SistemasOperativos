@@ -228,7 +228,6 @@ processRegisterFromCurrentFile ()
 					if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
 						rejectRegister "$line" "codigo de firma invalido"
 					else 
-
 						processCurrentRegister "$line"
 					fi
 				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
@@ -258,6 +257,7 @@ codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MA
 
 cat MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
+#	codeGestion="Fernandez2"
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 	createAllDirectories
 	
@@ -280,16 +280,12 @@ cat MAEDIR/gestiones.mae | while read line; do
 		 		else
 		 			echo "rechazar archivo"
 		 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
-		 			continue
 		 		fi	
 		 	else
 				echo "rechazar archivo"
 		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"					#rechazamos el archivo moviendolo a ./RECHDIR
-		 		continue
 		 	fi
 		done;
-	else
-		continue
 	fi
 done;
 
