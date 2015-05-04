@@ -236,7 +236,7 @@ processRegisterFromCurrentFile ()
 			rejectRegister "$line" "fecha invalida"
 		fi
 	done;
-	#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+	sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
