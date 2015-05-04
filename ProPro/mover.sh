@@ -45,13 +45,13 @@ if [ "$1" = "$2" ]; then
 fi
 
 #Chequeo si hay duplicados
-NOMBREARCHIVO=$( find $1 | sed 's/.*\///')
-cd "$2"
-if [ -f "$NOMBREARCHIVO" ]; then
-	echo "hay duplicado"
+#NOMBREARCHIVO=$( find $1 | sed 's/.*\///')
+#cd "$2"
+#if [ -f "$NOMBREARCHIVO" ]; then
+#	echo "hay duplicado"
 	
-	exit 5
-fi
+#	exit 5
+#fi
 
 mv "$1" "$2"
 sh glog.sh MOVER "Archivo $origen movido correctamente" INFO
