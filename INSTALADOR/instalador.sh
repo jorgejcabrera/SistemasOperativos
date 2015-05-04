@@ -2,29 +2,117 @@
 GRUPO=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05
 CONFDIR=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05/conf
 #CONFDIR=../grupo05/conf
-instalacionConfirmada="No"
-BINDIR=$GRUPO/bin
-MAEDIR=$GRUPO/mae
-NOVEDIR=$GRUPO/novedades
-declare -i DATASIZE=100
-ACEPDIR=$GRUPO/a_protocolizar
-RECHDIR=$GRUPO/rechazados
-PROCDIR=$GRUPO/protocolizados
-INFODIR=$GRUPO/informes
-DUPDIR=/dup
-LOGDIR=$GRUPO/log
-LOGSIZE=400
 
 #1 LOGUEAMOS EL COMIENZO DE EJECUCION
 sh glog.sh INSTALADOR "Inicio de ejecucion de InsPro" INFO
+echo "Inicio de ejecucion de InsPro"
 sh glog.sh INSTALADOR "Directorio Predefinido de Configuracion: $CONFDIR" INFO
+echo "Directorio Predefinido de Configuracion: $CONFDIR"
 sh glog.sh INSTALADOR "Log de la instalacion: $CONFDIR" INFO
+echo "Log de la instalacion: $CONFDIR"
+
+
+
+#MEMORIA DEL SCRIPT
+if [ -f memoryFile ]; then
+	if [ $(grep -r "BINDIR" memoryFile) ]; then
+		BINDIR=$(grep -r "BINDIR" memoryFile)
+		BINDIR=${BINDIR:7}
+	else
+		BINDIR=$GRUPO/bin  #defaultvalue
+	fi
+
+	if [ $(grep -r "MAEDIR" memoryFile) ]; then
+		MAEDIR=$(grep -r "MAEDIR" memoryFile)
+		MAEDIR=${MAEDIR:7}
+	else
+		MAEDIR=$GRUPO/mae  #defaultvalue
+	fi
+
+	if [ $(grep -r "NOVEDIR" memoryFile) ]; then
+		NOVEDIR=$(grep -r "NOVEDIR" memoryFile)
+		NOVEDIR=${NOVEDIR:8}
+	else
+		NOVEDIR=$GRUPO/novedades  #defaultvalue
+	fi
+
+	if [ $(grep -r "DATASIZE" memoryFile) ]; then
+		DATASIZE=$(grep -r "DATASIZE" memoryFile)
+		DATASIZE=${DATASIZE:9}
+	else
+		declare -i DATASIZE=100  #defaultvalue
+	fi
+
+	if [ $(grep -r "ACEPDIR" memoryFile) ]; then
+		ACEPDIR=$(grep -r "ACEPDIR" memoryFile)
+		ACEPDIR=${ACEPDIR:8}
+	else
+		ACEPDIR=$GRUPO/a_protocolizar #defaultvalue
+	fi
+
+	if [ $(grep -r "RECHDIR" memoryFile) ]; then
+		RECHDIR=$(grep -r "RECHDIR" memoryFile)
+		RECHDIR=${RECHDIR:8}
+	else
+		RECHDIR=$GRUPO/rechazados  #defaultvalue
+	fi
+
+	if [ $(grep -r "PROCDIR" memoryFile) ]; then
+		PROCDIR=$(grep -r "PROCDIR" memoryFile)
+		PROCDIR=${PROCDIR:8}
+	else
+		PROCDIR=$GRUPO/protocolizados #defaultvalue
+	fi
+
+	if [ $(grep -r "INFODIR" memoryFile) ]; then
+		INFODIR=$(grep -r "INFODIR" memoryFile)
+		INFODIR=${INFODIR:8}
+	else
+		INFODIR=$GRUPO/informes  #defaultvalue
+	fi
+
+	if [ $(grep -r "DUPDIR" memoryFile) ]; then
+		DUPDIR=$(grep -r "DUPDIR" memoryFile)
+		DUPDIR=${DUPDIR:7}
+	else
+		DUPDIR=/dup  #defaultvalue
+	fi
+
+	if [ $(grep -r "LOGDIR" memoryFile) ]; then
+		LOGDIR=$(grep -r "LOGDIR" memoryFile)
+		LOGDIR=${LOGDIR:7}
+	else
+		LOGDIR=$GRUPO/log  #defaultvalue
+	fi
+
+	if [ $(grep -r "LOGSIZE" memoryFile) ]; then
+		LOGSIZE=$(grep -r "LOGSIZE" memoryFile)
+		LOGSIZE=${LOGSIZE:8}
+	else
+		LOGSIZE=400  #defaultvalue
+	fi
+else 
+	BINDIR=$GRUPO/bin
+	MAEDIR=$GRUPO/mae
+	NOVEDIR=$GRUPO/novedades
+	declare -i DATASIZE=100
+	ACEPDIR=$GRUPO/a_protocolizar
+	RECHDIR=$GRUPO/rechazados
+	PROCDIR=$GRUPO/protocolizados
+	INFODIR=$GRUPO/informes
+	DUPDIR=/dup
+	LOGDIR=$GRUPO/log
+	LOGSIZE=400
+	variables="BINDIR=$GRUPO/bin\nMAEDIR=$GRUPO/mae\nNOVEDIR=$GRUPO/novedades\nDATASIZE=100\nACEPDIR=$GRUPO/a_protocolizar\nRECHDIR=$GRUPO/rechazados\nPROCDIR=$GRUPO/protocolizados\nINFODIR=$GRUPO/informes\nDUPDIR=/dup\nLOGDIR=$GRUPO/log\nLOGSIZE=400\n" 		echo $variables > memoryFile;
+fi
+
+instalacionConfirmada="No"
 
 #2 DETECTAR SI EL PAQUETE SISPROG O ALGUNO DE SUS COMPONENTES YA ESTA INSTALADO
 CONFIGFILE="$CONFDIR/InsPro.conf"
 if [ -f $CONFIGFILE ]; then
 	sh glog.sh INSTALADOR "existe el archivo InsPro.conf, asumimos que el paquete ya fue instalado" WAR
-	sh verifInstalacion.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $DUPDIR $LOGDIR
+	sh verifInstalacion.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $DUPDIR $LOGDIR $DATASIZE $LOGSIZE
 else
 	sh glog.sh INSTALADOR "no existe el archivo InsPro.conf, asumimos que el paquete no fue instalado" INFO
 	
@@ -51,6 +139,7 @@ else
 		if ! [ -z $directorioInstalacion ] ; then
 			BINDIR=$GRUPO/$directorioInstalacion
 		fi
+		sed -i 's/$BINDIR/$binDefault/g' memoryFile
 		sh glog.sh INSTALADOR "Defina el directorio de instalacion de los ejecutables ($binDefault) $BINDIR" INFO
 
 		#7 DEFINIMOS EL DIRECTORIO DE INSTALACION DE LOS ARCHIVOS MAESTROS Y TABLAS
@@ -74,18 +163,22 @@ else
 		#9 DEFINIMOS EL ESPACIO MINIMO LIBRE PARA EL ARRIBO DE ARCHIVOS DE NOVEDADES
 		echo "Defina espacio minimo libre para el arribo de estas novedades en Mbytes ($DATASIZE): ";
 		read dataIngresada
-		dataDefault=$DATASIZE
+		dataDefault=$DATASIZE		
 		if ! [ -z $dataIngresada ] ; then
 			DATASIZE=$dataIngresada
 		fi
 		sh glog.sh INSTALADOR "Defina espacio minimo libre para el arribo de estas novedades en Mbytes ($dataDefault): $DATASIZE" INFO
-
 		#10 VERIFICAR ESPACIO EN DISCO
 		DISCSIZE=$(df -B1024 "$GRUPO" | tail -n1 | sed -e"s/\s\{1,\}/;/g" | cut -f4 -d';');
-		#DISCSIZE=$(echo "scale=0 ; $DATASIZE/1024" | bc -l); #lo paso
-		let $DISCSIZE/1024;
-		echo $DISCSIZE
-		#FALTA ESTE PASO!!!!!! (BUSCAR BIEN COMO PASAR A MB Y VALIDAR)
+		milion=1000
+		DISCSIZE=$(expr $DISCSIZE / $milion)
+		while [ $DATASIZE -gt $DISCSIZE ]; do
+			echo "El espacio minimo definido para el arribo de novedades es mayor al espacio que hay en disco, por favor defina un espacio mas chico"
+			read dataIngresada
+			if ! [ -z $dataIngresada ] ; then
+				DATASIZE=$dataIngresada
+			fi
+		done
 
 		#11 DEFINIR EL DIRECTORIO DE INPUT DEL PROCESO ProPro
 		echo "Defina el directorio de grabacion de las Novedades aceptadas ($ACEPDIR): ";
@@ -129,10 +222,10 @@ else
 		read nombreDuplicados
 		dupDefault=$DUPDIR
 		#FALTA VALIDAR QUE SEA UN NOMBRE SOLO SIMPLE
-		if ! [ -z $nombreDuplicados ] ; then
+		if ! [ -z $nombreDuplicados ] || [[ $nombreDuplicados =~ ^[a-zA-Z] ]] ; then
 			DUPDIR=$nombreDuplicados
 		fi
-		sh glog.sh INSTALADOR "Defina el nombre para el repositorio de archivos duplicados($dupDefault): $INFODIR" INFO
+		sh glog.sh INSTALADOR "Defina el nombre para el repositorio de archivos duplicados($dupDefault): $DUPDIR" INFO
 	
 		#16 DEFINIR EL NOMBRE DEL DIRECTORIO PARA DEPOSITAR LOS LOGS DE EJECUCION DE LOS COMANDOS
 		echo "Defina el directorio de logs ($LOGDIR): ";
@@ -173,7 +266,7 @@ else
 		sh glog.sh INSTALADOR $msgMostrar INFO	
 
 		if [ $instalacionConfirmada = "Si" ] ; then
-			sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR
+			sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
 		else
 			echo "Usted ha rechazado la instalacion, volveremos a definir todas las estructuras de directorio"
 			sh glog.sh INSTALADOR "Usted ha rechazado la instalacion, volveremos a definir todas las estructuras de directorio" ERR
