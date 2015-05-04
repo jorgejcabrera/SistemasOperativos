@@ -1,5 +1,4 @@
 #!/bin/bash
-countFiles="$(find ./ACEPDIR/$codeGestion -type f -printf x | wc -c)"
 archivoMaestro="MAEDIR/gestiones.mae"
 archivoDeContadores="MAEDIR/tab/axg.tab"
 archivoDeEmisores="MAEDIR/emisores.mae"
@@ -10,20 +9,13 @@ MAE_TRANSMITTER=$archivoDeEmisores
 MAE_NORM_BY_TRANSMITTER=$archivoDeNormasPorEmisor
 FILE_HISTORY=$historialDeArchivos
 
-sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
-
 #PRE: recibe como parametro una fecha con el formato dia-mes-anio
 #POST: devuelve 0 si la fecha tiene un formato invalido y 1 si el formato es valido
 validateDate () 
 {
-	#TODO usar regular expresion para validar la fecha
-	if [ -z $dateFromRegister ]; then
-		echo 0
-		return
-	fi 
-	local day=$(echo $dateFromRegister | cut -d '/' -f 1)											#parseo para obtener el dia de la fecha
-	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 										#parseo para obtener el mes de la fecha
-	local year=$(echo $dateFromRegister | cut -d '/' -f 3) 											#parseo para obtener el anio de la fecha
+	local day=$(echo $dateFromRegister | cut -d '/' -f 1)										#parseo para obtener el dia de la fecha
+	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 									#parseo para obtener el mes de la fecha
+	local year=$(echo $dateFromRegister | cut -d '/' -f 3) 										#parseo para obtener el anio de la fecha
 	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
 		echo 0																					#la fecha no es valida
 		return
@@ -39,8 +31,8 @@ validateDateOnGest ()
 {
 	#la fecha de inicio de gestion, que es la que esta en gestiones.mae tiene formato dia/mes/anio, pero la fecha que esta
 	#en el nombre del archivo a protocolizar tiene formato dia-mes-anio con lo cual se parsean distinto
-	local dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)										#obtengo la fecha de comienzo de la gesiton que se esta por protocolizar
- 	local dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)											#obtengo la fecha de finalizacion de la gestion que se esta por protocolizar
+	local dateBeginning=$(echo $RESULT_GEST | cut -d ';' -f 2)									#obtengo la fecha de comienzo de la gesiton que se esta por protocolizar
+ 	local dateEnded=$(echo $RESULT_GEST | cut -d ';' -f 3)										#obtengo la fecha de finalizacion de la gestion que se esta por protocolizar
 	local dayBegin=$(echo $dateBeginning | cut -d '/' -f 1)			
 	local monthBegin=$(echo $dateBeginning | cut -d '/' -f 2)
 	local yearBegin=$(echo $dateBeginning | cut -d '/' -f 3)
@@ -150,18 +142,17 @@ increaseCouter ()
 createCounter ()
 {
 	local lastLineInFile=`tail -1 $MAE_COUNT_FILE`														#obtengo el ultimo registro de la tabla axg.tab
-	local lasIdContador=$(echo $lastLineInFile | cut -d ';' -f 1)
-	local newIdContador=`expr $lasIdContador + 1`
+	local lastIdContador=$(echo $lastLineInFile | cut -d ';' -f 1)
+	local newIdContador=`expr $lastIdContador + 1`
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
 	numberNorm="1"
-	local registerToWrite="$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate"
-	
+
 	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 
-	echo $registerToWrite >> $MAE_COUNT_FILE
+	echo "$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate" >> $MAE_COUNT_FILE
 }
 
 #PRE: se supone que los archivos maestros estan cargados con lo cual no es necesario verificar la existencia de esos archivos
@@ -249,10 +240,12 @@ processRegisterFromCurrentFile ()
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
-#
-#	
-#
-codeCurrentGest=$(grep "$codeCurrentGest;$currentYear;$codeEmisor;$codeNorm" $MAE_COUNT_FILE | cut -d ';' -f 2)
+
+codeCurrentGest=$(tail -n -1 MAEDIR/gestiones.mae | cut -d ';' -f 1)
+countFiles=$(find ./ACEPDIR/ -type f | wc -l)
+sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+countRejectFile=0
+countProcessFile=0
 
 cat MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
@@ -274,16 +267,23 @@ cat MAEDIR/gestiones.mae | while read line; do
 		 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
 					codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
+					countProcessFile=$((countProcessFile+1))
 					processRegisterFromCurrentFile
 		 		else
-		 			echo "rechazar archivo"
+		 			countRejectFile=$((countRejectFile+1))
 		 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
 		 		fi	
 		 	else
-				echo "rechazar archivo"
+		 		countRejectFile=$((countRejectFile+1))
 		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"					#rechazamos el archivo moviendolo a ./RECHDIR
 		 	fi
 		done;
 	fi
+	if [ "$codeGestion" = "$codeCurrentGest" ]; then														#como se procesa por orden coronologico si la gestion procesada es igual a la corriente, loggeamos todo
+		echo $countProcessFile
+		sh glog.sh PROPRO "Se procesaron $countProcessFile archivos" INFO
+		sh glog.sh PROPRO "Se rechazaron $countRejectFile archivos" INFO
+	fi
 done;
+sh glog.sh PROPRO "Fin de propro" INFO
 
