@@ -1,5 +1,5 @@
 #!/bin/bash
-CONFDIR=$PWD/conf
+CONFDIR=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05/conf
 #************Glog
 #************Parametro1 (obligatorio):comando (nombre del comando o funcion que genera el mensaje)
 #************Parametro2 (obligatorio): mensaje

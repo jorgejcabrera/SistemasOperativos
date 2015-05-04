@@ -1,6 +1,7 @@
 #!/bin/bash
-GRUPO=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05
-CONFDIR=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05/conf
+GRUPO=$PWD
+CONFDIR=$PWD/conf
+DATADIR=$PWD/datos
 BINDIR=$1
 MAEDIR=$2
 NOVEDIR=$3
@@ -79,17 +80,17 @@ echo $msgGrabar > $CONFDIR/InsPro.conf;
 if [ $completa = 1 ]; then
 	echo -e $msgMostrar;
 	echo "Actualizando la configuracion del sistema"
-	sh glog.sh INSTALADOR "Actualizando la configuracion del sistema" INFO
+	sh glog.sh InsPro "Actualizando la configuracion del sistema" INFO
 	echo "Estado de la instalación: COMPLETA"
-	sh glog.sh INSTALADOR "Estado de la instalación: COMPLETA" WAR
+	sh glog.sh InsPro "Estado de la instalación: COMPLETA" WAR
 	echo "Proceso de instalacion Cancelado."
-	sh glog.sh INSTALADOR "Proceso de instalacion Cancelado." WAR
+	sh glog.sh InsPro "Proceso de instalacion Cancelado." WAR
 	exit
 elif [ $completa = 0 ]; then
 	echo -e $msgMostrar;
 	echo "Estado de la instalación: INCOMPLETA"
-	sh glog.sh INSTALADOR "Estado de la instalación: INCOMPLETA" WAR
+	sh glog.sh InsPro "Estado de la instalación: INCOMPLETA" WAR
 	echo "Componentes Faltantes: $faltantes"
-	sh glog.sh INSTALADOR "Componentes Faltantes: $faltantes" WAR
+	sh glog.sh InsPro "Componentes Faltantes: $faltantes" WAR
 	sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
 fi

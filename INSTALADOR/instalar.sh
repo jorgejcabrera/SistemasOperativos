@@ -1,7 +1,7 @@
 #!/bin/bash
-GRUPO=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05
-CONFDIR=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05/conf
-DATADIR=/home/mariagustina/SISOP/SISTEMASOPERATIVOS/TP/grupo05/datos
+GRUPO=$PWD
+CONFDIR=$PWD/conf
+DATADIR=$PWD/datos
 BINDIR=$1
 MAEDIR=$2
 NOVEDIR=$3
@@ -28,11 +28,11 @@ while [ $valida = 0 ]; do
 		valida=1
 	fi
 done
-sh glog.sh INSTALADOR "Iniciando Instalacion. Esta Ud. seguro? (Si-No) $confirmarInstalacion" INFO
+sh glog.sh InsPro "Iniciando Instalacion. Esta Ud. seguro? (Si-No) $confirmarInstalacion" INFO
 
 if [ $instalacionConfirmada = "Si" ] ; then
 	echo "Creando Estructuras de directorio. . . ."
-	sh glog.sh INSTALADOR "Creando Estructuras de directorio. . . ." INFO			
+	sh glog.sh InsPro "Creando Estructuras de directorio. . . ." INFO			
 	
 	if ! [ -d $BINDIR ]; then
 		mkdir $BINDIR
@@ -81,7 +81,7 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	
 	#20.02 MOVER LOS ARCHIVOS MAESTROS AA MAEDIR Y LAS TABLAS AL DIRECTORIO MAEDIR/tab
 	echo "Instalando Archivos Maestros y tablas"
-	sh glog.sh INSTALADOR "Instalando Archivos Maestros y tablas" INFO
+	sh glog.sh InsPro "Instalando Archivos Maestros y tablas" INFO
 #SUPONGO QUE LOS QUE NO SON TABLAS NI MAESTROS SON ARCHIVOS DE NOVEDADES	
 
 	for archivoOrigen in $DATADIR/*.mae;
@@ -101,16 +101,17 @@ if [ $instalacionConfirmada = "Si" ] ; then
 
 	#FALTA 20.03 MOVER LOS EJECUTABLES Y FUNCIONES AL DIRECTORIO BINDIR (verificarlo cuando este todo)
 	echo "Instalando Archivos Programas y funciones"
-	sh glog.sh INSTALADOR "Instalando Archivos Programas y funciones" INFO	
-	sh mover.sh IniPro $BINDIR
-	sh mover.sh RecPro $BINDIR
-	sh mover.sh ProPro $BINDIR
-	sh mover.sh InfPro $BINDIR
-	#sh mover.sh mover.sh $BINDIR VER ESTO
-	sh mover.sh Glog $BINDIR
-	sh mover.sh Stop $BINDIR
-	sh mover.sh Start $BINDIR
-	sh mover.sh SisProG $BINDIR
+	sh glog.sh InsPro "Instalando Archivos Programas y funciones" INFO	
+	sh mover.sh IniPro.sh $BINDIR
+	sh mover.sh RecPro.sh $BINDIR
+	sh mover.sh ProPro.sh $BINDIR
+	sh mover.sh InfPro.sh $BINDIR
+	sh mover.sh glog.sh $BINDIR
+	sh mover.sh Stop.sh $BINDIR
+	sh mover.sh Start.sh $BINDIR
+	sh mover.sh SisProG.sh $BINDIR
+	cp mover.sh $BINDIR
+	rm mover.sh
 	
 	#20.04 ACTUALIZAR EL ARCHIVO DE CONFIGURACION InsPro.conf
 	#FORMATO DE ARCHIVO: VARIABLE=VALOR=USUARIO=FECHA
@@ -120,15 +121,21 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	echo $msgMostrar > $CONFDIR/InsPro.conf;
 
 	echo "Actualizando la configuracion del sistema"
-	sh glog.sh INSTALADOR "Actualizando la configuracion del sistema" INFO
+	sh glog.sh InsPro "Actualizando la configuracion del sistema" INFO
 
 	#20.05 NO HAY ARCHIVOS TEMPORALES
+	if [ -f memoryFile ]; then
+		rm memoryFile
+	fi	
+	if [ -f memoryFilee ]; then	
+		rm memoryFilee
+	fi
 	#20.06 MOSTRAR MSJ DE FIN DE INSTALACION
 	echo "Instalacion CONCLUIDA"
-	sh glog.sh INSTALADOR "Instalacion CONCLUIDA" INFO
+	sh glog.sh InsPro "Instalacion CONCLUIDA" INFO
 	exit
 else
 	echo "INSTALACION CANCELADA"
-	sh glog.sh INSTALADOR "INSTALACION CANCELADA" WAR
+	sh glog.sh InsPro "INSTALACION CANCELADA" WAR
 	exit
 fi
