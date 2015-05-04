@@ -4,10 +4,10 @@ EXIT=0
 SLEEP=10 #600
 MSG_FILE_ACCEPTED=" es válido y ha sido aceptado"
 MSG_FILE_REJECTED=" no es válido y ha sido rechazado."
-MAEDIR="/home/facundo/Escritorio/RecProPruebas/Maestros" #PARA PRUEBAS UNICAMENTE
-NOVEDIR="/home/facundo/Escritorio/RecProPruebas/Novedades" #PARA PRUEBAS UNICAMENTE
-ACEPDIR="/home/facundo/Escritorio/RecProPruebas/Aceptados" #PARA PRUEBAS UNICAMENTE
-RECHDIR="/home/facundo/Escritorio/RecProPruebas/Rechazados" #PARA PRUEBAS UNICAMENTE
+MAEDIR="/home/facundo/Escritorio/Pruebas/MAEDIR" #PARA PRUEBAS UNICAMENTE
+NOVEDIR="/home/facundo/Escritorio/Pruebas/NOVEDIR" #PARA PRUEBAS UNICAMENTE
+ACEPDIR="/home/facundo/Escritorio/Pruebas/ACEPDIR" #PARA PRUEBAS UNICAMENTE
+RECHDIR="/home/facundo/Escritorio/Pruebas/RECHDIR" #PARA PRUEBAS UNICAMENTE
 ARCH_MAE_GEST="/gestiones.mae"
 ARCH_MAE_NORM="/normas.mae"
 ARCH_MAE_EMI="/emisores.mae"
@@ -224,13 +224,13 @@ checkCarpetaExistente(){
 invocarProPro(){
 	#Si hay archivos en ACEPDIR, intenta invocar a ProPro
 	if [ `ls "$ACEPDIR" | wc -l` -gt 0 ]; then
-		PROGRAMA="ProPro.sh"
+		PROGRAMA="propro.sh"
 		if ps ax | grep -v grep | grep -q $PROGRAMA
 		then
-			#sh ProPro.sh #Ver que parametros pasarle
 			sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
 		else
-			PID=$(pgrep -f $PROGRAMA)
+			sh propro.sh &
+			PID=$!
 			sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
 		fi
 	else

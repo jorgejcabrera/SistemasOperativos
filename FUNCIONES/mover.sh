@@ -8,13 +8,13 @@
 #   Archivo de Log del comando que la invoca (si corresponde)
 # Opciones y Parámetros
 #   Parámetro 1 (obligatorio): archivo origen
-#   Parámetro 2 (obligatorio): Directorio destino
+#   Parámetro 2 (obligatorio): archivo destino
 #   Parámetro 3 (opcional): comando que la invoca
 #
 
 #No pueden ser menos de 2 ni mas de 3 parametros
 if [ $# -gt 3 -o $# -lt 2 ]; then
-	sh glog.sh MOVER "Cantidad de parametros inválida" ERR
+	echo "Cantidad de parametros inválida"
 	exit 1
 fi
 
@@ -25,13 +25,17 @@ arorigen="${1##*/}"
 
 #Chequear que los primeros dos argumentos sean directorios validos
 if [ ! -f "$1" ];then #Chequeo si $1 es un archivo
-	sh glog.sh MOVER "El origen no existe" ERR
+	if [ $# -eq 3 ]; then
+		sh glog.sh MOVER "El origen no existe" ERR
+	fi
 	exit 2
 fi
 
 if [ ! -d "$rutadestino" ]; then #Chequeo si el directorio del destino existe
         echo "destino no existe"
+	if [ $# -eq 3 ]; then
 		sh glog.sh MOVER "El directorio destino no existe" ERR
+	fi
 	exit 3
 else
         rutadestino=$(echo "./$rutadestino")
@@ -44,16 +48,8 @@ if [ "$1" = "$2" ]; then
 		exit 4
 fi
 
-#Chequeo si hay duplicados
-#NOMBREARCHIVO=$( find $1 | sed 's/.*\///')
-#cd "$2"
-#if [ -f "$NOMBREARCHIVO" ]; then
-#	echo "hay duplicado"
-	
-#	exit 5
-#fi
-
 mv "$1" "$2"
-sh glog.sh MOVER "Archivo $origen movido correctamente" INFO
-
+if [ $# -eq 3 ]; then
+		sh glog.sh MOVER "Archivo $origen movido correctamente" INFO
+fi
 exit 0
