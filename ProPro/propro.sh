@@ -169,9 +169,6 @@ createAllDirectories ()
 	if [ ! -d "PROCDIR/proc" ]; then
 		mkdir PROCDIR/proc
 	fi
-	if [ ! -d "PROCDIR/$codeGestion" ]; then
-		mkdir PROCDIR/$codeGestion
-	fi
 	if [ ! -d "LOGDIR" ]; then
 		mkdir LOGDIR
 	fi
@@ -250,7 +247,10 @@ countProcessFile=0
 cat MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
-	createAllDirectories
+	
+	if [ ! -d PROCDIR/$codeGestion ]; then
+		mkdir PROCDIR/$codeGestion
+	fi
 	
 	if [ -d ACEPDIR/$codeGestion ]; then
 		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
