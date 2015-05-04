@@ -243,16 +243,17 @@ countFiles=$(find ./ACEPDIR/ -type f | wc -l)
 sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
 countRejectFile=0
 countProcessFile=0
+createAllDirectories
 
 cat MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
-	
-	if [ ! -d PROCDIR/$codeGestion ]; then
-		mkdir PROCDIR/$codeGestion
-	fi
-	
+
 	if [ -d ACEPDIR/$codeGestion ]; then
+			
+		if [ ! -d PROCDIR/$codeGestion ]; then
+			mkdir PROCDIR/$codeGestion
+		fi
 		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
 		 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
  			echo "protocolizando $completeFileName"
