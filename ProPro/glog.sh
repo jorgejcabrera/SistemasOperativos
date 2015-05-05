@@ -5,8 +5,8 @@
 #************Parametro2 (obligatorio): mensaje
 #************Parametro3 (opcional):tipo de mensaje [INFO,WAR,ERR]
 
-LOGSIZE=100
-LOGBORRARHH=51 #Borra hasta la linea n-1
+LOGSIZE=100000
+LOGBORRARHH=4951 #Borra hasta la linea n-1
 
 #Evito que sea un log infinito, cuando llega a LOGSIZE trunca las primeras LOGBORRARHH-1 lineas
 #cd ..   # vuelvo un directorio atras TODO modificar esto
@@ -55,8 +55,10 @@ mensaje=$2
 if [ $1 = "InsPro" ]; then
 	echo $fecha $USER $comando $tipoMensaje $mensaje  >> CONFDIR/InsPro.log
 else	
-	if [ $1 = "MOVER" ]; then
-		GPPID=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr [:lower:] [:upper:]`
+	if [ $1 = "MOVER" ]; then #TODO or START
+#		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr [:lower:] [:upper:]`
+		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
+		GPPID=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr [:lower:] [:upper:]` #Obtengo el ID del abuelo, si no hay queda el del padre
 		echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$GPPID.log	
 	else	echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
 	fi

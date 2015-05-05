@@ -54,6 +54,6 @@ fi
 #fi
 
 mv "$1" "$2"
-sh glog.sh MOVER "Archivo $origen movido correctamente" INFO
+sh glog.sh MOVER "Archivo $1 movido correctamente" INFO
 
 exit 0
