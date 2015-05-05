@@ -204,35 +204,68 @@ rejectRegister ()
 #POST: procesa todos los registros del archivo que se esta protocolizando
 processRegisterFromCurrentFile ()
 {
-	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-		dateFromRegister=$(echo $line | cut -d ';' -f 1)
-		if [ $(validateDate) -eq 1 ]; then
-			if [ $(validateDateOnGest) -eq 1 ]; then
-				Cod_Tema=""
-				Causante=""
-				Extracto=""
-				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
-					if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
-						rejectRegister "$line" "codigo de firma invalido"
-					else 
-						processCurrentRegister "$line"
+	local numberLines=$(cat ACEPDIR/Kirchner/Kirchner_DEC_2121_9042_27-6-2007 | wc -l)
+	numberLines=$((numberLines+1))
+	if [ $numberLines -gt 1 ]; then
+		cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
+			dateFromRegister=$(echo $line | cut -d ';' -f 1)
+			if [ $(validateDate) -eq 1 ]; then
+				if [ $(validateDateOnGest) -eq 1 ]; then
+					Cod_Tema=""
+					Causante=""
+					Extracto=""
+					if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
+						codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
+						if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
+							rejectRegister "$line" "codigo de firma invalido"
+						else 
+							processCurrentRegister "$line"
+						fi
+					elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
+						numberNorm=$(echo $line | cut -d ';' -f 2)
+						if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
+							rejectRegister "$line" "El numero de norma invalido"
+						else 
+							protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
+						fi
 					fi
-				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
-					numberNorm=$(echo $line | cut -d ';' -f 2)
-					if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-						rejectRegister "$line" "El numero de norma invalido"
-					else 
-						protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
-					fi
+				else
+					rejectRegister "$line" "fecha fuera del rango de la gestion"
 				fi
 			else
-				rejectRegister "$line" "fecha fuera del rango de la gestion"
+				rejectRegister "$line" "fecha invalida"
 			fi
-		else
-			rejectRegister "$line" "fecha invalida"
-		fi
-	done;
+		done;
+	else
+		textLine=$(cat ACEPDIR/Kirchner/Kirchner_DEC_2121_9042_27-6-2007)
+		dateFromRegister=$(echo $textLine | cut -d ';' -f 1)
+			if [ $(validateDate) -eq 1 ]; then
+				if [ $(validateDateOnGest) -eq 1 ]; then
+					Cod_Tema=""
+					Causante=""
+					Extracto=""
+					if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
+						codSignatureIntoFile=$(echo $textLine | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
+						if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
+							rejectRegister "$textLine" "codigo de firma invalido"
+						else 
+							processCurrentRegister "$textLine"
+						fi
+					elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
+						numberNorm=$(echo $textLine | cut -d ';' -f 2)
+						if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
+							rejectRegister "$textLine" "El numero de norma invalido"
+						else 
+							protocolize	"$textLine"												#el numero de norma es mayor a 0 y se considera valido
+						fi
+					fi
+				else
+					rejectRegister "$textLine" "fecha fuera del rango de la gestion"
+				fi
+			else
+				rejectRegister "$textLine" "fecha invalida"
+			fi
+	fi
 	sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
@@ -245,27 +278,30 @@ countRejectFile=0
 countProcessFile=0
 createAllDirectories
 
-cat MAEDIR/gestiones.mae | while read line; do
-	codeGestion=$(echo $line | cut -d ';' -f 1)
+#cat MAEDIR/gestiones.mae | while read line; do
+#	codeGestion=$(echo $line | cut -d ';' -f 1)
+	codeGestion="Kirchner"
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
 	if [ -d ACEPDIR/$codeGestion ]; then
-			
+		echo "1"
 		if [ ! -d PROCDIR/$codeGestion ]; then
 			mkdir PROCDIR/$codeGestion
 		fi
 		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
+		 	echo "2"
 		 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
  			echo "protocolizando $completeFileName"
 		 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
 		 	
 		 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+		 		echo "3"
 		 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
 		 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
 		 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
 		 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
-
 		 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
+					echo "4"
 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
 					codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
 					countProcessFile=$((countProcessFile+1))
@@ -285,6 +321,6 @@ cat MAEDIR/gestiones.mae | while read line; do
 		sh glog.sh PROPRO "Se procesaron $countProcessFile archivos" INFO
 		sh glog.sh PROPRO "Se rechazaron $countRejectFile archivos" INFO
 	fi
-done;
+#done;
 sh glog.sh PROPRO "Fin de propro" INFO
 
