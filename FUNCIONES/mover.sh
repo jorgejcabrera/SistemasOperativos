@@ -48,21 +48,18 @@ if [ "$1" = "$2" ]; then
 		exit 4
 fi
 
-#TODO chequear duplicados
 #Chequeo si hay duplicados
 cd $GRUPO
 NOMBREARCHIVO=$( find $1 | sed 's/.*\///') #Busca el archivo en el path origen y luego despeja el nombre del mismo
 cd "$2"
 if [ -f "$NOMBREARCHIVO" ]; then # Si encuentro el archivo en destino
-	echo "hay duplicado"
-	MoverArchivoADUPDIR
-	mv "$1" "$DUPDIR"
-	NUMEROSECUENCIA=$( cat $CONFDIR/InsProPRUEBA.conf | grep 'NUMEROSECUENCIA' | sed 's/NUMEROSECUENCIA=//' )
+	mv "$GRUPO/$1" "$DUPDIR" # Muevo el archivo a DUPDIR
+	NUMEROSECUENCIA=$( cat $CONFDIR/InsPro.conf | grep 'NUMEROSECUENCIA' | sed 's/NUMEROSECUENCIA=//' ) # Busco el N de secuencia en el archivo de conf
+	echo $NUMEROSECUENCIA
 	NUEVONOMBRE=$NOMBREARCHIVO"."$NUMEROSECUENCIA
-	mv "$NOMBREARCHIVO" "$NUEVONOMBRE"
-	NUMEROSECUENCIA=$(expr $NUMEROSECUENCIA + 1)
-	sed -i 's
-
+	echo $NUEVONOMBRE
+	mv $DUPDIR"/"$NOMBREARCHIVO $NUEVONOMBRE
+	$(cat $CONFDIR/InsPro.conf | sed 's/NUMEROSECUENCIA='$NUMEROSECUENCIA'/NUMEROSECUENCIA='$(expr $NUMEROSECUENCIA + 001)'/' > $CONFDIR/InsPro.conf)
 	exit 5
 fi
 
