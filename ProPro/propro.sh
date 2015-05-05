@@ -240,67 +240,13 @@ processRegisterFromCurrentFile ()
 	numberLines=$((numberLines+1))
 	if [ $numberLines -gt 1 ]; then
 		cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-			#dateFromRegister=$(echo $line | cut -d ';' -f 1)
-			#if [ $(validateDate) -eq 1 ]; then
-			#	if [ $(validateDateOnGest) -eq 1 ]; then
-			#		Cod_Tema=""
-			#		Causante=""
-			#		Extracto=""
-			#		if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-			#			codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
-			#			if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
-			#				rejectRegister "$line" "codigo de firma invalido"
-			#			else 
-			#				processCurrentRegister "$line"
-			#			fi
-			#		elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
-			#			numberNorm=$(echo $line | cut -d ';' -f 2)
-			#			if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-			#				rejectRegister "$line" "El numero de norma invalido"
-			#			else 
-			#				protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
-			#			fi
-			#		fi
-			#	else
-			#		rejectRegister "$line" "fecha fuera del rango de la gestion"
-			#	fi
-			#else
-			#	rejectRegister "$line" "fecha invalida"
-			#fi
 			processRegister "$line"
 		done;
 	else
-		line=$(cat ACEPDIR/Kirchner/Kirchner_DEC_2121_9042_27-6-2007)
+		line=$(cat ACEPDIR/$codeGestion/$completeFileName)
 		processRegister "$line"
-		#dateFromRegister=$(echo $textLine | cut -d ';' -f 1)
-		#	if [ $(validateDate) -eq 1 ]; then
-		#		if [ $(validateDateOnGest) -eq 1 ]; then
-		#			Cod_Tema=""
-		#			Causante=""
-		#			Extracto=""
-		#			if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-		#				codSignatureIntoFile=$(echo $textLine | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
-		#				if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
-		#					rejectRegister "$textLine" "codigo de firma invalido"
-		#				else 
-		#					processCurrentRegister "$textLine"
-		#				fi
-		#			elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
-		#				numberNorm=$(echo $textLine | cut -d ';' -f 2)
-		#				if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-		#					rejectRegister "$textLine" "El numero de norma invalido"
-		#				else 
-		#					protocolize	"$textLine"												#el numero de norma es mayor a 0 y se considera valido
-		#				fi
-		#			fi
-		#		else
-		#			rejectRegister "$textLine" "fecha fuera del rango de la gestion"
-		#		fi
-		#	else
-		#		rejectRegister "$textLine" "fecha invalida"
-		#	fi
 	fi
-	#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
+	sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
 	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
 }
 
