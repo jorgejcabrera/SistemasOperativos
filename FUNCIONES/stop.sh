@@ -12,7 +12,7 @@ if [ $# -gt 1 -o $# -lt 1 ]; then
 fi
 
 #El demonio no debe estar corriendo
-CORRIENDO=$(ps aux | grep R.*/$1$)
+CORRIENDO=$(ps aux | grep .*/$1$)
 if [ -z "$CORRIENDO" ]; then
 	echo "El demonio no se encuentra corriendo"
 	exit 1
