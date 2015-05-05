@@ -1,13 +1,13 @@
 #!/bin/bash
 
 EXIT=0
-SLEEP=10 #600
+SLEEP=10
 MSG_FILE_ACCEPTED=" es válido y ha sido aceptado"
 MSG_FILE_REJECTED=" no es válido y ha sido rechazado."
-MAEDIR="/home/facundo/Escritorio/Pruebas/MAEDIR" #PARA PRUEBAS UNICAMENTE
-NOVEDIR="/home/facundo/Escritorio/Pruebas/NOVEDIR" #PARA PRUEBAS UNICAMENTE
-ACEPDIR="/home/facundo/Escritorio/Pruebas/ACEPDIR" #PARA PRUEBAS UNICAMENTE
-RECHDIR="/home/facundo/Escritorio/Pruebas/RECHDIR" #PARA PRUEBAS UNICAMENTE
+MAEDIR="/home/facundo/Escritorio/A/RecPro/MAEDIR" #PARA PRUEBAS UNICAMENTE
+NOVEDIR="/home/facundo/Escritorio/A/RecPro/NOVEDIR" #PARA PRUEBAS UNICAMENTE
+ACEPDIR="/home/facundo/Escritorio/A/RecPro/ACEPDIR" #PARA PRUEBAS UNICAMENTE
+RECHDIR="/home/facundo/Escritorio/A/RecPro/RECHDIR" #PARA PRUEBAS UNICAMENTE
 ARCH_MAE_GEST="/gestiones.mae"
 ARCH_MAE_NORM="/normas.mae"
 ARCH_MAE_EMI="/emisores.mae"
@@ -222,20 +222,21 @@ checkCarpetaExistente(){
 
 #Invoca a ProPro
 invocarProPro(){
-	#Si hay archivos en ACEPDIR, intenta invocar a ProPro
-	if [ `ls "$ACEPDIR" | wc -l` -gt 0 ]; then
-		PROGRAMA="propro.sh"
-		if ps ax | grep -v grep | grep -q $PROGRAMA
-		then
-			sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
-		else
-			sh propro.sh &
-			PID=$!
-			sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
+	#Si hay archivos en los subdirectorios de ACEPDIR, intenta invocar a ProPro
+	ls "$ACEPDIR" | while read line; do
+		if [ `ls "$ACEPDIR/$line" | wc -l` -gt 0 ]; then
+			PROGRAMA="propro.sh"
+			if ps ax | grep -v grep | grep -q $PROGRAMA
+			then
+				sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
+			else
+				sh propro.sh &
+				PID=$!
+				sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
+			fi	
+			break;
 		fi
-	else
-		sh glog.sh RecPro "No se invoca a ProPro por no haber archivos en $ACEPDIR" INFO
-	fi
+	done
 }
 
 #Se verifica si NOVEDIR tiene archivos
