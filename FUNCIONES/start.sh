@@ -4,9 +4,6 @@
 # Parametro 1
 # demonio a arrancar
 
-#TODO centralizar el uso de glog, sino busca en los multiples archivos glog y falla
-#PATH_GLOG=$(find . -name *glog.sh )
-echo $VAR1
 #Me fijo si fue invocado desde linea de comandos o desde otro script
 darSalidaCorrespondiente(){
 	PADRE=$(ps -o stat= -p $PPID)
@@ -38,7 +35,7 @@ PATH_DAEMON=$(find . -name *$1)
 if [ -z "$PATH_DAEMON" ]; then
 	darSalidaCorrespondiente START "Funcion inexistente" ERR 
 	exit 1
-else 	"$PATH_DAEMON" &
+else 	"$PATH_DAEMON" & #Arranco el demonio
 	darSalidaCorrespondiente START "Arranco el demonio" INFO 
 fi
 
