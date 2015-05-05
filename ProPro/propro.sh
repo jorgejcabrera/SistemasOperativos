@@ -253,7 +253,7 @@ processRegisterFromCurrentFile ()
 
 codeCurrentGest=$(tail -n -1 MAEDIR/gestiones.mae | cut -d ';' -f 1)
 countFiles=$(find ./ACEPDIR/ -type f | wc -l)
-sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+sh glog.sh PROPRO "Inicio de propro. Cantidad de archivos a procesar: $countFiles" INFO
 countRejectFile=0
 countProcessFile=0
 createAllDirectories
