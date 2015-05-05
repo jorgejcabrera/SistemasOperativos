@@ -247,7 +247,7 @@ processRegisterFromCurrentFile ()
 		processRegister "$line"
 	fi
 	sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
-	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
+	sh glog.sh MOVER "Se movió el archivo $completeFileName con éxito" INFO	
 }
 
 
