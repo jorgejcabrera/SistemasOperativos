@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#************Glog
-#************Parametro1 (obligatorio):comando (nombre del comando o funcion que genera el mensaje)
-#************Parametro2 (obligatorio): mensaje
-#************Parametro3 (opcional):tipo de mensaje [INFO,WAR,ERR]
+#Glog
+#Parametro1 (obligatorio):comando (nombre del comando o funcion que genera el mensaje)
+#Parametro2 (obligatorio): mensaje
+#Parametro3 (opcional):tipo de mensaje [INFO,WAR,ERR]
 
-LOGSIZE=100000 # TODO lo debe determinar la var de conf LOGSIZE
-LOGBORRARHH=4951 #Borra hasta la linea n-1
+CONFDIR=$PWD/conf
+LOGSIZE=5000 # TODO lo debe determinar la var de conf LOGSIZE
+LOGBORRARHH=$(expr $LOGSIZE - 49) #Borra hasta la linea n-1
 
 #Evito que sea un log infinito, cuando llega a LOGSIZE trunca las primeras LOGBORRARHH-1 lineas
-
 LOGDIRSIZE=$(wc -l LOGDIR/"$1".log 2> /dev/null | sed 's/ LOGDIR\/'$1'.log//') #Cantidad de lineas del log del parametro 1
 if [ $LOGDIRSIZE ]; then
 	if [ $LOGDIRSIZE -ge $LOGSIZE ]; then # Si alcanzo el maximo de lineas
@@ -26,11 +26,13 @@ if [ $LOGDIRSIZE ]; then
 	fi
 fi
 
+
 #Valido que el script reciba 2 o a lo sumo 3 parametros
 if [ $# -lt 2 ] || [ $# -gt 3 ]; then
 	echo "No se pudo loguear mensaje, cantidad de parametros incorrecta: $# "
 	exit
 fi
+
 
 #Valido que el tercer parametro sea del tipo INFO,WAR,ERR
 if [ ! $3 ]; then # si no existe el tercer parametro, entonces
@@ -45,10 +47,12 @@ else # si existe el tercer parametro, entonces
 	fi
 fi
 	
+
 #Escribo el archivo
 fecha=`date +"%X %x"`
 comando=$1
 mensaje=$2
+
 
 #Logueo en el lugar correspondiente
 if [ $1 = "InsPro" ]; then

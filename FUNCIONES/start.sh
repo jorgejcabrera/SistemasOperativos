@@ -6,8 +6,7 @@
 
 #TODO centralizar el uso de glog, sino busca en los multiples archivos glog y falla
 #PATH_GLOG=$(find . -name *glog.sh )
-#TODO guardar el log en el comando que la llama
-
+echo $VAR1
 #Me fijo si fue invocado desde linea de comandos o desde otro script
 darSalidaCorrespondiente(){
 	PADRE=$(ps -o stat= -p $PPID)
@@ -35,7 +34,6 @@ if ! [ -z "$CORRIENDO" ]; then
 fi
 
 #Debe existir el demonio
-#cd ..
 PATH_DAEMON=$(find . -name *$1)
 if [ -z "$PATH_DAEMON" ]; then
 	darSalidaCorrespondiente START "Funcion inexistente" ERR 

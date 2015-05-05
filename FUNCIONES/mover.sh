@@ -8,13 +8,17 @@
 #   Archivo de Log del comando que la invoca (si corresponde)
 # Opciones y Parámetros
 #   Parámetro 1 (obligatorio): archivo origen
-#   Parámetro 2 (obligatorio): archivo destino
+#   Parámetro 2 (obligatorio): Directorio destino
 #   Parámetro 3 (opcional): comando que la invoca
 #
 
+GRUPO=/home/nico/SistemasOperativos #TODO debe ser la var de conf.
+DUPDIR=$GRUPO/Duplicados  #TODO debe ser la var de conf.
+CONFDIR=$GRUPO/conf #TODO debe ser la var de conf.
+
 #No pueden ser menos de 2 ni mas de 3 parametros
 if [ $# -gt 3 -o $# -lt 2 ]; then
-	echo "Cantidad de parametros inválida"
+	sh glog.sh MOVER "Cantidad de parametros inválida" ERR
 	exit 1
 fi
 
@@ -25,17 +29,13 @@ arorigen="${1##*/}"
 
 #Chequear que los primeros dos argumentos sean directorios validos
 if [ ! -f "$1" ];then #Chequeo si $1 es un archivo
-	if [ $# -eq 3 ]; then
-		sh glog.sh MOVER "El origen no existe" ERR
-	fi
+	sh glog.sh MOVER "El origen no existe" ERR
 	exit 2
 fi
 
 if [ ! -d "$rutadestino" ]; then #Chequeo si el directorio del destino existe
         echo "destino no existe"
-	if [ $# -eq 3 ]; then
 		sh glog.sh MOVER "El directorio destino no existe" ERR
-	fi
 	exit 3
 else
         rutadestino=$(echo "./$rutadestino")
@@ -48,8 +48,25 @@ if [ "$1" = "$2" ]; then
 		exit 4
 fi
 
-mv "$1" "$2"
-if [ $# -eq 3 ]; then
-		sh glog.sh MOVER "Archivo $origen movido correctamente" INFO
+#TODO chequear duplicados
+#Chequeo si hay duplicados
+cd $GRUPO
+NOMBREARCHIVO=$( find $1 | sed 's/.*\///') #Busca el archivo en el path origen y luego despeja el nombre del mismo
+cd "$2"
+if [ -f "$NOMBREARCHIVO" ]; then # Si encuentro el archivo en destino
+	echo "hay duplicado"
+	MoverArchivoADUPDIR
+	mv "$1" "$DUPDIR"
+	NUMEROSECUENCIA=$( cat $CONFDIR/InsProPRUEBA.conf | grep 'NUMEROSECUENCIA' | sed 's/NUMEROSECUENCIA=//' )
+	NUEVONOMBRE=$NOMBREARCHIVO"."$NUMEROSECUENCIA
+	mv "$NOMBREARCHIVO" "$NUEVONOMBRE"
+	NUMEROSECUENCIA=$(expr $NUMEROSECUENCIA + 1)
+	sed -i 's
+
+	exit 5
 fi
+
+mv "$1" "$2"
+sh glog.sh MOVER "Archivo $1 movido correctamente" INFO
+
 exit 0
