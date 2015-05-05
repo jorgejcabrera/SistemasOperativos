@@ -10,18 +10,18 @@ LOGSIZE=5000 # TODO lo debe determinar la var de conf LOGSIZE
 LOGBORRARHH=$(expr $LOGSIZE - 49) #Borra hasta la linea n-1
 
 #Evito que sea un log infinito, cuando llega a LOGSIZE trunca las primeras LOGBORRARHH-1 lineas
-LOGDIRSIZE=$(wc -l LOGDIR/"$1".log 2> /dev/null | sed 's/ LOGDIR\/'$1'.log//') #Cantidad de lineas del log del parametro 1
+LOGDIRSIZE=$(wc -l $LOGDIR/"$1".log 2> /dev/null | sed 's/ LOGDIR\/'$1'.log//') #Cantidad de lineas del log del parametro 1
 if [ $LOGDIRSIZE ]; then
 	if [ $LOGDIRSIZE -ge $LOGSIZE ]; then # Si alcanzo el maximo de lineas
-		sed -i '1,'$LOGBORRARHH' d' LOGDIR/$1.log #Borro  desde la linea 1 hasta la linea LOGBORRARHH en el log correspondiente
+		sed -i '1,'$LOGBORRARHH' d' $LOGDIR/$1.log #Borro  desde la linea 1 hasta la linea LOGBORRARHH en el log correspondiente
 #Logueo en el lugar correspondiente
 		fecha=`date +"%X %x"`
 		comando=$1
 		mensaje="Log excedido para poder controlar que se esta realizando este trabajo."
 		if [ $1 = "InsPro" ]; then
-			echo $fecha $USER $comando $tipoMensaje $mensaje  >> CONFDIR/InsPro.log
+			echo $fecha $USER $comando $tipoMensaje $mensaje  >> $CONFDIR/InsPro.log
 		else 
-			echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
+			echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
 		fi
 	fi
 fi
@@ -61,8 +61,8 @@ else
 	if [ $1 = "MOVER" -o $1 = "START" ]; then
 		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
 		GPPID=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr [:lower:] [:upper:]` #Obtengo el ID del abuelo, si no hay queda el del padre
-		echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$GPPID.log	
-	else	echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
+		echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$GPPID.log	
+	else	echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
 	fi
 fi
 
