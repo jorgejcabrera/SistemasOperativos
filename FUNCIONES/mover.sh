@@ -12,10 +12,6 @@
 #   Parámetro 3 (opcional): comando que la invoca
 #
 
-GRUPO=/home/nico/SistemasOperativos #TODO debe ser la var de conf.
-DUPDIR=$GRUPO/Duplicados  #TODO debe ser la var de conf.
-CONFDIR=$GRUPO/conf #TODO debe ser la var de conf.
-
 #No pueden ser menos de 2 ni mas de 3 parametros
 if [ $# -gt 3 -o $# -lt 2 ]; then
 	sh glog.sh MOVER "Cantidad de parametros inválida" ERR

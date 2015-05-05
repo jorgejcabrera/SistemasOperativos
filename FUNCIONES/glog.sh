@@ -6,7 +6,6 @@
 #Parametro3 (opcional):tipo de mensaje [INFO,WAR,ERR]
 
 CONFDIR=$PWD/conf
-LOGSIZE=5000 # TODO lo debe determinar la var de conf LOGSIZE
 LOGBORRARHH=$(expr $LOGSIZE - 49) #Borra hasta la linea n-1
 
 #Evito que sea un log infinito, cuando llega a LOGSIZE trunca las primeras LOGBORRARHH-1 lineas
