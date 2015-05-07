@@ -1,4 +1,0 @@
-03/06/1952;9999;causante;extracto;224;idExpediente;1947;12EE5E9;ACEP
-05/06/1946;9999;causante;extracto;224;idExpediente;1947;12EE5E9;ACEP
-03/06/1952;9999;causante;extracto;224;idExpediente;1947;12EE59;RECH
-03/06/1946;9999;causante;extracto;224;idExpediente;1947;12EE5E9;RECH
