@@ -4,10 +4,10 @@ EXIT=0
 SLEEP=10
 MSG_FILE_ACCEPTED=" es válido y ha sido aceptado"
 MSG_FILE_REJECTED=" no es válido y ha sido rechazado."
-MAEDIR="/home/facundo/Escritorio/A/RecPro/MAEDIR" #PARA PRUEBAS UNICAMENTE
-NOVEDIR="/home/facundo/Escritorio/A/RecPro/NOVEDIR" #PARA PRUEBAS UNICAMENTE
-ACEPDIR="/home/facundo/Escritorio/A/RecPro/ACEPDIR" #PARA PRUEBAS UNICAMENTE
-RECHDIR="/home/facundo/Escritorio/A/RecPro/RECHDIR" #PARA PRUEBAS UNICAMENTE
+MAEDIR="/home/facundo/Escritorio/BBB/RecPro/MAEDIR" #PARA PRUEBAS UNICAMENTE
+NOVEDIR="/home/facundo/Escritorio/BBB/RecPro/NOVEDIR" #PARA PRUEBAS UNICAMENTE
+ACEPDIR="/home/facundo/Escritorio/BBB/RecPro/ACEPDIR" #PARA PRUEBAS UNICAMENTE
+RECHDIR="/home/facundo/Escritorio/BBB/RecPro/RECHDIR" #PARA PRUEBAS UNICAMENTE
 ARCH_MAE_GEST="/gestiones.mae"
 ARCH_MAE_NORM="/normas.mae"
 ARCH_MAE_EMI="/emisores.mae"
@@ -153,6 +153,94 @@ checkEmisorExistente(){
 	fi
 }
 
+#Verifica que la fecha sea real
+checkFechaValida(){
+	DIA=$1
+	MES=$2
+	ANIO=$3
+	PATH_ARCH="$4"
+	ARCHIVO="$5"
+	VALIDA=1;
+	case $MES in
+		01)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		02)
+		if [ $ANIO%4 -eq 0 ]; then
+			if [ $DIA -gt 29 ]; then
+				VALIDA=0;
+			fi
+		else
+			if [ $DIA -gt 28 ]; then
+				VALIDA=0;
+			fi
+		fi
+		;;
+		03)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		04)
+		if [ $DIA -gt 30 ]; then
+			VALIDA=0;
+		fi
+		;;
+		05)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		06)
+		if [ $DIA -gt 30 ]; then
+			VALIDA=0;
+		fi
+		;;
+		07)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		08)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		09)
+		if [ $DIA -gt 30 ]; then
+			VALIDA=0;
+		fi
+		;;
+		10)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		11)
+		if [ $DIA -gt 30 ]; then
+			VALIDA=0;
+		fi
+		;;
+		12)
+		if [ $DIA -gt 31 ]; then
+			VALIDA=0;
+		fi
+		;;
+		*)
+			VALIDA=0;
+		;;
+	esac
+
+	if [ $VALIDA -eq 0 ]; then
+		sh glog.sh RecPro "La fecha del archivo $ARCHIVO no es válida." ERR
+		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		continue;
+	fi
+}
+
 #Verifica que la fecha esté dentro de un rango válido
 checkRangoFecha(){
 	FECHA=$1
@@ -178,6 +266,11 @@ checkRangoFecha(){
 	DIA_ARCH=$( cut -d '-' -f 1 <<< "$FECHA" )
 	MES_ARCH=$( cut -d '-' -f 2 <<< "$FECHA" )
 	ANIO_ARCH=$( cut -d '-' -f 3 <<< "$FECHA" )
+
+	#Se verifica que las fechas existan
+	checkFechaValida $DIA_INICIO $MES_INICIO $ANIO_INICIO "$PATH_ARCH" "$ARCHIVO"
+	checkFechaValida $DIA_FIN $MES_FIN $ANIO_FIN "$PATH_ARCH" "$ARCHIVO"
+	checkFechaValida $DIA_ARCH $MES_ARCH $ANIO_ARCH "$PATH_ARCH" "$ARCHIVO"
 
 	#Comparacion de las fechas
 	if [ $ANIO_INICIO -gt $ANIO_ARCH -o $ANIO_FIN -lt $ANIO_ARCH ]; then
@@ -230,9 +323,14 @@ invocarProPro(){
 			then
 				sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
 			else
-				sh propro.sh &
-				PID=$!
-				sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
+				bash propro.sh &
+				CORRECTO=$?
+				if [ $CORRECTO -eq 0 ]; then
+					PID=$!
+					sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
+				else
+					echo "Ocurrió un inconveniente al invocar a ProPro."
+				fi
 			fi	
 			break;
 		fi
