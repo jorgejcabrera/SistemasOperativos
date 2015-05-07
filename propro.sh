@@ -1,8 +1,8 @@
 #!/bin/bash
-archivoMaestro="MAEDIR/gestiones.mae"
-archivoDeContadores="MAEDIR/tab/axg.tab"
-archivoDeEmisores="MAEDIR/emisores.mae"
-archivoDeNormasPorEmisor="MAEDIR/tab/nxe.tab"
+archivoMaestro="$MAEDIR/gestiones.mae"
+archivoDeContadores="$MAEDIR/tab/axg.tab"
+archivoDeEmisores="$MAEDIR/emisores.mae"
+archivoDeNormasPorEmisor="$MAEDIR/tab/nxe.tab"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
 MAE_TRANSMITTER=$archivoDeEmisores
@@ -101,9 +101,9 @@ protocolize ()
 		Nro_Norma="$2"
 	fi
 	if [ $typeGest -eq 0 ]; then		
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$completeFileName" >> "$PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
 	else
-		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro" >> "PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
+		echo "$codeGestion;$codeNorm;$codeEmisor;$Fecha_Norma;$Nro_Norma;$Anio_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro" >> "$PROCDIR/$codeGestion/$Anio_Norma.$codeNorm"
 	fi
 }
 
@@ -132,9 +132,9 @@ increaseCouter ()
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	
-	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	sh mover.sh $MAE_COUNT_FILE $MAEDIR/tab/ant/
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	cp $MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 	
 	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
@@ -148,9 +148,9 @@ createCounter ()
 	local userName=`echo $USER`
 	numberNorm="1"
 
-	sh mover.sh $MAE_COUNT_FILE MAEDIR/tab/ant/
+	sh mover.sh $MAE_COUNT_FILE $MAEDIR/tab/ant/
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	cp $MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
 
 	echo "$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate" >> $MAE_COUNT_FILE
 }
@@ -160,20 +160,17 @@ createCounter ()
 #encuentran con lo cual tampoco es necesario su creacion
 createAllDirectories ()
 {
-	if [ ! -d "PROCDIR" ]; then
-		mkdir PROCDIR
+	if [ ! -d "$PROCDIR" ]; then
+		mkdir $PROCDIR
 	fi
-	if [ ! -d "RECHDIR" ]; then
-		mkdir RECHDIR
+	if [ ! -d "$RECHDIR" ]; then
+		mkdir $RECHDIR
 	fi
-	if [ ! -d "PROCDIR/proc" ]; then
-		mkdir PROCDIR/proc
+	if [ ! -d "$PROCDIR/proc" ]; then
+		mkdir $PROCDIR/proc
 	fi
-	if [ ! -d "PROCDIR/$codeGestion" ]; then
-		mkdir PROCDIR/$codeGestion
-	fi
-	if [ ! -d "LOGDIR" ]; then
-		mkdir LOGDIR
+	if [ ! -d "$LOGDIR" ]; then
+		mkdir $LOGDIR
 	fi
 }
 
@@ -184,7 +181,7 @@ rejectFile ()
 	local reasonForRejection="$1"
 	sh glog.sh PROPRO $reasonForRejection ERR
 	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
-	sh mover.sh ./ACEPDIR/$codeGestion/$completeFileName ./RECHDIR PROPRO
+	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR PROPRO
 }
 
 rejectRegister ()
@@ -201,69 +198,83 @@ rejectRegister ()
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
 	local Id_Registro=$(echo $currentLine | cut -d ';' -f 9)
 	local Fuente="$completeFileName"
-	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> PROCDIR/$codeGestion.rech
+	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> $PROCDIR/$codeGestion.rech
+}
+
+processRegister ()
+{
+	line="$1"
+	dateFromRegister=$(echo $line | cut -d ';' -f 1)
+	if [ $(validateDate) -eq 1 ]; then
+		if [ $(validateDateOnGest) -eq 1 ]; then
+			Cod_Tema=""
+			Causante=""
+			Extracto=""
+			if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
+				codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
+				if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
+					rejectRegister "$line" "codigo de firma invalido"
+				else 
+					processCurrentRegister "$line"
+				fi
+			elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
+				numberNorm=$(echo $line | cut -d ';' -f 2)
+				if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
+					rejectRegister "$line" "El numero de norma invalido"
+				else 
+					protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
+				fi
+			fi
+		else
+			rejectRegister "$line" "fecha fuera del rango de la gestion"
+		fi
+	else
+		rejectRegister "$line" "fecha invalida"
+	fi
 }
 
 #POST: procesa todos los registros del archivo que se esta protocolizando
 processRegisterFromCurrentFile ()
 {
-	cat ACEPDIR/$codeGestion/$completeFileName | while read line; do
-		dateFromRegister=$(echo $line | cut -d ';' -f 1)
-		if [ $(validateDate) -eq 1 ]; then
-			if [ $(validateDateOnGest) -eq 1 ]; then
-				Cod_Tema=""
-				Causante=""
-				Extracto=""
-				if [ $typeGest -eq 1 ]; then											#se tratra de una gestion corriente
-					codSignatureIntoFile=$(echo $line | cut -d ';' -f 8) 				#busco el codigo de firma dentro del archivo
-					if [ $codSignature != $codSignatureIntoFile ]; then					#el codigo de firma es invalido
-						rejectRegister "$line" "codigo de firma invalido"
-					else 
-						processCurrentRegister "$line"
-					fi
-				elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
-					numberNorm=$(echo $line | cut -d ';' -f 2)
-					if [ $numberNorm -lt 0 ]; then										#si el numero de norma es menor a 0 es invalido																		#si el numero de norma es menor a 0 es invalido			
-						rejectRegister "$line" "El numero de norma invalido"
-					else 
-						protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
-					fi
-				fi
-			else
-				rejectRegister "$line" "fecha fuera del rango de la gestion"
-			fi
-		else
-			rejectRegister "$line" "fecha invalida"
-		fi
-	done;
-	#sh mover.sh ACEPDIR/$codeGestion/$completeFileName PROCDIR/proc
-	sh glog.sh MOVER "Se movió el archivo protocolizado con éxito" INFO	
+	local numberLines=$(cat $ACEPDIR/$codeGestion/$completeFileName | wc -l)
+	numberLines=$((numberLines+1))
+	if [ $numberLines -gt 1 ]; then
+		cat $ACEPDIR/$codeGestion/$completeFileName | while read line; do
+			processRegister "$line"
+		done;
+	else
+		line=$(cat $ACEPDIR/$codeGestion/$completeFileName)
+		processRegister "$line"
+	fi
+	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $PROCDIR/proc
+	sh glog.sh MOVER "Se movió el archivo $completeFileName con éxito" INFO	
 }
 
 
-codeCurrentGest=$(tail -n -1 MAEDIR/gestiones.mae | cut -d ';' -f 1)
-countFiles=$(find ./ACEPDIR/ -type f | wc -l)
-sh glog.sh PROPRO "Inicio de propro \n \t\t\t Cantidad de archivos a procesar: $countFiles" INFO
+codeCurrentGest=$(tail -n -1 $MAEDIR/gestiones.mae | cut -d ';' -f 1)
+countFiles=$(find $ACEPDIR/ -type f | wc -l)
+sh glog.sh PROPRO "Inicio de propro. Cantidad de archivos a procesar: $countFiles" INFO
 countRejectFile=0
 countProcessFile=0
-
-cat MAEDIR/gestiones.mae | while read line; do
+createAllDirectories
+cat $MAEDIR/gestiones.mae | while read line; do
 	codeGestion=$(echo $line | cut -d ';' -f 1)
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
-	createAllDirectories
-	
-	if [ -d ACEPDIR/$codeGestion ]; then
-		for completeFileName in `ls ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
-		 	completeFileName=$(find ./ACEPDIR/$codeGestion -type f -name "*$completeFileName" | cut -d '/' -f 4)
+
+	if [ -d $ACEPDIR/$codeGestion ]; then
+		if [ ! -d $PROCDIR/$codeGestion ]; then
+			mkdir $PROCDIR/$codeGestion
+		fi
+		for completeFileName in `ls $ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
+		 	completeFileName=$(find $ACEPDIR/$codeGestion -type f -name "*$completeFileName") # | cut -d '/' -f 4)
+ 			completeFileName=`basename $completeFileName` 			
  			echo "protocolizando $completeFileName"
-		 	fileAlreadyDocketed=$(find ./PROCDIR/proc/ -type f -name "$completeFileName" | cut -d '/' -f 4)		#me fijo si el archivo ya fue protocolizado
-		 	
+		 	fileAlreadyDocketed=$(find $PROCDIR/proc/ -type f -name "$completeFileName")		#me fijo si el archivo ya fue protocolizado
 		 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
 		 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
 		 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
 		 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
 		 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
-
 		 		if [ ! -z $existCodeNormAndCodEmisorCombination ]; then										#si existe la combinacion, levanta la linea entera y el string no esto vacio
 					typeGest=$(echo $RESULT_GEST | cut -d ';' -f 5)											#me fijo que tipo de gestion es, si es la actual, me devuelve 1 sino es un registro historico y me devuelve 0
 					codSignature=$(grep "^$codeEmisor" $MAE_TRANSMITTER | cut -d ';' -f 3)					#obtengo el codigo de firma correspondiente al codigo de emisor en el nombre del archivo												
@@ -280,7 +291,6 @@ cat MAEDIR/gestiones.mae | while read line; do
 		done;
 	fi
 	if [ "$codeGestion" = "$codeCurrentGest" ]; then														#como se procesa por orden coronologico si la gestion procesada es igual a la corriente, loggeamos todo
-		echo $countProcessFile
 		sh glog.sh PROPRO "Se procesaron $countProcessFile archivos" INFO
 		sh glog.sh PROPRO "Se rechazaron $countRejectFile archivos" INFO
 	fi

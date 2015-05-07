@@ -77,6 +77,7 @@ if [ $instalacionConfirmada = "Si" ] ; then
 
 	if ! [ -d $LOGDIR ]; then
 		mkdir $LOGDIR
+		chmod -R 777 $LOGDIR
 	fi	
 	
 	#20.02 MOVER LOS ARCHIVOS MAESTROS AA MAEDIR Y LAS TABLAS AL DIRECTORIO MAEDIR/tab
@@ -105,10 +106,9 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	sh mover.sh IniPro.sh $BINDIR
 	sh mover.sh RecPro.sh $BINDIR
 	sh mover.sh propro.sh $BINDIR
-	sh mover.sh InfPro.sh $BINDIR
+	sh mover.sh InfPro.pl $BINDIR
 	sh mover.sh stop.sh $BINDIR
 	sh mover.sh start.sh $BINDIR
-	sh mover.sh SisProG.sh $BINDIR
 	sh mover.sh verifAmbIni.sh $BINDIR
 	sh mover.sh verifInstalacion.sh $BINDIR	
 

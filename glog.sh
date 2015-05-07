@@ -7,7 +7,6 @@ CONFDIR=$PWD/conf
 
 LOGSIZE=100
 LOGBORRARHH=51 #Borra hasta la linea n-1
-
 #Evito que sea un log infinito, cuando llega a LOGSIZE trunca las primeras LOGBORRARHH-1 lineas
 LOGDIRSIZE=$(wc -l LOGDIR/"$1".log 2> /dev/null | sed 's/ LOGDIR\/'$1'.log//') #Cantidad de lineas del log del parametro 1
 if [ $LOGDIRSIZE ]; then
@@ -21,7 +20,7 @@ if [ $LOGDIRSIZE ]; then
 		if [ $1 = "InsPro" ]; then
 			echo $fecha $USER $comando $tipoMensaje $mensaje  >> CONFDIR/InsPro.log
 		else 
-			echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
+			echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$1.log #TODO El path de logs debe ser determinado x la variable de configuracion LOGDIR
 		fi
 	fi
 fi
@@ -56,9 +55,9 @@ if [ $1 = "InsPro" ]; then
 else	
 	if [ $1 = "MOVER" ]; then # TODO or START
 		GPPID=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr [:lower:] [:upper:]`
-		echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$GPPID.log	
+		echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$GPPID.log	
 	else	
-		echo $fecha $USER $comando $tipoMensaje $mensaje  >> LOGDIR/$1.log #TODO ElPath d log debe determinarse x la var de conf LOGDIR
+		echo $fecha $USER $comando $tipoMensaje $mensaje  >> $LOGDIR/$1.log #TODO ElPath d log debe determinarse x la var de conf LOGDIR
 	fi
 fi
 
