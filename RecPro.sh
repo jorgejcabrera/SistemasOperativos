@@ -297,11 +297,11 @@ checkCarpetaExistente(){
 	PATH_ARCH="$2"
 	ARCHIVO="$3"
 	ACEPDIR_AUX="$ACEPDIR/$COD_GESTION"
-	[ -e $ACEPDIR_AUX ]
+	[ -e "$ACEPDIR_AUX" ]
 	ACCEPT_RETURN=$?
 	if [[ $ACCEPT_RETURN -eq 1 ]]
 	then
-		mkdir $ACEPDIR_AUX
+		mkdir "$ACEPDIR_AUX"
 		sh glog.sh RecPro "Se ha creado una nueva carpeta llamada $COD_GESTION en el directorio $ACEPDIR." INFO
 		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
 		sh mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
@@ -322,6 +322,7 @@ invocarProPro(){
 				sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
 			else
 				bash propro.sh &
+				wait $!
 				CORRECTO=$?
 				if [ $CORRECTO -eq 0 ]; then
 					PID=$!
