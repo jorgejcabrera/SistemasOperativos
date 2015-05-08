@@ -1,8 +1,13 @@
 #!/bin/bash
+
 EXIT=0
-SLEEP=10 #600
+SLEEP=10
 MSG_FILE_ACCEPTED=" es válido y ha sido aceptado"
 MSG_FILE_REJECTED=" no es válido y ha sido rechazado."
+MAEDIR="/home/facundo/Escritorio/BBB/RecPro/MAEDIR" #PARA PRUEBAS UNICAMENTE
+NOVEDIR="/home/facundo/Escritorio/BBB/RecPro/NOVEDIR" #PARA PRUEBAS UNICAMENTE
+ACEPDIR="/home/facundo/Escritorio/BBB/RecPro/ACEPDIR" #PARA PRUEBAS UNICAMENTE
+RECHDIR="/home/facundo/Escritorio/BBB/RecPro/RECHDIR" #PARA PRUEBAS UNICAMENTE
 ARCH_MAE_GEST="/gestiones.mae"
 ARCH_MAE_NORM="/normas.mae"
 ARCH_MAE_EMI="/emisores.mae"
@@ -158,68 +163,68 @@ checkFechaValida(){
 	VALIDA=1;
 	case $MES in
 		01)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		02)
-		if [ $ANIO%4 -eq 0 ]; then
-			if [ $DIA -gt 29 ]; then
+		if [ $(($ANIO % 4)) -eq 0 ]; then
+			if [ $DIA -gt 29 -o $DIA -lt 1 ]; then
 				VALIDA=0;
 			fi
 		else
-			if [ $DIA -gt 28 ]; then
+			if [ $DIA -gt 28 -o $DIA -lt 1 ]; then
 				VALIDA=0;
 			fi
 		fi
 		;;
 		03)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		04)
-		if [ $DIA -gt 30 ]; then
+		if [ $DIA -gt 30 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		05)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		06)
-		if [ $DIA -gt 30 ]; then
+		if [ $DIA -gt 30 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		07)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		08)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		09)
-		if [ $DIA -gt 30 ]; then
+		if [ $DIA -gt 30 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		10)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		11)
-		if [ $DIA -gt 30 ]; then
+		if [ $DIA -gt 30 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
 		12)
-		if [ $DIA -gt 31 ]; then
+		if [ $DIA -gt 31 -o $DIA -lt 1 ]; then
 			VALIDA=0;
 		fi
 		;;
@@ -296,8 +301,7 @@ checkCarpetaExistente(){
 	ACCEPT_RETURN=$?
 	if [[ $ACCEPT_RETURN -eq 1 ]]
 	then
-		echo $ACEPDIR		
-		mkdir "$ACEPDIR_AUX"
+		mkdir $ACEPDIR_AUX
 		sh glog.sh RecPro "Se ha creado una nueva carpeta llamada $COD_GESTION en el directorio $ACEPDIR." INFO
 		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
 		sh mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
