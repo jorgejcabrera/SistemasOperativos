@@ -133,7 +133,7 @@ increaseCouter ()
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	local completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="MAEDIR/tab/ant/$completeFileName$completeTime"
+	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName$completeTime"
 	echo $fileNameToMove
 	
 	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
@@ -151,7 +151,7 @@ createCounter ()
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
 	local completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="MAEDIR/tab/ant/$completeFileName$completeTime"
+	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName$completeTime"
 	echo $fileNameToMove
 	numberNorm="1"
 
