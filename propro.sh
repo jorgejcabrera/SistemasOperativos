@@ -132,10 +132,13 @@ increaseCouter ()
 	local incrementCounter=`expr $Numero + 1`
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
+	local completeTime=`date +"%H-%M-%S"`
+	local fileNameToMove="MAEDIR/tab/ant/$completeFileName$completeTime"
+	echo $fileNameToMove
 	
-	sh mover.sh $MAE_COUNT_FILE $MAEDIR/tab/ant/
+	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp $MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	cp $fileNameToMove $MAE_COUNT_FILE
 	
 	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
@@ -147,11 +150,14 @@ createCounter ()
 	local newIdContador=`expr $lastIdContador + 1`
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
+	local completeTime=`date +"%H-%M-%S"`
+	local fileNameToMove="MAEDIR/tab/ant/$completeFileName$completeTime"
+	echo $fileNameToMove
 	numberNorm="1"
 
-	sh mover.sh $MAE_COUNT_FILE $MAEDIR/tab/ant/
+	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp $MAEDIR/tab/ant/axg.tab $MAE_COUNT_FILE
+	cp $fileNameToMove $MAE_COUNT_FILE
 
 	echo "$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate" >> $MAE_COUNT_FILE
 }
