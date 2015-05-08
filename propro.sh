@@ -133,9 +133,7 @@ increaseCouter ()
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	local completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName-$completeTime"
-	echo $fileNameToMove
-	
+	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName-$completeTime"	
 	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp $fileNameToMove $MAE_COUNT_FILE
