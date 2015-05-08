@@ -15,8 +15,9 @@ validateDate ()
 {
 	local day=$(echo $dateFromRegister | cut -d '/' -f 1)										#parseo para obtener el dia de la fecha
 	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 									#parseo para obtener el mes de la fecha
-	local year=$(echo $dateFromRegister | cut -d '/' -f 3) 										#parseo para obtener el anio de la fecha
-	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 ]; then
+	local year=$(echo $dateFromRegister | cut -d '/' -f 3)
+	local format=$(echo grep -o "/" "$dateFromRegister" | wc -l) 										#parseo para obtener el anio de la fecha
+	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 -a $format -eq 2 ]; then
 		echo 0																					#la fecha no es valida
 		return
 	else
@@ -266,7 +267,7 @@ cat $MAEDIR/gestiones.mae | while read line; do
 			mkdir $PROCDIR/$codeGestion
 		fi
 		for completeFileName in `ls $ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
-		 	completeFileName=$(find $ACEPDIR/$codeGestion -type f -name "*$completeFileName") # | cut -d '/' -f 4)
+		 	completeFileName=$(find $ACEPDIR/$codeGestion -type f -name "*$completeFileName")
  			completeFileName=`basename $completeFileName` 			
  			echo "protocolizando $completeFileName"
 		 	fileAlreadyDocketed=$(find $PROCDIR/proc/ -type f -name "$completeFileName")		#me fijo si el archivo ya fue protocolizado
