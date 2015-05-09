@@ -8,7 +8,7 @@
 
 #---------------VARIABLES---------------#
 CONFDIR=$PWD/conf
-COMANDO=$1
+COMANDO=$(echo "$1" | tr '[:lower:]' '[:upper:]') # Paso el comando a mayusculas para unificar grabacion en log y nombre del ARCHIVO.log
 NAMEFILELOG=$1
 MENSAJE=$2
 TIPOMENSAJE=$3
@@ -45,6 +45,8 @@ logInPlace(){
 }
 
 #---------------CODIGO---------------#
+
+
 
 #---------------Valido que el script reciba 2 o a lo sumo 3 parametros---------------#
 if [ $# -lt 2 ] || [ $# -gt 3 ]; then
