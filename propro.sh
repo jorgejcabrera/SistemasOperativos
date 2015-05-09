@@ -245,11 +245,19 @@ processRegisterFromCurrentFile ()
 	numberLines=$((numberLines+1))
 	if [ $numberLines -gt 1 ]; then
 		cat $ACEPDIR/$codeGestion/$completeFileName | while read line; do
-			processRegister "$line"
+			if [ $(echo $line | grep -o ";" | wc -l) -eq 7 ]; then
+				processRegister "$line"
+			else
+				rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
+			fi
 		done;
 	else
 		line=$(cat $ACEPDIR/$codeGestion/$completeFileName)
-		processRegister "$line"
+		if [ $(echo $line | grep -o ";" | wc -l) -eq 7 ]; then
+			processRegister "$line"
+		else
+			rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
+		fi
 	fi
 	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $PROCDIR/proc
 	sh glog.sh MOVER "Se movió el archivo $completeFileName con éxito" INFO	
