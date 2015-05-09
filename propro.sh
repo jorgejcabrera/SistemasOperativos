@@ -183,7 +183,7 @@ rejectFile ()
 	local completeLocalFileName="$completeFileName-$2"
 	sh glog.sh PROPRO $reasonForRejection ERR
 	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
-	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName RECHDIR/$completeLocalFileName PROPRO
+	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR/$completeLocalFileName PROPRO
 }
 
 rejectRegister ()
