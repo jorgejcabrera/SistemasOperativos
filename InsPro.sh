@@ -308,7 +308,7 @@ else
 			fi
 		done
 
-		sh glog.sh InsPro $msgMostrar INFO	
+		sh glog.sh InsPro "$msgMostrar" INFO	
 
 		if [ $instalacionConfirmada = "Si" ] ; then
 			sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
