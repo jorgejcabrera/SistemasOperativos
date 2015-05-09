@@ -33,8 +33,8 @@ logInPlace(){
 		TIPOMENSAJE="INFO"
 	fi
 
-	if [ $COMANDO = "InsPro" ]; then
-		NAMEFILELOG="InsPro"
+	if [ $COMANDO = "INSPRO" ]; then
+		NAMEFILELOG="INSPRO"
 		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> $CONFDIR/$NAMEFILELOG.log
 	else	
 		if [ "$COMANDO" = "MOVER" -o "$COMANDO" = "START" ]; then
