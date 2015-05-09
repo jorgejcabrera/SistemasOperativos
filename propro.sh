@@ -132,12 +132,11 @@ increaseCouter ()
 	local incrementCounter=`expr $Numero + 1`
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
-	local completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName-$completeTime"	
+	completeTime=`date +"%H-%M-%S"`
+	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"	
 	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
-	cp $fileNameToMove $MAE_COUNT_FILE
-	
+	cp $fileNameToMove $MAE_COUNT_FILE	
 	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
 
@@ -148,15 +147,12 @@ createCounter ()
 	local newIdContador=`expr $lastIdContador + 1`
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
-	local completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="$MAEDIR/tab/ant/$completeFileName-$completeTime"
-	echo $fileNameToMove
+	completeTime=`date +"%H-%M-%S"`
+	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"
 	numberNorm="1"
-
 	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
 	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp $fileNameToMove $MAE_COUNT_FILE
-
 	echo "$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate" >> $MAE_COUNT_FILE
 }
 
@@ -184,9 +180,10 @@ createAllDirectories ()
 rejectFile ()
 {
 	local reasonForRejection="$1"
+	local completeLocalFileName="$completeFileName-$2"
 	sh glog.sh PROPRO $reasonForRejection ERR
 	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
-	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR PROPRO
+	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName RECHDIR/$completeLocalFileName PROPRO
 }
 
 rejectRegister ()
@@ -282,8 +279,9 @@ cat $MAEDIR/gestiones.mae | while read line; do
 		 	completeFileName=$(find $ACEPDIR/$codeGestion -type f -name "*$completeFileName")
  			completeFileName=`basename $completeFileName` 			
  			echo "protocolizando $completeFileName"
-		 	fileAlreadyDocketed=$(find $PROCDIR/proc/ -type f -name "$completeFileName")		#me fijo si el archivo ya fue protocolizado
-		 	if [ -z $fileAlreadyDocketed ]; then																#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
+		 	fileAlreadyDocketed=$(find $PROCDIR/proc -type f -name "$completeFileName")						#me fijo si el archivo ya fue protocolizado
+		 	completeTime=`date +"%H-%M-%S"`
+		 	if [ -z $fileAlreadyDocketed ]; then															#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
 		 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
 		 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
 		 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
@@ -295,11 +293,11 @@ cat $MAEDIR/gestiones.mae | while read line; do
 					processRegisterFromCurrentFile
 		 		else
 		 			countRejectFile=$((countRejectFile+1))
-		 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm"
+		 			rejectFile "Emisor $codeEmisor no habilitado para la norma $codeNorm" "$completeTime"
 		 		fi	
 		 	else
 		 		countRejectFile=$((countRejectFile+1))
-		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO"					#rechazamos el archivo moviendolo a ./RECHDIR
+		 		rejectFile "Se rechaza el archivo $completeFileName por estar DUPLICADO" "$completeTime"					#rechazamos el archivo moviendolo a ./RECHDIR
 		 	fi
 		done;
 	fi
