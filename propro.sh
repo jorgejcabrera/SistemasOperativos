@@ -245,15 +245,15 @@ processRegisterFromCurrentFile ()
 	numberLines=$((numberLines+1))
 	if [ $numberLines -gt 1 ]; then
 		cat $ACEPDIR/$codeGestion/$completeFileName | while read line; do
-			if [ $(echo $line | grep -o ";" | wc -l) -eq 7 ]; then
+			if [ $(echo $line | grep -o ";" | wc -l) -eq 8 ]; then
 				processRegister "$line"
 			else
 				rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
 			fi
 		done;
 	else
-		line=$(cat $ACEPDIR/$codeGestion/$completeFileName)
-		if [ $(echo $line | grep -o ";" | wc -l) -eq 7 ]; then
+		line=$(cat $ACEPDIR/$codeGestion/$completeFileName)								#meti esta negrada porque con el while si el archivo tiene una linea se la salta
+		if [ $(echo $line | grep -o ";" | wc -l) -eq 8 ]; then
 			processRegister "$line"
 		else
 			rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
