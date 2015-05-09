@@ -7,7 +7,7 @@
 #Me fijo si fue invocado desde linea de comandos o desde otro script
 darSalidaCorrespondiente(){
 	PADRE=$(ps -o stat= -p $PPID)
-	if [ "$PADRE" == "Ss" ]; then
+	if [ "$PADRE" = "Ss" ]; then
 	echo "$2"
 	else sh glog.sh "$1" "$2" "$3"
 	fi
