@@ -102,6 +102,7 @@ checkVarIni(){
 	fi
 }
 
+checkVarIni "LOGSIZE" $LOGSIZE
 checkVarIni "MAEDIR" $MAEDIR
 checkVarIni "NOVEDIR" $NOVEDIR
 checkVarIni "ACEPDIR" $ACEPDIR
@@ -123,6 +124,7 @@ RECHDIR=$(grep "RECHDIR" $CONFIGFILE | cut -d "=" -f 2)
 PROCDIR=$(grep "PROCDIR" $CONFIGFILE | cut -d "=" -f 2)
 INFODIR=$(grep "INFODIR" $CONFIGFILE | cut -d "=" -f 2)
 DUPDIR=$(grep "DUPDIR" $CONFIGFILE | cut -d "=" -f 2)
+LOGSIZE=$(grep "LOGSIZE" $CONFIGFILE | cut -d "=" -f 2)
 
 #Funciones Varias
 isDir(){
@@ -144,7 +146,6 @@ isFile(){
 }
 
 # Check Install: Verifico que la instalación esté completa ( que no falte ningún archivo ni directorio )
-isFile "$BINDIR/demonioInfinito.sh"
 isFile "$BINDIR/mover.sh"
 isFile "$BINDIR/propro.sh"
 isFile "$BINDIR/RecPro.sh"
@@ -193,6 +194,7 @@ done
 
 SYS_STATUS="INICIALIZADO"
 
+export LOGSIZE
 export CONFDIR
 export LOGDIR
 export BINDIR
