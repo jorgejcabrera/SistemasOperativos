@@ -110,6 +110,7 @@ checkVarIni "RECHDIR" $RECHDIR
 checkVarIni "PROCDIR" $PROCDIR
 checkVarIni "INFODIR" $INFODIR
 checkVarIni "DUPDIR" $DUPDIR
+checkVarIni "GRUPO" $GRUPO
 
 if [ "$SYS_STATUS" = "ERROR" ]; then
 	echo "Se termina la inicialización del sistema erróneamente."	
@@ -117,6 +118,7 @@ if [ "$SYS_STATUS" = "ERROR" ]; then
 fi
 
 #Seteo las variables de directorios desde el archivo de Configuración ( InsPro.conf )
+GRUPO=$(grep "GRUPO" $CONFIGFILE | cut -d "=" -f 2)
 MAEDIR=$(grep "MAEDIR" $CONFIGFILE | cut -d "=" -f 2)
 NOVEDIR=$(grep "NOVEDIR" $CONFIGFILE | cut -d "=" -f 2)
 ACEPDIR=$(grep "ACEPDIR" $CONFIGFILE | cut -d "=" -f 2)
@@ -165,6 +167,7 @@ isDir "$RECHDIR"
 isDir "$PROCDIR"
 isDir "$INFODIR"
 isDir "$LOGDIR"
+isDir "$GRUPO"
 
 if [ "$SYS_STATUS" = "ERROR" ]; then
 	echo "Se termina la inicialización del sistema erróneamente."	
@@ -194,6 +197,7 @@ done
 
 SYS_STATUS="INICIALIZADO"
 
+export GRUPO
 export LOGSIZE
 export CONFDIR
 export LOGDIR

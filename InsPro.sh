@@ -74,7 +74,7 @@ if [ -f memoryFile ]; then
 		DUPDIR=$(grep -r "DUPDIR" memoryFile)
 		DUPDIR=${DUPDIR:7}
 	else
-		DUPDIR=/dup  #defaultvalue
+		DUPDIR=$GRUPO/dup  #defaultvalue
 	fi
 
 	if [ $(grep -r "LOGDIR" memoryFile) ]; then
@@ -99,7 +99,7 @@ else
 	RECHDIR=$GRUPO/rechazados
 	PROCDIR=$GRUPO/protocolizados
 	INFODIR=$GRUPO/informes
-	DUPDIR=/dup
+	DUPDIR=$GRUPO/dup
 	LOGDIR=$GRUPO/log
 	LOGSIZE=400
 	echo -e "BINDIR=$BINDIR\nMAEDIR=$MAEDIR\nNOVEDIR=$NOVEDIR\nDATASIZE=$DATASIZE\nACEPDIR=$ACEPDIR\nRECHDIR=$RECHDIR\nPROCDIR=$PROCDIR\nINFODIR=$INFODIR\nDUPDIR=$DUPDIR\nLOGDIR=$LOGDIR\nLOGSIZE=$LOGSIZE\n" > memoryFile;

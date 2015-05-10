@@ -78,6 +78,11 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	if ! [ -d $LOGDIR ]; then
 		mkdir $LOGDIR
 		chmod -R 777 $LOGDIR
+
+	if ! [ -d $DUPDIR ]; then
+		mkdir $DUPDIR
+	fi
+	
 	fi	
 	
 	#20.02 MOVER LOS ARCHIVOS MAESTROS AA MAEDIR Y LAS TABLAS AL DIRECTORIO MAEDIR/tab
@@ -102,7 +107,8 @@ if [ $instalacionConfirmada = "Si" ] ; then
 
 	#FALTA 20.03 MOVER LOS EJECUTABLES Y FUNCIONES AL DIRECTORIO BINDIR (verificarlo cuando este todo)
 	echo "Instalando Archivos Programas y funciones"
-	sh glog.sh InsPro "Instalando Archivos Programas y funciones" INFO	
+	sh glog.sh InsPro "Instalando Archivos Programas y funciones" INFO
+	echo $BINDIR	
 	sh mover.sh IniPro.sh $BINDIR
 	sh mover.sh RecPro.sh $BINDIR
 	sh mover.sh propro.sh $BINDIR
@@ -124,7 +130,7 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	#FORMATO DE ARCHIVO: VARIABLE=VALOR=USUARIO=FECHA
 	fecha=`date +"%X %x"`
 	quienSoy=$(whoami)	
-	msgMostrar="GRUPO=$GRUPO=$quienSoy=$fecha\nCONFDIR=$CONFDIR=$quienSoy=$fecha\nBINDIR=$BINDIR=$quienSoy=$fecha\nMAEDIR=$MAEDIR=$quienSoy=$fecha\nNOVEDIR=$NOVEDIR=$quienSoy=$fecha\nDATAZISE=$DATASIZE=$quienSoy=$fecha\nACEPDIR=$ACEPDIR=$quienSoy=$fecha\nRECHDIR=$RECHDIR=$quienSoy=$fecha\nPROCDIR=$PROCDIR=$quienSoy=$fecha\nINFODIR=$INFODIR=$quienSoy=$fecha\nDUPDIR=$DUPDIR=$quienSoy=$fecha\nLOGDIR=$LOGDIR=$quienSoy=$fecha\nLOGSIZE=$LOGSIZE=$quienSoy=$fecha\n"
+	msgMostrar="GRUPO=$GRUPO=$quienSoy=$fecha\nCONFDIR=$CONFDIR=$quienSoy=$fecha\nBINDIR=$BINDIR=$quienSoy=$fecha\nMAEDIR=$MAEDIR=$quienSoy=$fecha\nNOVEDIR=$NOVEDIR=$quienSoy=$fecha\nDATAZISE=$DATASIZE=$quienSoy=$fecha\nACEPDIR=$ACEPDIR=$quienSoy=$fecha\nRECHDIR=$RECHDIR=$quienSoy=$fecha\nPROCDIR=$PROCDIR=$quienSoy=$fecha\nINFODIR=$INFODIR=$quienSoy=$fecha\nDUPDIR=$DUPDIR=$quienSoy=$fecha\nLOGDIR=$LOGDIR=$quienSoy=$fecha\nLOGSIZE=$LOGSIZE=$quienSoy=$fecha\nNUMEROSECUENCIA=000\n"
 	echo $msgMostrar > $CONFDIR/InsPro.conf;
 
 	echo "Actualizando la configuracion del sistema"
