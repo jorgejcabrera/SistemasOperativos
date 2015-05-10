@@ -9,7 +9,7 @@
 #---------------VARIABLES---------------#
 CONFDIR=$PWD/conf
 COMANDO=$(echo "$1" | tr '[:lower:]' '[:upper:]') # Paso el comando a mayusculas para unificar grabacion en log y nombre del ARCHIVO.log
-NAMEFILELOG=$1
+NAMEFILELOG=$(echo "$1" | tr '[:lower:]' '[:upper:]') # Paso el comando a mayusculas para unificar grabacion en log y nombre del ARCHIVO.log
 MENSAJE=$2
 TIPOMENSAJE=$3
 if [ -n "$LOGSIZE" ]; then
@@ -23,6 +23,10 @@ fatherOfFunction(){
 		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
 		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre
 	fi
+	if [ "$PPNAME" = "INSTALAR" ]; then
+		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
+		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre del padre
+	fi
 	NAMEFILELOG=$PPNAME
 }
 
@@ -33,20 +37,19 @@ logInPlace(){
 		TIPOMENSAJE="INFO"
 	fi
 
-	if [ $COMANDO = "INSPRO" ]; then
+	if [ "$COMANDO" = "MOVER" -o "$COMANDO" = "START" ]; then
+		fatherOfFunction
+	fi	
+	if [ "$COMANDO" = "INSPRO" ] || [ "$NAMEFILELOG" = "INSPRO" ]; then
 		NAMEFILELOG="INSPRO"
+		COMANDO="INSPRO"
 		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> $CONFDIR/$NAMEFILELOG.log
-	else	
-		if [ "$COMANDO" = "MOVER" -o "$COMANDO" = "START" ]; then
-			fatherOfFunction
-		fi	
+	else
 		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> $LOGDIR/$NAMEFILELOG.log
 	fi
 }
 
 #---------------CODIGO---------------#
-
-
 
 #---------------Valido que el script reciba 2 o a lo sumo 3 parametros---------------#
 if [ $# -lt 2 ] || [ $# -gt 3 ]; then
