@@ -1,26 +1,27 @@
 #!/usr/bin/perl
 #
 ########################################################
-#           SSOO Grupo 05 - $year, 1° Cuatrimestre      #
+#          SSOO Grupo 05 - $year, 1° Cuatrimestre      #
 #                       Comando InfPro.pl              #
 ########################################################
 
 # Levanto las variables de ambiente.
-	if (!exists $ENV{"MAEDIR"}){
+if ( !exists $ENV{"MAEDIR"} ) {
+
 	#if (! (-e $CONFDIR."InsPro.conf")){
-		print "El sistema no se halla inicializado.\n";
-		exit;
-	}
-	
-	if (&validoInstancias) {
-		print "No puede ejecutarse mas de una instancia del InfPro a la vez\n";
-		exit;
-	}
-$CONFDIR     = $ENV{CONFDIR}."/";
-$BINDIR      = $ENV{BINDIR}."/";
-$MAEDIR      = $ENV{MAEDIR}."/";
-$PROCDIR     = $ENV{PROCDIR}."/";
-$INFODIR     = $ENV{INFODIR}."/";
+	print "El sistema no se halla inicializado.\n";
+	exit;
+}
+
+if (&validoInstancias) {
+	print "No puede ejecutarse mas de una instancia del InfPro a la vez\n";
+	exit;
+}
+$CONFDIR     = $ENV{CONFDIR} . "/";
+$BINDIR      = $ENV{BINDIR} . "/";
+$MAEDIR      = $ENV{MAEDIR} . "/";
+$PROCDIR     = $ENV{PROCDIR} . "/";
+$INFODIR     = $ENV{INFODIR} . "/";
 $ANIOINICIAL = 1946;
 my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) =
   localtime(time);
@@ -31,15 +32,14 @@ $year += 1900;
 %Gestiones  = &cargoGestiones;
 %Emisores   = &cargoEmisores;
 
-
 sub realizoConsulta {
 
 	# Primero llamo a los modulos de los filtros.
-	local $filtroTiposNorma = &filtroNorma;
-	local @filtroAnios      = &filtroAnio;
-	local @nroNorma         = &filtroNroNorma;
-	local $gestion          = &filtroGestion;
-	local $emisor           = &filtroEmisor;
+	local $filtroTiposNorma  = &filtroNorma;
+	local @filtroAnios       = &filtroAnio;
+	local @nroNorma          = &filtroNroNorma;
+	local $gestion           = &filtroGestion;
+	local $emisor            = &filtroEmisor;
 	local @elementosConsulta = ();
 	&procesoConsulta;
 	&muestroPantallaConsulta;
@@ -95,7 +95,7 @@ sub procesoPROCDIRConsulta {
 			next if ( ( $gestion ne "" ) and ( $archivo ne $gestion ) );
 			&procesoDirectorioConsulta($newdir);
 		}
-			}
+	}
 }
 
 sub procesoConsulta {
@@ -188,7 +188,8 @@ sub escriboResultadoConsulta {
 		print ARCH "\n";
 	}
 	close(ARCH);
-	print "El nombre del archivo de consulta generado es " . $nombreArchivo."\n";
+	print "El nombre del archivo de consulta generado es "
+	  . $nombreArchivo . "\n";
 }
 
 # Escribo por pantalla los resultados de una consulta
@@ -396,14 +397,15 @@ sub escriboResultadoInforme {
 		print ARCH "\n";
 	}
 	close(ARCH);
-	print "El nombre del archivo de consulta generado es " . $nombreArchivo."\n";
+	print "El nombre del archivo de consulta generado es "
+	  . $nombreArchivo . "\n";
 }
 
 sub realizoEstadistica {
 
 	# Primero llamo a los modulos de los filtros.
-	local @filtroAnios = &filtroAnio;
-	local $gestion     = &filtroGestion;
+	local @filtroAnios    = &filtroAnio;
+	local $gestion        = &filtroGestion;
 	local %elementosEstad = ();
 	&procesoDirectorioEstad;
 	&muestroPantallaEstad;
@@ -504,7 +506,8 @@ sub escriboResultadoEstad {
 		}
 	}
 	close(ARCH);
-	print "El nombre del archivo de estadisticas generado es " . $nombreArchivo."\n";
+	print "El nombre del archivo de estadisticas generado es "
+	  . $nombreArchivo . "\n";
 }
 
 # Escribo por pantalla los resultados de una Estad
@@ -545,55 +548,52 @@ sub procesoArchivoGestionEstad {
 # No devuelve ningun valor
 sub procesoArgumentos() {
 	@argumentos = split( " ", $_[0] );
-	$largo = @argumentos;	
+	$largo = @argumentos;
 	for ( my $cont = 0 ; $cont < $largo ; $cont++ ) {
 		if ( $argumentos[$cont] eq "-a" ) {
 			&mostrarAyuda();
 		}
-		if ( $argumentos[$cont]=~ "-w" ) {
+		if ( $argumentos[$cont] eq "-w" ) {
 			$w = 1;
+			next;
 		}
-		if ( ( $argumentos[$cont] eq "-e" ) or ( $argumentos[$cont] eq "-we" )){
+		if ( ( $argumentos[$cont] eq "-e" ) or ( $argumentos[$cont] eq "-we" ) )
+		{
 			$e = 1;
 			next;
 		}
-		if ( ( $argumentos[$cont] eq "-c" ) or ( $argumentos[$cont] =~ "-wc" )){
+		if ( ( $argumentos[$cont] eq "-c" ) or ( $argumentos[$cont] eq "-wc" ) )
+		{
 			$c = 1;
 			$cont++;
-
 			# Guardo la clave de Busqueda
 			if (    ( $cont < $largo )
-				and ( substr $argumentos[$cont], 0, 1 ne "-" ) )
+				and ( (substr $argumentos[$cont], 0, 1 )ne "-" ) )
 			{
 				$claveBusqueda = $argumentos[$cont];
+				$cont++;
 			}
 			$cont--;
 			next;
 		}
-		if ( ($argumentos[$cont] eq "-i" )or ( $argumentos[$cont] eq "-wi" )) {
+		if ( ( $argumentos[$cont] eq "-i" ) or ( $argumentos[$cont] eq "-wi" ) )
+		{
 			$i = 1;
 			$cont++;
 
 			# Cargo la lista de archivos a procesar
 			while ( ( $cont < $largo )
-				and ( ( substr $argumentos[$cont], 0, 1 ne "-" ) ) )
+				and ( ( (substr $argumentos[$cont], 0, 1) ne "-" ) ) )
 			{
 				push @listaResultados, $argumentos[$cont];
 				$cont++;
 			}
 			$cont--;
 			next;
-		}
-		return $cadena="";
+			}
+		return $cadena = "";
 	}
-	if ( ( $e + $i ) > 1 ) {
-		print "No se pueden seleccionar estadistica junto con informe";
-		exit;
-	}
-	if ( ( $e + $c ) > 1 ) {
-		print "No se pueden seleccionar estadistica junto con consulta";
-		exit;
-	}
+
 }
 
 # Me devuelve el nombre del proximo archivo de Resultados. Revisa automaticamente en el
@@ -785,7 +785,7 @@ sub filtroAnio {
 	while (1) {
 		@anios  = ();
 		$cadena = "";
-		print "Ingrese el periodo a buscar: ";
+		print "Ingrese el periodo a buscar(AñoIncial-AñoFinal): ";
 		$cadena = <STDIN>;
 		chomp($cadena);
 
@@ -798,7 +798,12 @@ sub filtroAnio {
 	   # Aqui valido que no se haya ingresado mas valores de los que corresponde
 		if ( @anios > 2 ) {
 			print
-"El rango se ingreso incorrectamente( debe ser entre 2 anios), intentelo nuevamente\n";
+"El rango se ingreso incorrectamente( debe ser entre 2 anios), por favor ingreselo nuevamente \n";
+			print
+"El rango puede ser vacio, un unico año o un rango indentificado por los \n";
+			print
+"dos valores separados por un guion(-). El año debe estar el rango de años\n";
+			print "validos($ANIOINICIAL - $year)\n";
 		}
 		elsif ( @anios == 1 ) {
 
@@ -810,7 +815,13 @@ sub filtroAnio {
 			{
 				last;
 			}
-			print "El anio ingresado no contiene un anio valido \n";
+			print
+"El anio ingresado no contiene un anio valido, por favor ingreselo nuevamente \n";
+			print
+"El rango puede ser vacio, un unico año o un rango indentificado por los \n";
+			print
+"dos valores separados por un guion(-). El año debe estar el rango de años\n";
+			print "validos($ANIOINICIAL - $year)\n";
 		}
 		else {
 
@@ -826,7 +837,13 @@ sub filtroAnio {
 			{
 				last;
 			}
-			print "El periodo ingresado es incorrecto, ingresolo nuevamente \n";
+			print
+"El periodo ingresado es incorrecto( los valores deben estar ordenados cronologicamente, \n";
+			print
+"ser numero y estar dentro del rango de años validos($ANIOINICIAL - $year), ingresolo nuevamente \n";
+			print
+"El rango puede ser vacio, un unico numero o un rango indentificado por los \n";
+			print "dos valores separados por un guion(-)\n";
 		}
 	}
 	return @anios;
@@ -840,7 +857,8 @@ sub filtroNroNorma {
 	while (1) {
 		@nroNorma = ();
 		$cadena   = "";
-		print "Ingrese el rango de numero de Norma  a buscar: ";
+		print
+"Ingrese el rango de numero de Norma  a buscar(Nro Incial-NroFinal): ";
 		$cadena = <STDIN>;
 		chomp($cadena);
 
@@ -850,7 +868,11 @@ sub filtroNroNorma {
 		}
 		@nroNorma = split( "-", $cadena );
 		if ( @nroNorma > 2 ) {
-			print "El rango se ingreso incorrectamente, intentelo nuevamente\n";
+			print
+"El rango se ingreso incorrectamente(Se ingresaron mas de 2 valores para el rango), intentelo nuevamente\n";
+			print
+"El rango puede ser vacio, un unico numero o un rango indentificado por los \n";
+			print "dos valores separados por un guion(-)\n";
 		}
 		elsif ( @nroNorma == 1 ) {
 
@@ -859,7 +881,11 @@ sub filtroNroNorma {
 			if ( $valor =~ /^\d+$/ ) {
 				last;
 			}
-			print "El numero ingresado no contiene un numero valido \n";
+			print
+"El rango se ingreso incorrectamente( no se ingreso un número correcto), intentelo nuevamente\n";
+			print
+"El rango puede ser vacio, un unico numero o un rango indentificado por los \n";
+			print "dos valores separados por un guion(-)\n";
 		}
 		else {
 
@@ -871,7 +897,11 @@ sub filtroNroNorma {
 			{
 				last;
 			}
-			print "El rango ingresado es incorrecto, ingreselo nuevamente \n";
+			print
+"El rango se ingreso incorrectamente(Los valores deben ser numericos y estar ordenados de menor a mayor), intentelo nuevamente\n";
+			print
+"El rango puede ser vacio, un unico numero o un rango indentificado por los \n";
+			print "dos valores separados por un guion(-)\n";
 		}
 	}
 	return @nroNorma;
@@ -956,15 +986,15 @@ sub fecha_comparable {
 sub validoInstancias {
 	@array = `ps -ef | grep InfPro`;
 	$largo = 0;
-	foreach (@array){
-		@tmp= split(" ",$_);
-		if ( ($$== $tmp[1])or ($$== $tmp[2])or ($_=~/grep/)){
+	foreach (@array) {
+		@tmp = split( " ", $_ );
+		if ( ( $$ == $tmp[1] ) or ( $$ == $tmp[2] ) or ( $_ =~ /grep/ ) ) {
 			next;
 		}
-		print $_."\n";
+		print $_. "\n";
 		$largo++;
 	}
-	return ( $largo !=0 );
+	return ( $largo != 0 );
 }
 
 #     Imprime la ayuda de la función.
@@ -981,33 +1011,53 @@ sub mostrarAyuda() {
 	print "\n";
 	print " Argumentos:\n";
 	print " -a\n";
-	print "         muestra la ayuda.\n";
+	print "    muestra la ayuda.\n";
 	print " -w\n";
-	print "         indica que la consulta se escribira a archivo\n";
+	print "    indica que la consulta se escribira a archivo\n";
 	print " -c\n";
 	print
-"         se realizara una consulta sobre los documentos protocolizados.\n";
+	  "    se realizara una consulta sobre los documentos protocolizados.\n";
+	print "    Para la consulta se podran realizar los siguientes filtros:\n";
+	print "      - Filtro por tipo de norma (todas, una)\n";
 	print
-	  "         Para la consulta se podran realizar los siguientes filtros:\n";
-	print "             - Filtro por tipo de norma (todas, una)\n";
-	print "             - Filtro por año (todos, rango de años)\n";
+"      - Filtro por año. Para ingresar un año en particular (todos, rango de años)\n";
 	print
-	  "             - Filtro por numero de norma (todas, rango de números)\n";
-	print "             - Filtro por gestión (todas, una)\n";
-	print "             - Filtro por emisor (todos, uno\n";
+"         * Para ingresar un año en particular se ingresa este completo( 4 digitos).\n";
+	print
+"         * Para ingresar un rango, se ingresan los años separados por un guión(-),\n";
+	print
+"           ambos deben estar en formato de 4 dígitos y ordenados cronologicamente\n";
+	print
+	  "         * En el caso que se desee observar todos, no ingresa nada\n";
+	print "      - Filtro por numero de norma (todas, rango de números)\n";
+	print "         * Para ingresar un número en particular.\n";
+	print
+"         * Para ingresar un rango, se ingresan los números separados por un guión(-),\n";
+	print "           ambos deben estar ordenados crecientemente\n";
+	print
+	  "         * En el caso que se desee observar todos, no ingresa nada\n";
+	print "      - Filtro por gestión (todas, una)\n";
+	print "      - Filtro por emisor (todos, uno\n";
 	print " -i\n";
 	print
-"         genera un informe a partir de los resultados de estadisticas anteriores.\n";
+"    genera un informe a partir de los resultados de estadisticas anteriores.\n";
 	print
-"         Puede ir en conjunto con el parámetro -c para ingresar claves y filtros para\n";
-	print "         la búsqueda.\n";
+"    Puede ir en conjunto con el parámetro -c para ingresar claves y filtros para\n";
+	print "    la búsqueda.\n";
 	print " -e\n";
+	print "    genera estadisticas a sobre los documentos protocolizados.\n";
+	print "    Para la consulta se podran realizar los siguientes filtros:\n";
 	print
-	  "         genera estadisticas a sobre los documentos protocolizados.\n";
+"      - Filtro por año. Para ingresar un año en particular (todos, rango de años)\n";
 	print
-	  "         Para la consulta se podran realizar los siguientes filtros:\n";
-	print "             - Filtro por año (todos, rango de años)\n";
-	print "             - Filtro por gestión (todas, una)\n";
+"         * Para ingresar un año en particular se ingresa este completo( 4 digitos).\n";
+	print
+"         * Para ingresar un rango, se ingresan los años separados por un guión(-),\n";
+	print
+"           ambos deben estar en formato de 4 dígitos y ordenados cronologicamente\n";
+	print
+	  "         * En el caso que se desee observar todos, no ingresa nada\n";
+	print "      - Filtro por gestión (todas, una)\n";
 	print " \n";
 	print " El parámetro -e no puede ir junto con los parámetros -c o -i.\n";
 	print "\n";
@@ -1016,17 +1066,17 @@ sub mostrarAyuda() {
 sub main {
 	local ( $e, $i, $w, $c, @listaResultados, $claveBusqueda );
 
-	
 	my $cadena = "";
-	my $error=0;
-	
+	my $error  = 0;
+
 	while (1) {
-		
-		if ($error){
+
+		if ($error) {
 			print "No se ingresaron los parametros correctos\n";
 		}
+
 		# Blanqueo las variables del comando.
-		$error=0;
+		$error           = 0;
 		$i               = 0;
 		$e               = 0;
 		$c               = 0;
@@ -1035,7 +1085,7 @@ sub main {
 		$claveBusqueda   = "";
 		print "Ingrese la consulta a realizar(q para salir, -a para ayuda): ";
 		$cadena = <STDIN>;
-		
+
 		system(clear);
 		chomp($cadena);
 
@@ -1043,20 +1093,30 @@ sub main {
 			last;
 		}
 		&procesoArgumentos($cadena);
+		if ( ( $e + $i ) > 1 ) {
+			print "No se pueden seleccionar estadistica junto con informe\n";
+
+			next;
+		}
+		if ( ( $e + $c ) > 1 ) {
+			print "No se pueden seleccionar estadistica junto con consulta\n";
+			next;
+		}
 		if ( $e == 1 ) {
 			&realizoEstadistica;
 		}
 		elsif ( $i == 1 ) {
 			&realizoInforme;
 		}
-		elsif($c==1) {
+		elsif ( $c == 1 ) {
 			&realizoConsulta;
-		} else {
-			$error=1;
 		}
-		
+		else {
+			$error = 1;
+		}
+
 	}
-	
+
 	exit;
 }
 
