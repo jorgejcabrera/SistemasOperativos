@@ -99,11 +99,6 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	do
 		sh mover.sh $archivoOrigen $MAEDIR/tab
 	done
-	
-	for archivoOrigen in $DATADIR/*;
-	do
-		sh mover.sh $archivoOrigen $NOVEDIR
-	done
 
 	#FALTA 20.03 MOVER LOS EJECUTABLES Y FUNCIONES AL DIRECTORIO BINDIR (verificarlo cuando este todo)
 	echo "Instalando Archivos Programas y funciones"
