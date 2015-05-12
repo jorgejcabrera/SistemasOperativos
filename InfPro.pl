@@ -559,11 +559,17 @@ sub procesoArgumentos() {
 		}
 		if ( ( $argumentos[$cont] eq "-e" ) or ( $argumentos[$cont] eq "-we" ) )
 		{
+			if ( $argumentos[$cont] eq "-we" ){
+				$w=1;
+			}
 			$e = 1;
 			next;
 		}
 		if ( ( $argumentos[$cont] eq "-c" ) or ( $argumentos[$cont] eq "-wc" ) )
 		{
+			if ( $argumentos[$cont] eq "-wc" ){
+				$w=1;
+			}
 			$c = 1;
 			$cont++;
 			# Guardo la clave de Busqueda
@@ -578,6 +584,9 @@ sub procesoArgumentos() {
 		}
 		if ( ( $argumentos[$cont] eq "-i" ) or ( $argumentos[$cont] eq "-wi" ) )
 		{
+			if ( $argumentos[$cont] eq "-wi" ){
+				$w=1;
+			}
 			$i = 1;
 			$cont++;
 
