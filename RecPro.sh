@@ -20,21 +20,21 @@ checkFormatoArchivo(){
 		#Se verifica cantidad de "_" y que no comience ni termine el nombre del archivo en ese caracter.
 		CANT_GUION_BAJO=`grep -o "_" <<<$ARCHIVO | wc -l`
 		if [ $CANT_GUION_BAJO != 4 -o ${ARCHIVO:0:1} == "_" -o ${ARCHIVO: -5} == "_.txt" ]; then
-			sh glog.sh RecPro "El nombre del archivo $ARCHIVO no es válido." ERR
-			sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-			sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+			glog.sh RecPro "El nombre del archivo $ARCHIVO no es válido." ERR
+			glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+			mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 			continue
 		fi
 	else
 		if echo "$TYPE" | grep -q -i "$EMPTY"; then #Se verifica que el archivo no esté vacío
-			sh glog.sh RecPro "El archivo $ARCHIVO está vacío." ERR
-			sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-			sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+			glog.sh RecPro "El archivo $ARCHIVO está vacío." ERR
+			glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+			mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 			continue
 		else
-			sh glog.sh RecPro "El archivo $ARCHIVO no tiene formato de texto." ERR
-			sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-			sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+			glog.sh RecPro "El archivo $ARCHIVO no tiene formato de texto." ERR
+			glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+			mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 			continue
 		fi
 	fi
@@ -47,9 +47,9 @@ checkGestion(){
 	ARCHIVO="$3"
 	ES_GESTION='^([a-zA-Z])+([a-zA-Z\ ])+([0-9])?$'
 	if ! [[ $COD_GESTION =~ $ES_GESTION ]]; then
-		sh glog.sh RecPro "El código de gestión del archivo $ARCHIVO no es válido." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de gestión del archivo $ARCHIVO no es válido." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -61,9 +61,9 @@ checkNorma(){
 	ARCHIVO="$3"
 	ES_NORMA='^[A-Z][A-Z][A-Z]$'
 	if ! [[ $COD_NORMA =~ $ES_NORMA ]]; then
-		sh glog.sh RecPro "El código de norma del archivo $ARCHIVO no es válido." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de norma del archivo $ARCHIVO no es válido." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -75,9 +75,9 @@ checkEmisor(){
 	ARCHIVO="$3"
 	ES_NUMERO='^([0-9])+$'
 	if ! [[ $COD_EMISOR =~ $ES_NUMERO ]]; then
-		sh glog.sh RecPro "El código de emisor del archivo $ARCHIVO no es válido." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de emisor del archivo $ARCHIVO no es válido." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -89,9 +89,9 @@ checkNroArchivo(){
 	ARCHIVO="$3"
 	ES_NUMERO='^([0-9])+$'
 	if ! [[ $NRO_ARCHIVO =~ $ES_NUMERO ]]; then
-		sh glog.sh RecPro "El número del archivo $ARCHIVO no es válido." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El número del archivo $ARCHIVO no es válido." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -103,9 +103,9 @@ checkFecha(){
 	ARCHIVO="$3"
 	ES_FECHA='^[0-3][0-9]-[0-1][0-9]-[0-2][0-9][0-9][0-9]$'
 	if ! [[ $FECHA =~ $ES_FECHA ]]; then
-		sh glog.sh RecPro "La fecha del archivo $ARCHIVO no es válida." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "La fecha del archivo $ARCHIVO no es válida." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -116,9 +116,9 @@ checkGestionExistente(){
 	PATH_ARCH="$2"
 	ARCHIVO="$3"
 	if [[ $GREP_RETURN != 0 ]]; then
-		sh glog.sh RecPro "El código de gestión del archivo $ARCHIVO no se encuentra en el archivo gestiones.mae." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de gestión del archivo $ARCHIVO no se encuentra en el archivo gestiones.mae." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -129,9 +129,9 @@ checkNormaExistente(){
 	PATH_ARCH="$2"
 	ARCHIVO="$3"
 	if [[ $GREP_RETURN != 0 ]]; then
-		sh glog.sh RecPro "El código de norma del archivo $ARCHIVO no se encuentra en el archivo normas.mae." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de norma del archivo $ARCHIVO no se encuentra en el archivo normas.mae." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -142,9 +142,9 @@ checkEmisorExistente(){
 	PATH_ARCH="$2"
 	ARCHIVO="$3"
 	if [[ $GREP_RETURN != 0 ]]; then
-		sh glog.sh RecPro "El código de emisor del archivo $ARCHIVO no se encuentra en el archivo emisores.mae." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "El código de emisor del archivo $ARCHIVO no se encuentra en el archivo emisores.mae." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -230,9 +230,9 @@ checkFechaValida(){
 	esac
 
 	if [ $VALIDA -eq 0 ]; then
-		sh glog.sh RecPro "La fecha del archivo $ARCHIVO no es válida." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "La fecha del archivo $ARCHIVO no es válida." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue;
 	fi
 }
@@ -268,21 +268,21 @@ checkRangoFecha(){
 
 	#Comparacion de las fechas
 	if [ $ANIO_INICIO -gt $ANIO_ARCH -o $ANIO_FIN -lt $ANIO_ARCH ]; then
-		sh glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 	if [ \( $ANIO_INICIO -eq $ANIO_ARCH -a $MES_INICIO -gt $MES_ARCH \) -o \( $ANIO_FIN -eq $ANIO_ARCH -a $MES_FIN -lt $MES_ARCH \) ]; then
-		sh glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 	if [ \( $ANIO_INICIO -eq $ANIO_ARCH -a $MES_INICIO -eq $MES_ARCH -a $DIA_INICIO -gt $DIA_ARCH \) -o \( $ANIO_FIN -eq $ANIO_ARCH -a $MES_FIN -eq $MES_ARCH -a $DIA_FIN -lt $DIA_ARCH \) ]; then
-		sh glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
-		sh mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
+		glog.sh RecPro "La fecha del archivo $ARCHIVO está fuera de rango." ERR
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_REJECTED" ERR
+		mover.sh "$PATH_ARCH" "$RECHDIR" RecPro
 		continue
 	fi
 }
@@ -298,12 +298,12 @@ checkCarpetaExistente(){
 	if [[ $ACCEPT_RETURN -eq 1 ]]
 	then
 		mkdir "$ACEPDIR_AUX"
-		sh glog.sh RecPro "Se ha creado una nueva carpeta llamada $COD_GESTION en el directorio $ACEPDIR." INFO
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
-		sh mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
+		glog.sh RecPro "Se ha creado una nueva carpeta llamada $COD_GESTION en el directorio $ACEPDIR." INFO
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
+		mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
 	else
-		sh glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
-		sh mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
+		glog.sh RecPro "$ARCHIVO $MSG_FILE_ACCEPTED" INFO
+		mover.sh "$PATH_ARCH" "$ACEPDIR_AUX" RecPro
 	fi
 }
 
@@ -315,14 +315,14 @@ invocarProPro(){
 			PROGRAMA="propro.sh"
 			if ps ax | grep -v grep | grep -q $PROGRAMA
 			then
-				sh glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
+				glog.sh RecPro "Invocación de ProPro pospuesta para el siguiente ciclo" INFO
 			else
-				bash propro.sh &
+				propro.sh &
 				wait $!
 				CORRECTO=$?
 				if [ $CORRECTO -eq 0 ]; then
 					PID=$!
-					sh glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
+					glog.sh RecPro "ProPro corriendo bajo el no.: $PID" INFO
 				else
 					echo "Ocurrió un inconveniente al invocar a ProPro."
 				fi
@@ -336,7 +336,7 @@ invocarProPro(){
 while [ !$EXIT ]
 do
 	CANT_CICLOS=$((CANT_CICLOS + 1))
-	sh glog.sh RecPro "Ciclo nro. $CANT_CICLOS" INFO
+	glog.sh RecPro "Ciclo nro. $CANT_CICLOS" INFO
 	while [ `ls "$NOVEDIR" | wc -l` -gt 0 ]
 	do
 		ARCHIVO=`ls "$NOVEDIR" | head -n 1` #Se obtiene el primer archivo de la lista
