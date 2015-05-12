@@ -132,7 +132,8 @@ else
 	fi
 	while [ $instalacionConfirmada = "No" ]; do
 		#6 DEFINIMOS EL DIRECTORIO DE INSTALACION DE LOS EJECUTABLES
-		echo "Defina el directorio de instalacion de los ejecutables ($BINDIR):"; 		
+		bindirImprimir=`echo $BINDIR | sed 's/.*\///'`
+		echo "Defina el directorio de instalacion de los ejecutables ($bindirImprimir):"; 		
 		read directorioInstalacion		
 		binDefault=$BINDIR
 		if ! [ -z $directorioInstalacion ] ; then
@@ -143,10 +144,11 @@ else
 			fi
 		fi
 		sed -i "s|BINDIR=$binDefault|BINDIR=$BINDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el directorio de instalacion de los ejecutables ($binDefault) $BINDIR" INFO
+		sh glog.sh InsPro "Defina el directorio de instalacion de los ejecutables ($bindirImprimir) $BINDIR" INFO
 
 		#7 DEFINIMOS EL DIRECTORIO DE INSTALACION DE LOS ARCHIVOS MAESTROS Y TABLAS
-		echo "Defina el Directorio de instalacion para maestros y tablas ($MAEDIR):";		
+		maedirImprimir=`echo $MAEDIR | sed 's/.*\///'`
+		echo "Defina el Directorio de instalacion para maestros y tablas ($maedirImprimir):";		
 		read directorioMae
 		maeDefault=$MAEDIR
 		if ! [ -z $directorioMae ] ; then
@@ -157,10 +159,11 @@ else
 			fi
 		fi
 		sed -i "s|MAEDIR=$maeDefault|MAEDIR=$MAEDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el Directorio de instalacion para maestros y tablas ($maeDefault): $MAEDIR" INFO
+		sh glog.sh InsPro "Defina el Directorio de instalacion para maestros y tablas ($maedirImprimir): $MAEDIR" INFO
 
 		#8 DEFINIMOS EL DIRECTORIO DE INPUT DEL PROCESO RecPro
-		echo "Defina el Directorio de recepcion de documentos para protocolizacion ($NOVEDIR):";
+		novedirImprimir=`echo $NOVEDIR | sed 's/.*\///'`
+		echo "Defina el Directorio de recepcion de documentos para protocolizacion ($novedirImprimir):";
 		read directorioNovedades
 		noveDefault=$NOVEDIR
 		if ! [ -z $directorioNovedades ] ; then
@@ -171,7 +174,7 @@ else
 			fi
 		fi
 		sed -i "s|NOVEDIR=$noveDefault|NOVEDIR=$NOVEDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el Directorio de recepcion de documentos para protocolizacion ($noveDefault): $NOVEDIR" INFO
+		sh glog.sh InsPro "Defina el Directorio de recepcion de documentos para protocolizacion ($novedirImprimir): $NOVEDIR" INFO
 
 		#9 DEFINIMOS EL ESPACIO MINIMO LIBRE PARA EL ARRIBO DE ARCHIVOS DE NOVEDADES
 		echo "Defina espacio minimo libre para el arribo de estas novedades en Mbytes ($DATASIZE): ";
@@ -187,7 +190,7 @@ else
 		milion=1000
 		DISCSIZE=$(expr $DISCSIZE / $milion)
 		while [ $DATASIZE -gt $DISCSIZE ]; do
-			echo "El espacio minimo definido para el arribo de novedades es mayor al espacio que hay en disco, por favor defina un espacio mas chico"
+			echo "El espacio minimo definido para el arribo de novedades es mayor al espacio que hay en disco, por favor defina un espacio mas chico, espacio en disco: $DISCSIZE"
 			read dataIngresada
 			sed -i "s|DATASIZE=$DATASIZE|DATASIZE=$dataIngresada|g" memoryFile
 			if ! [ -z $dataIngresada ] ; then
@@ -196,7 +199,8 @@ else
 		done
 
 		#11 DEFINIR EL DIRECTORIO DE INPUT DEL PROCESO ProPro
-		echo "Defina el directorio de grabacion de las Novedades aceptadas ($ACEPDIR): ";
+		acepdirImprimir=`echo $ACEPDIR | sed 's/.*\///'`
+		echo "Defina el directorio de grabacion de las Novedades aceptadas ($acepdirImprimir): ";
 		read directorioAprotocolizar
 		acepDefault=$ACEPDIR
 		if ! [ -z $directorioAprotocolizar ] ; then
@@ -207,10 +211,11 @@ else
 			fi
 		fi
 		sed -i "s|ACEPDIR=$acepDefault|ACEPDIR=$ACEPDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el directorio de grabacion de las Novedades aceptadas ($acepDefault): $ACEPDIR" INFO
+		sh glog.sh InsPro "Defina el directorio de grabacion de las Novedades aceptadas ($acepdirImprimir): $ACEPDIR" INFO
 
 		#12 DEFINIR REPOSITORIO DE ARCHIVOS RECHAZADOS
-		echo "Dedina el directorio de grabacion de Archivos rechazados ($RECHDIR): ";
+		rechdirImprimir=`echo $RECHDIR | sed 's/.*\///'`		
+		echo "Defina el directorio de grabacion de Archivos rechazados ($rechdirImprimir): ";
 		read directorioRechazados
 		rechDefault=$RECHDIR
 		if ! [ -z $directorioRechazados ] ; then
@@ -222,10 +227,11 @@ else
 		fi
 		sed -i "s|RECHDIR=$rechDefault|RECHDIR=$RECHDIR|g" memoryFile
 		sh glog.sh InsPro "Defina el directorio de grabación de Archivos rechazados 
-	($rechDefault): $RECHDIR" INFO
+	($rechdirImprimir): $RECHDIR" INFO
 
 		#13 DEFINIR EL DIRECTORIO DE OUTPUT DEL PROCESO ProPro
-		echo "Defina el Directorio de grabacion de los documentos protocolizados ($PROCDIR):";
+		procdirImprimir=`echo $PROCDIR | sed 's/.*\///'`
+		echo "Defina el Directorio de grabacion de los documentos protocolizados ($procdirImprimir):";
 		read directorioProtocolizados
 		procDefault=$PROCDIR
 		if ! [ -z $directorioProtocolizados ] ; then
@@ -236,10 +242,11 @@ else
 			fi
 		fi
 		sed -i "s|PROCDIR=$procDefault|PROCDIR=$PROCDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el Directorio de grabacion de los documentos protocolizados ($procDefault): $PROCDIR" INFO
+		sh glog.sh InsPro "Defina el Directorio de grabacion de los documentos protocolizados ($procdirImprimir): $PROCDIR" INFO
 
 		#14 DEFINIR EL DIRECTORIO DE TRABAJO PRINCIPAL DEL PROCESO InfPro
-		echo "Defina el Directorio de grabacion de los informes de salida ($INFODIR):";
+		infodirImprimir=`echo $INFODIR | sed 's/.*\///'`
+		echo "Defina el Directorio de grabacion de los informes de salida ($infodirImprimir):";
 		read directorioInformes
 		infoDefault=$INFODIR
 		if ! [ -z $directorioInformes ] ; then
@@ -250,10 +257,11 @@ else
 			fi
 		fi
 		sed -i "s|INFODIR=$infoDefault|INFODIR=$INFODIR|g" memoryFile
-		sh glog.sh InsPro "Defina el Directorio de grabacion de los informes de salida ($infoDefault): $INFODIR" INFO
+		sh glog.sh InsPro "Defina el Directorio de grabacion de los informes de salida ($infodirImprimir): $INFODIR" INFO
 		
 		#15 DEFINIR EL NOMBRE PARA EL REPOSITORIO DE DUPLICADOS
-		echo "Defina el nombre para el repositorio de archivos duplicados($DUPDIR): ";
+		dupImprimir=`echo $DUPDIR | sed 's/.*\///'`
+		echo "Defina el nombre para el repositorio de archivos duplicados($dupImprimir): ";
 		read nombreDuplicados
 		dupDefault=$DUPDIR
 		if ! [ -z $nombreDuplicados ] || [[ $nombreDuplicados =~ ^[a-zA-Z] ]] ; then
@@ -264,10 +272,11 @@ else
 			fi
 		fi
 		sed -i "s|DUPDIR=$dupDefault|DUPDIR=$DUPDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el nombre para el repositorio de archivos duplicados($dupDefault): $DUPDIR" INFO
+		sh glog.sh InsPro "Defina el nombre para el repositorio de archivos duplicados($dupImprimir): $DUPDIR" INFO
 	
 		#16 DEFINIR EL NOMBRE DEL DIRECTORIO PARA DEPOSITAR LOS LOGS DE EJECUCION DE LOS COMANDOS
-		echo "Defina el directorio de logs ($LOGDIR): ";
+		logdirImprimir=`echo $LOGDIR | sed 's/.*\///'`		
+		echo "Defina el directorio de logs ($logdirImprimir): ";
 		read directorioLog
 		logDefault=$LOGDIR
 		if ! [ -z $directorioLog ] ; then
@@ -278,7 +287,7 @@ else
 			fi
 		fi
 		sed -i "s|LOGDIR=$logDefault|LOGDIR=$LOGDIR|g" memoryFile
-		sh glog.sh InsPro "Defina el directorio de logs ($logDefault): $LOGDIR" INFO
+		sh glog.sh InsPro "Defina el directorio de logs ($logdirImprimir): $LOGDIR" INFO
 
 		#17 DEFINIR EL TAMANO MAXIMO PARA LOS ARCHIVOS DE LOG
 		echo "Defina el tamano maximo para cada archivo de log en Kbytes ($LOGSIZE): ";
