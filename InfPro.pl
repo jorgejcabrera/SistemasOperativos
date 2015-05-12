@@ -259,6 +259,9 @@ sub procesoDirectorioInformeListado {
 	my ($directorio) = substr $INFODIR, 0, -1;
 	my $archivo;
 	foreach (@listaResultados) {
+		# Omito . y ..
+		next if ( ( $archivo eq "." ) or ( $archivo eq ".." ) );
+		next if ( $archivo !~ "^resultado" );
 		my $newdir = $directorio . "/" . $_;
 		&procesoArchivoInforme($newdir);
 	}
