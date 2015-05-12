@@ -134,8 +134,8 @@ increaseCouter ()
 	local Usuario=$(echo $completeLineWithNumberNorm | cut -d ';' -f 7)
 	completeTime=`date +"%H-%M-%S"`
 	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"	
-	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
-	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	mover.sh $MAE_COUNT_FILE $fileNameToMove
+	glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp $fileNameToMove $MAE_COUNT_FILE	
 	sed -i "s/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$Numero;$Usuario/$idContador;$Cod_Gestion;$Anio;$Cod_Emisor;$Cod_Norma;$incrementCounter;$Usuario/g" $MAE_COUNT_FILE
 }
@@ -150,8 +150,8 @@ createCounter ()
 	completeTime=`date +"%H-%M-%S"`
 	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"
 	numberNorm="1"
-	sh mover.sh $MAE_COUNT_FILE $fileNameToMove
-	sh glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
+	mover.sh $MAE_COUNT_FILE $fileNameToMove
+	glog.sh MOVER "Tabla de contadores preservada antes de su modificación" INFO
 	cp $fileNameToMove $MAE_COUNT_FILE
 	echo "$newIdContador;$codeGestion;$currentYear;$codeEmisor;$codeNorm;$numberNorm;$userName;$currentDate" >> $MAE_COUNT_FILE
 }
@@ -181,9 +181,9 @@ rejectFile ()
 {
 	local reasonForRejection="$1"
 	local completeLocalFileName="$completeFileName-$2"
-	sh glog.sh PROPRO $reasonForRejection ERR
-	sh glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
-	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR/$completeLocalFileName PROPRO
+	glog.sh PROPRO $reasonForRejection ERR
+	glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
+	mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR/$completeLocalFileName PROPRO
 }
 
 rejectRegister ()
@@ -201,7 +201,7 @@ rejectRegister ()
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
 	local Id_Registro=$(echo $currentLine | cut -d ';' -f 9)
 	local Fuente="$completeFileName"
-	sh glog.sh PROPRO "Se rechaza el registro: $reasonForRejectRegister" INFO
+	glog.sh PROPRO "Se rechaza el registro: $reasonForRejectRegister" INFO
 	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> $PROCDIR/$codeGestion.rech
 }
 
@@ -258,14 +258,14 @@ processRegisterFromCurrentFile ()
 			rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
 		fi
 	fi
-	sh mover.sh $ACEPDIR/$codeGestion/$completeFileName $PROCDIR/proc
-	sh glog.sh MOVER "Se movió el archivo $completeFileName con éxito" INFO	
+	mover.sh $ACEPDIR/$codeGestion/$completeFileName $PROCDIR/proc
+	glog.sh MOVER "Se movió el archivo $completeFileName con éxito" INFO	
 }
 
 
 codeCurrentGest=$(tail -n -1 $MAEDIR/gestiones.mae | cut -d ';' -f 1)
 countFiles=$(find $ACEPDIR/ -type f | wc -l)
-sh glog.sh PROPRO "Inicio de propro. Cantidad de archivos a procesar: $countFiles" INFO
+glog.sh PROPRO "Inicio de propro. Cantidad de archivos a procesar: $countFiles" INFO
 countRejectFile=0
 countProcessFile=0
 createAllDirectories
@@ -284,7 +284,7 @@ cat $MAEDIR/gestiones.mae | while read line; do
 		 	fileAlreadyDocketed=$(find $PROCDIR/proc -type f -name "$completeFileName")						#me fijo si el archivo ya fue protocolizado
 		 	completeTime=`date +"%H-%M-%S"`
 		 	if [ -z $fileAlreadyDocketed ]; then															#si el archivo no fue protocolizado, el find no nos retorna nada, y el string esta vacio
-		 		sh glog.sh PROPRO "Protocolizando $completeFileName" INFO
+		 		glog.sh PROPRO "Protocolizando $completeFileName" INFO
 		 		codeNorm=$(echo $completeFileName | cut -d '_' -f 2)																	
 		 		codeEmisor=$(echo  $completeFileName | cut -d '_' -f 3)															
 		 		existCodeNormAndCodEmisorCombination=$(find $MAE_NORM_BY_TRANSMITTER -type f -print | xargs grep "$codeNorm;$codeEmisor")	#me fijo si existe la combinacion de codigo de norma y emisor en la tabla nxe
@@ -304,9 +304,9 @@ cat $MAEDIR/gestiones.mae | while read line; do
 		done;
 	fi
 	if [ "$codeGestion" = "$codeCurrentGest" ]; then														#como se procesa por orden coronologico si la gestion procesada es igual a la corriente, loggeamos todo
-		sh glog.sh PROPRO "Se procesaron $countProcessFile archivos" INFO
-		sh glog.sh PROPRO "Se rechazaron $countRejectFile archivos" INFO
+		glog.sh PROPRO "Se procesaron $countProcessFile archivos" INFO
+		glog.sh PROPRO "Se rechazaron $countRejectFile archivos" INFO
 	fi
 done;
-sh glog.sh PROPRO "Fin de propro" INFO
+glog.sh PROPRO "Fin de propro" INFO
 
