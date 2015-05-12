@@ -201,7 +201,7 @@ rejectRegister ()
 	local Cod_Firma=$(echo $currentLine | cut -d ';' -f 8)
 	local Id_Registro=$(echo $currentLine | cut -d ';' -f 9)
 	local Fuente="$completeFileName"
-	sh glog.sh PROPRO "Se rechaza el registro: $2" INFO
+	sh glog.sh PROPRO "Se rechaza el registro: $reasonForRejectRegister" INFO
 	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> $PROCDIR/$codeGestion.rech
 }
 
