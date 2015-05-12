@@ -12,9 +12,12 @@ COMANDO=$(echo "$1" | tr '[:lower:]' '[:upper:]') # Paso el comando a mayusculas
 NAMEFILELOG=$(echo "$1" | tr '[:lower:]' '[:upper:]') # Paso el comando a mayusculas para unificar grabacion en log y nombre del ARCHIVO.log
 MENSAJE=$2
 TIPOMENSAJE=$3
+FECHA=`date +"%X %x"`
+MSGLOG="Log Excedido para poder controlar que se está realizando este trabajo."
 if [ -n "$LOGSIZE" ]; then
 	LOGBORRARHH=$(expr $LOGSIZE - 49) #Borra hasta la linea n-1
 fi
+
 
 #---------------FUNCIONES---------------#
 fatherOfFunction(){
@@ -31,7 +34,6 @@ fatherOfFunction(){
 }
 
 logInPlace(){
-	FECHA=`date +"%X %x"`
 	#Valido que el tercer parametro sea del tipo INFO,WAR,ERR
 	if [ -z "$TIPOMENSAJE" ] || [ "$TIPOMENSAJE" != "WAR" ] || [ "$TIPOMENSAJE" != "ERR" ]; then	
 		TIPOMENSAJE="INFO"
@@ -66,7 +68,7 @@ LOGDIRSIZE=$(wc -l $LOGDIR/"$NAMEFILELOG".log 2> /dev/null | sed 's/ \/.*//') #C
 if [ -n "$LOGDIRSIZE" ] && [ -n "$LOGSIZE" ]; then
 	if [ "$LOGDIRSIZE" -ge "$LOGSIZE" ]; then # Si alcanzo el maximo de lineas
 		sed -i '1,'$LOGBORRARHH' d' $LOGDIR/$NAMEFILELOG.log #Borro  desde la linea 1 hasta la linea LOGBORRARHH en el log correspondiente
-	logInPlace
+	echo $FECHA $USER "LOG" "INFO" $MSGLOG >> $LOGDIR/$NAMEFILELOG.log
 	fi
 fi
 	
