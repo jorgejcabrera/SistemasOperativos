@@ -99,11 +99,6 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	do
 		sh mover.sh $archivoOrigen $MAEDIR/tab
 	done
-	
-	for archivoOrigen in $DATADIR/*;
-	do
-		sh mover.sh $archivoOrigen $NOVEDIR
-	done
 
 	#FALTA 20.03 MOVER LOS EJECUTABLES Y FUNCIONES AL DIRECTORIO BINDIR (verificarlo cuando este todo)
 	echo "Instalando Archivos Programas y funciones"
@@ -115,11 +110,9 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	sh mover.sh InfPro.pl $BINDIR
 	sh mover.sh stop.sh $BINDIR
 	sh mover.sh start.sh $BINDIR
-	sh mover.sh verifAmbIni.sh $BINDIR
 	sh mover.sh verifInstalacion.sh $BINDIR	
 
 	cp glog.sh $BINDIR
-	cp demonioInfinito.sh $BINDIR
 	cp InsPro.sh $BINDIR
 	cp instalar.sh $BINDIR
 	cp verificarInstalacion.sh $BINDIR
@@ -153,12 +146,10 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	echo "Instalacion CONCLUIDA"
 	sh glog.sh InsPro "Instalacion CONCLUIDA" INFO
 	rm glog.sh 
-	rm demonioInfinito.sh
 	exit
 else
 	echo "INSTALACION CANCELADA"
 	sh glog.sh InsPro "INSTALACION CANCELADA" WAR
 	rm glog.sh 
-	rm demonioInfinito.sh
 	exit
 fi

@@ -8,10 +8,11 @@ if [ "$SYS_STATUS" = "INICIALIZADO" ]; then
 	echo "El programa ya se ha iniciado."
 	echo "Desea ejecutar RecPro.sh? (S/N)"
 	read response
-	echo "Fin IniPro.sh"
 	if [ "$response" = "S" ] || [ "$response" = "s" ]; then
-		RecPro.sh
+		echo "Se ejecutará la función RecPro."
+		start.sh RecPro.sh
 	fi	
+	echo "Fin IniPro.sh"
 	return 0
 fi
 
@@ -128,6 +129,7 @@ checkVarIni(){
 	fi
 }
 
+checkVarIni "LOGSIZE" $LOGSIZE
 checkVarIni "MAEDIR" $MAEDIR
 checkVarIni "NOVEDIR" $NOVEDIR
 checkVarIni "ACEPDIR" $ACEPDIR
@@ -135,6 +137,7 @@ checkVarIni "RECHDIR" $RECHDIR
 checkVarIni "PROCDIR" $PROCDIR
 checkVarIni "INFODIR" $INFODIR
 checkVarIni "DUPDIR" $DUPDIR
+checkVarIni "GRUPO" $GRUPO
 
 if [ "$SYS_STATUS" = "ERROR" ]; then
 	echo "Se termina la inicialización del sistema erróneamente."	
@@ -142,6 +145,7 @@ if [ "$SYS_STATUS" = "ERROR" ]; then
 fi
 
 #Seteo las variables de directorios desde el archivo de Configuración ( InsPro.conf )
+GRUPO=$(grep "GRUPO" $CONFIGFILE | cut -d "=" -f 2)
 MAEDIR=$(grep "MAEDIR" $CONFIGFILE | cut -d "=" -f 2)
 NOVEDIR=$(grep "NOVEDIR" $CONFIGFILE | cut -d "=" -f 2)
 ACEPDIR=$(grep "ACEPDIR" $CONFIGFILE | cut -d "=" -f 2)
@@ -149,6 +153,7 @@ RECHDIR=$(grep "RECHDIR" $CONFIGFILE | cut -d "=" -f 2)
 PROCDIR=$(grep "PROCDIR" $CONFIGFILE | cut -d "=" -f 2)
 INFODIR=$(grep "INFODIR" $CONFIGFILE | cut -d "=" -f 2)
 DUPDIR=$(grep "DUPDIR" $CONFIGFILE | cut -d "=" -f 2)
+LOGSIZE=$(grep "LOGSIZE" $CONFIGFILE | cut -d "=" -f 2)
 
 #Funciones Varias
 isDir(){
@@ -170,8 +175,6 @@ isFile(){
 }
 
 # Check Install: Verifico que la instalación esté completa ( que no falte ningún archivo ni directorio )
-isFile "$BINDIR/demonioInfinito.sh"
-chmod 777 "$BINDIR/demonioInfinito.sh"
 isFile "$BINDIR/mover.sh"
 chmod 777 "$BINDIR/mover.sh"
 isFile "$BINDIR/propro.sh"
@@ -224,6 +227,7 @@ do
 		if ! [ -x $var ]; then
 			echo "No se pudo dar permisos de ejecución al archivo $var"
 			echo $ERRORINSTALL
+			glog.sh IniPro "No se pudo dar permisos de ejecución al archivo $var" ERR
 			SYS_STATUS="ERROR"
 			return 1
 		fi
@@ -248,6 +252,8 @@ export RECHDIR
 export PROCDIR
 export INFODIR
 export DUPDIR
+export GRUPO
+export LOGSIZE
 
 SYS_STATUS="INICIALIZADO"
 export SYS_STATUS
@@ -256,7 +262,9 @@ echo "Inicialización finalizada."
 echo "Desea ejecutar RecPro.sh? (S/N)"
 read response
 if [ "$response" = "S" ] || [ "$response" = "s" ]; then
-	RecPro.sh
+	echo "Se ejecutará la función RecPro."
+	start.sh RecPro.sh
 fi
+echo "Fin IniPro.sh"
 return 0
 

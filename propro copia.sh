@@ -181,7 +181,7 @@ rejectFile ()
 {
 	local reasonForRejection="$1"
 	local completeLocalFileName="$completeFileName-$2"
-	glog.sh PROPRO $reasonForRejection ERR
+	glog.sh PROPRO "$reasonForRejection" ERR
 	glog.sh PROPRO "Archivo $completeFileName rechazado" ERR
 	mover.sh $ACEPDIR/$codeGestion/$completeFileName $RECHDIR/$completeLocalFileName PROPRO
 }

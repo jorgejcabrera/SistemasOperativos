@@ -21,14 +21,14 @@ fi
 
 #---------------FUNCIONES---------------#
 fatherOfFunction(){
-	PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'`
-	if [ "$PPNAME" = "MOVER" ] || [ "$PPNAME" = "START" ]; then
+	PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.*\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'`
+if [ "$PPNAME" = "MOVER" ] || [ "$PPNAME" = "START" ]; then
 		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
-		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre
+		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.*\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre
 	fi
 	if [ "$PPNAME" = "INSTALAR" ]; then
 		PPID=`ps -fp $PPID | awk "/$PPID/"' { print $3 } '` #Obtengo el ID del padre
-		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre del padre
+		PPNAME=`ps -fp $PPID | awk "/$PPID/"' { print $9 } ' | sed 's/.*\///' | sed 's/.sh//' | tr '[:lower:]' '[:upper:]'` 	#Obtengo el nombre del padre del padre del padre
 	fi
 	NAMEFILELOG=$PPNAME
 }
