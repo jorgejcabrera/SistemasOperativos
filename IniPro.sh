@@ -5,21 +5,19 @@ ERRORINSTALL="El programa no se ha instalado correctamente. Intente realizar la 
 MSGVARSINI="El programa no ha podido realizar la inicialización correctamente. Vuelva a instalar el programa. Consulte el archivo README.txt para mas informacion."
 
 if [ "$SYS_STATUS" = "INICIALIZADO" ]; then
-	echo "El programa ya se ha iniciado."
+	echo "El programa ya se ha inicializado."
 	echo "Desea ejecutar RecPro.sh? (S/N)"
 	read response
 	if [ "$response" = "S" ] || [ "$response" = "s" ]; then
 		echo "Se ejecutará la función RecPro."
+		glog.sh IniPro "Se procederá a ejecutar la función RecPro." INFO
 		start.sh RecPro.sh
 	fi	
 	echo "Fin IniPro.sh"
 	return 0
 fi
 
-if [ "$SYS_STATUS" = "ERROR" ]; then
-	echo $ERRORINSTALL
-	return 1
-fi
+SYS_STATUS="INICIALIZANDO"
 
 echo "Inicializando sistema... "
 #Obtengo el PATH completo del archivo de Configuración ( InsPro.conf )
@@ -32,7 +30,7 @@ CONFIGFILE="$CONFDIR/InsPro.conf"
 #Verifico que CONFDIR sea un Directorio
 if [ ! -d "$CONFDIR" ]; then
 	echo $ERRORINSTALL
-	echo "CONFDIR is not DIR"
+	echo "Detalle: No se encontró el directorio de configuración."
 	SYS_STATUS="ERROR"
 	return 1
 fi
@@ -42,7 +40,7 @@ chmod 774 "$CONFDIR"
 #Verifico que CONFIGFILE sea un Archivo
 if [ ! -f "$CONFIGFILE" ]; then
 	echo $ERRORINSTALL
-	echo "CONFIGFILE is not FILE"
+	echo "Detalle: No se encontró el archivo de configuración."
 	SYS_STATUS="ERROR"
 	return 1
 fi
@@ -50,12 +48,12 @@ fi
 chmod 774 "$CONFIGFILE"
 
 # Check LOGDIR is empty
-if [ -n "$LOGDIR" ]; then
-	echo $MSGVARSINI
-	echo "La variable de ambiente LOGDIR, ya ha sido inicializada."		
-	SYS_STATUS="ERROR"
-	return 1
-fi
+#if [ -n "$LOGDIR" ]; then
+#	echo $MSGVARSINI
+#	echo "La variable de ambiente LOGDIR, ya ha sido inicializada."		
+#	SYS_STATUS="ERROR"
+#	return 1
+#fi
 
 # Charge LOGDIR
 LOGDIR=$(grep "LOGDIR" $CONFIGFILE | cut -d "=" -f 2)
@@ -63,16 +61,16 @@ LOGDIR=$(grep "LOGDIR" $CONFIGFILE | cut -d "=" -f 2)
 # Check LOGDIR is DIR
 if [ ! -d "$LOGDIR" ]; then
 	echo $ERRORINSTALL
-	echo "LOGDIR is not DIR"
+	echo "Detalle: No se encontró el directorio de LOG."
 	SYS_STATUS="ERROR"
 	return 1
 fi
 
 chmod 774 "$LOGDIR"
 
-echo "Se ha configurado el directorio LOG."
-
 export LOGDIR
+
+echo "Se ha configurado el directorio LOG."
 
 #Charge BINDIR
 BINDIR=$(grep "BINDIR" $CONFIGFILE | cut -d "=" -f 2)
@@ -80,7 +78,7 @@ BINDIR=$(grep "BINDIR" $CONFIGFILE | cut -d "=" -f 2)
 #Check BINDIR is DIR
 if [ ! -d "$BINDIR" ]; then
 	echo $ERRORINSTALL
-	echo "BINDIR is not DIR"
+	echo "Detalle: No se encontró el directorio de ejecutables (BIN)."
 	SYS_STATUS="ERROR"
 	return 1
 fi
@@ -98,6 +96,7 @@ NAMEGLOG="glog.sh"
 #Check GLOG is FILE
 if [ ! -f "$GLOG" ]; then
 	echo $ERRORINSTALL
+	echo "Detalle: No se encontró el archivo $GLOG."
 	SYS_STATUS="ERROR"
 	return 1
 fi
@@ -106,43 +105,43 @@ fi
 if ! [ -x $GLOG ]; then
 	chmod 777 $GLOG
 	if ! [ -x $GLOG ]; then
-		echo "No se pudo dar permisos de ejecución al archivo $GLOG. Se corta la inicializacion del sistema."
+		echo "No se pudo dar permisos de ejecución al archivo $GLOG. Se termina la inicializacion del sistema erróneamente."
 		SYS_STATUS="ERROR"
 		return 1
 	fi
-	glog.sh IniPro "Inicializando Sistema..." INFO
 fi
 
 echo "El Log ha sido configurado."
+glog.sh IniPro "Inicializando Sistema..." INFO
 
 # Check Vars Initialized: Verifico que las variables de ambiente no se encuentren inicializadas para la sesión actual. Con Logger
-checkVarIni(){
-	VARNAME=$1
-	VAR=$2
-	if [ -n "$VAR" ]; then
-		echo $MSGVARSINI
-		glog.sh IniPro "La variable de ambiente $VARNAME, ya ha sido inicializada." ERR
-		SYS_STATUS="ERROR"
-		return 1
-	else
-		glog.sh IniPro "Se verificó que la variable $VARNAME no se encuentra inicializada." INFO
-	fi
-}
+#checkVarIni(){
+#	VARNAME=$1
+#	VAR=$2
+#	if [ -n "$VAR" ]; then
+#		echo $MSGVARSINI
+#		glog.sh IniPro "La variable de ambiente $VARNAME, ya ha sido inicializada." ERR
+#		SYS_STATUS="ERROR"
+#		return 1
+#	else
+#		glog.sh IniPro "Se verificó que la variable $VARNAME no se encuentra inicializada." INFO
+#	fi
+#}
 
-checkVarIni "LOGSIZE" $LOGSIZE
-checkVarIni "MAEDIR" $MAEDIR
-checkVarIni "NOVEDIR" $NOVEDIR
-checkVarIni "ACEPDIR" $ACEPDIR
-checkVarIni "RECHDIR" $RECHDIR
-checkVarIni "PROCDIR" $PROCDIR
-checkVarIni "INFODIR" $INFODIR
-checkVarIni "DUPDIR" $DUPDIR
-checkVarIni "GRUPO" $GRUPO
+#checkVarIni "LOGSIZE" $LOGSIZE
+#checkVarIni "MAEDIR" $MAEDIR
+#checkVarIni "NOVEDIR" $NOVEDIR
+#checkVarIni "ACEPDIR" $ACEPDIR
+#checkVarIni "RECHDIR" $RECHDIR
+#checkVarIni "PROCDIR" $PROCDIR
+#checkVarIni "INFODIR" $INFODIR
+#checkVarIni "DUPDIR" $DUPDIR
+#checkVarIni "GRUPO" $GRUPO
 
-if [ "$SYS_STATUS" = "ERROR" ]; then
-	echo "Se termina la inicialización del sistema erróneamente."	
-	return 1
-fi
+#if [ "$SYS_STATUS" = "ERROR" ]; then
+#	echo "Se termina la inicialización del sistema erróneamente."	
+#	return 1
+#fi
 
 #Seteo las variables de directorios desde el archivo de Configuración ( InsPro.conf )
 GRUPO=$(grep "GRUPO" $CONFIGFILE | cut -d "=" -f 2)
@@ -159,19 +158,27 @@ LOGSIZE=$(grep "LOGSIZE" $CONFIGFILE | cut -d "=" -f 2)
 isDir(){
 	VAR=$1
 	if [ ! -d "$VAR" ]; then
-		echo "ERROR: no es DIR $VAR"
+		echo $ERRORINSTALL
+		echo "Detalle: No se encontró el directorio: $VAR."
+		glog.sh IniPro "No se encontró el directorio: $VAR. Se finaliza la ejecución erroneamente." ERR
 		SYS_STATUS="ERROR"
 		return 1
 	fi
+#	echo "Directorio verificado: $VAR."
+	glog.sh IniPro "Directorio verificado: $VAR." INFO
 }
 
 isFile(){
 	VAR=$1
 	if [ ! -f "$VAR" ]; then
-		echo "ERROR: no es FILE $VAR"
+		echo $ERRORINSTALL
+		echo "Detalle: No se encontró el archivo: $VAR."
+		glog.sh IniPro "No se encontró el archivo: $VAR. Se finaliza la ejecución erroneamente." ERR
 		SYS_STATUS="ERROR"		
 		return 1
 	fi
+#	echo "Archivo verificado: $VAR."
+	glog.sh IniPro "Archivo verificado: $VAR." INFO
 }
 
 # Check Install: Verifico que la instalación esté completa ( que no falte ningún archivo ni directorio )
@@ -219,6 +226,8 @@ if [ "$SYS_STATUS" = "ERROR" ]; then
 	return 1
 fi
 
+echo "Se han verificado todos los directorios."
+
 # Check Permisos
 for var in $BINDIR/*
 do
@@ -232,7 +241,11 @@ do
 			return 1
 		fi
 	fi
+#	echo "El archivo $var tiene los permisos necesarios."
+	glog.sh IniPro "El archivo $var tiene los permisos necesarios." INFO
 done
+
+echo "Se han verificado todos los archivos."
 
 #for var in $PARENTDIR/*
 #do
@@ -259,10 +272,12 @@ SYS_STATUS="INICIALIZADO"
 export SYS_STATUS
 
 echo "Inicialización finalizada."
+glog.sh IniPro "Inicialización finalizada" INFO
 echo "Desea ejecutar RecPro.sh? (S/N)"
 read response
 if [ "$response" = "S" ] || [ "$response" = "s" ]; then
 	echo "Se ejecutará la función RecPro."
+	glog.sh IniPro "Se procederá a ejecutar la función RecPro." INFO
 	start.sh RecPro.sh
 fi
 echo "Fin IniPro.sh"
