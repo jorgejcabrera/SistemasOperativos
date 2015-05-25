@@ -17,13 +17,16 @@ validateDate ()
 	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 									#parseo para obtener el mes de la fecha
 	local year=$(echo $dateFromRegister | sed 's@.*/\([^/]*\)$@\1@')							#parseo para obtener el anio de la fecha
 	local format=$(echo $line | sed 's@^\([^;]*\);.*$@\1@' | grep -o "/" | wc -l)
-	if [ ! $format -eq 2 ] ; then
+	if [ ! "$format" -eq 2 ] ; then
 		echo 0 																					#el formato de la fecha es invalido
 		return
 	elif [ -n "$(printf '%s\n' "$day" | sed 's/[0-9]//g')" ] || [ -n "$(printf '%s\n' "$month" | sed 's/[0-9]//g')" ] || [ -n "$(printf '%s\n' "$year" | sed 's/[0-9]//g')" ]; then
   		echo 0 																					#chequeo que el dia, mes y anio sean numeros
   		return
-	elif [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 -o $year -gt $(date +'%Y') ]; then
+	elif [ -z "$month" ] || [ -z "$day" ] || [ -z "$year" ]; then								#chequeo que no esten vacios los campos
+		echo 0
+		return
+	elif [ "$day" -gt 31 -o "$day" -lt 1 -o "$month" -gt 12 -o "$month" -lt 1 -o "$year" -gt $(date +'%Y') ]; then
 		echo 0																					#la fecha no es valida
 		return
 	else
@@ -51,44 +54,43 @@ validateDateOnGest ()
 	local yearFromRegister=$(echo $dateFromRegister | sed 's@.*/\([^/]*\)$@\1@')
 
 	if [ $typeGest -eq 0 ]; then																	#valido la fecha para un registro historico
-		if [ $yearFromRegister -gt $yearEnd -o $yearFromRegister -lt $yearBegin ]; then
+		if [ "$yearFromRegister" -gt "$yearEnd" -o "$yearFromRegister" -lt "$yearBegin" ]; then
 			echo 0																					#la fecha no esta dentro del periodo de la gestion
 			return
-		elif [ $yearBegin -eq $yearFromRegister -a $monthFromRegister -lt $monthBegin ]; then
+		elif [ "$yearBegin" -eq "$yearFromRegister" -a "$monthFromRegister" -lt "$monthBegin" ]; then
 			echo 0																					#la fecha no esta dentro del periodo de la gestion
 			return
-		elif [ $yearEnd -eq $yearFromRegister -a $monthFromRegister -gt $monthEnd ]; then
+		elif [ "$yearEnd" -eq "$yearFromRegister" -a "$monthFromRegister" -gt "$monthEnd" ]; then
 			echo 0																					#la fecha no esta dentro del periodo de la gestion
 			return
-		elif [ $monthBegin -eq $monthFromRegister -a $yearBegin -eq $yearFromRegister -a $dayBegin -gt $dayFromRegister ]; then
+		elif [ "$monthBegin" -eq "$monthFromRegister" -a "$yearBegin" -eq "$yearFromRegister" -a "$dayBegin" -gt "$dayFromRegister" ]; then
 			echo 0																					#la fecha no esta dentro del periodo de la gestion
 			return
-		elif [ $monthEnd -eq $monthFromRegister -a $yearEnd -eq $yearFromRegister -a $dayEnd -lt $dayFromRegister ]; then
+		elif [ "$monthEnd" -eq "$monthFromRegister" -a "$yearEnd" -eq "$yearFromRegister" -a "$dayEnd" -lt "$dayFromRegister" ]; then
 			echo 0
 			return
 		else
 			echo 1 																					#la fecha esta dentro del periodo de la gestion
 			return
 		fi
-	elif [ $typeGest -eq 1 ]; then
-		if [ $yearFromRegister -lt $yearBegin ]; then
+	elif [ "$typeGest" -eq 1 ]; then
+		if [ "$yearFromRegister" -lt "$yearBegin" ]; then
 			echo 0
 			return
-		elif [ $yearBegin -eq $yearFromRegister -a $monthFromRegister -lt $monthBegin ]; then
+		elif [ "$yearBegin" -eq "$yearFromRegister" -a "$monthFromRegister" -lt "$monthBegin" ]; then
 			echo 0
 			return
-		elif [ $monthBegin -eq $monthFromRegister -a $yearBegin -eq $yearFromRegister -a $dayBegin -gt $dayFromRegister ]; then
+		elif [ "$monthBegin" -eq "$monthFromRegister" -a "$yearBegin" -eq "$yearFromRegister" -a "$dayBegin" -gt "$dayFromRegister" ]; then
 			echo 0
 			return
 		else
 			echo 1
 			return
 		fi
-	elif [ $typeGest -gt 1 ]; then
+	elif [ "$typeGest" -gt 1 ]; then
 		echo 0
 		return	
 	fi
-}
 
 protocolize ()
 {
