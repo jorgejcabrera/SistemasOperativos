@@ -35,7 +35,7 @@ if [ "$PPNAME" = "MOVER" ] || [ "$PPNAME" = "START" ]; then
 
 logInPlace(){
 	#Valido que el tercer parametro sea del tipo INFO,WAR,ERR
-	if [ -z "$TIPOMENSAJE" ] || [ "$TIPOMENSAJE" != "WAR" ] || [ "$TIPOMENSAJE" != "ERR" ]; then	
+	if [ -z "$TIPOMENSAJE" ]; then	
 		TIPOMENSAJE="INFO"
 	fi
 
@@ -45,9 +45,9 @@ logInPlace(){
 	if [ "$COMANDO" = "INSPRO" ] || [ "$NAMEFILELOG" = "INSPRO" ]; then
 		NAMEFILELOG="INSPRO"
 		COMANDO="INSPRO"
-		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> $CONFDIR/$NAMEFILELOG.log
+		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> "$CONFDIR"/$NAMEFILELOG.log
 	else
-		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> $LOGDIR/$NAMEFILELOG.log
+		echo $FECHA $USER $COMANDO $TIPOMENSAJE $MENSAJE  >> "$LOGDIR"/$NAMEFILELOG.log
 	fi
 }
 
