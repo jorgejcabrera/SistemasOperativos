@@ -221,7 +221,7 @@ processRegister ()
 			elif [ $typeGest -eq 0 ]; then											#se trata de una gestion historica
 				numberNorm=$(echo $line | sed 's@^\([^;]*\);\([^;]*\);.*$@\2@')
 				if [ -n "$(printf '%s\n' "$numberNorm" | sed 's/[0-9]//g')" ] || [ $numberNorm -lt 0 ]; then
-					rejectRegister "$line" "El numero de norma invalido"
+					rejectRegister "$line" "numero de norma invalido"
 				else
 					protocolize	"$line"												#el numero de norma es mayor a 0 y se considera valido
 				fi
