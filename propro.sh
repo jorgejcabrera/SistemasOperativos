@@ -91,6 +91,7 @@ validateDateOnGest ()
 		echo 0
 		return	
 	fi
+}
 
 protocolize ()
 {
