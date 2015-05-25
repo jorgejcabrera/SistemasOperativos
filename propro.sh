@@ -86,6 +86,9 @@ validateDateOnGest ()
 
 protocolize ()
 {
+	if [ ! -d $PROCDIR/$codeGestion ]; then
+		mkdir $PROCDIR/$codeGestion
+	fi
 	local currentLine="$1"
 	local Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
 	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);.*$@\2@')
@@ -271,9 +274,6 @@ cat $MAEDIR/gestiones.mae | while read line || [ -n "$line" ]; do
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
 	if [ -d $ACEPDIR/$codeGestion ]; then
-		if [ ! -d $PROCDIR/$codeGestion ]; then
-			mkdir $PROCDIR/$codeGestion
-		fi
 		for completeFileName in `ls $ACEPDIR/$codeGestion/ | cut -d '_' -f 5 | sort -t - -k 3 -k 2 -k 1`; do  	
 		 	completeFileName=$(find $ACEPDIR/$codeGestion -type f -name "*$completeFileName" | sed 's@.*/\([^/]*\)$@\1@')
  			echo "protocolizando $completeFileName"
