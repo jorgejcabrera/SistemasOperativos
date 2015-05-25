@@ -1,8 +1,8 @@
 #!/bin/bash
-archivoMaestro="MAEDIR/gestiones.mae"
-archivoDeContadores="MAEDIR/tab/axg.tab"
-archivoDeEmisores="MAEDIR/emisores.mae"
-archivoDeNormasPorEmisor="MAEDIR/tab/nxe.tab"
+archivoMaestro="$MAEDIR/gestiones.mae"
+archivoDeContadores="$MAEDIR/tab/axg.tab"
+archivoDeEmisores="$MAEDIR/emisores.mae"
+archivoDeNormasPorEmisor="$MAEDIR/tab/nxe.tab"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
 MAE_TRANSMITTER=$archivoDeEmisores
@@ -146,7 +146,7 @@ increaseCouter ()
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | sed 's@.*;\([^;]*\);\([^;]*\)$@\1@')
 	completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="MAEDIR/tab/ant/$completeTime-$completeFileName"	
+	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"	
 	mover.sh "$MAE_COUNT_FILE" "$fileNameToMove"
 	glog.sh "MOVER" "Tabla de contadores preservada antes de su modificación" "INFO"
 	cp "$fileNameToMove" "$MAE_COUNT_FILE"	
@@ -161,7 +161,7 @@ createCounter ()
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
 	completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="MAEDIR/tab/ant/$completeTime-$completeFileName"
+	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"
 	numberNorm="1"
 	mover.sh "$MAE_COUNT_FILE" "$fileNameToMove"
 	glog.sh "MOVER" "Tabla de contadores preservada antes de su modificación" "INFO"
@@ -281,13 +281,13 @@ processRegisterFromCurrentFile ()
 }
 
 
-codeCurrentGest=$(tail -n -1 MAEDIR/gestiones.mae | cut -d ';' -f 1)
+codeCurrentGest=$(tail -n -1 $MAEDIR/gestiones.mae | cut -d ';' -f 1)
 countFiles=$(find $ACEPDIR/ -type f | wc -l)
 glog.sh "PROPRO" "Inicio de propro. Cantidad de archivos a procesar: $countFiles" "INFO"
 countRejectFile=0
 countProcessFile=0
 createAllDirectories
-cat MAEDIR/gestiones.mae | while read line || [ -n "$line" ]; do
+cat $MAEDIR/gestiones.mae | while read line || [ -n "$line" ]; do
 	codeGestion=$(echo $line | sed 's@^\([^;]*\);.*$@\1@')
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
