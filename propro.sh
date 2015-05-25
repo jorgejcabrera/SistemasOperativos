@@ -15,11 +15,14 @@ validateDate ()
 {
 	local day=$(echo $dateFromRegister | sed 's@^\([^/]*\)/.*$@\1@')							#parseo para obtener el dia de la fecha
 	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 									#parseo para obtener el mes de la fecha
-	local year=$(echo $dateFromRegister | sed 's@.*/\([^/]*\)$@\1@')
-	local format=$(echo grep -o "/" "$dateFromRegister" | wc -l) 								#parseo para obtener el anio de la fecha
-	if [ ! $format -eq 2 ]; then
+	local year=$(echo $dateFromRegister | sed 's@.*/\([^/]*\)$@\1@')							#parseo para obtener el anio de la fecha
+	local format=$(echo $line | sed 's@^\([^;]*\);.*$@\1@' | grep -o "/" | wc -l)
+	if [ ! $format -eq 2 ] ; then
 		echo 0 																					#el formato de la fecha es invalido
 		return
+	elif [ -n "$(printf '%s\n' "$day" | sed 's/[0-9]//g')" ] || [ -n "$(printf '%s\n' "$month" | sed 's/[0-9]//g')" ] || [ -n "$(printf '%s\n' "$year" | sed 's/[0-9]//g')" ]; then
+  		echo 0 																					#chequeo que el dia, mes y anio sean numeros
+  		return
 	elif [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 -o $year -gt $(date +'%Y') ]; then
 		echo 0																					#la fecha no es valida
 		return
@@ -197,7 +200,7 @@ rejectRegister ()
 	local currentLine="$1"
 	local reasonForRejectRegister="$2"
 	local motivo="$2"
-	local Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
+	Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
 	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);.*$@\2@')
 	Causante=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);.*$@\3@')
 	Extracto=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);.*$@\4@')
