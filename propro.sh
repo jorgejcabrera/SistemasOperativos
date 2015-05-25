@@ -17,7 +17,7 @@ validateDate ()
 	local month=$(echo $dateFromRegister | cut -d '/' -f 2) 									#parseo para obtener el mes de la fecha
 	local year=$(echo $dateFromRegister | sed 's@.*/\([^/]*\)$@\1@')
 	local format=$(echo grep -o "/" "$dateFromRegister" | wc -l) 								#parseo para obtener el anio de la fecha
-	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 -a $format -eq 2 ]; then
+	if [ $day -gt 31 -o $day -lt 1 -o $month -gt 12 -o $month -lt 1 -o $year -gt $(date +'%Y') -a $format -eq 2 ]; then
 		echo 0																					#la fecha no es valida
 		return
 	else
