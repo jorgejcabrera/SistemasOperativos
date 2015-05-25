@@ -1,8 +1,8 @@
 #!/bin/bash
-archivoMaestro="$MAEDIR/gestiones.mae"
-archivoDeContadores="$MAEDIR/tab/axg.tab"
-archivoDeEmisores="$MAEDIR/emisores.mae"
-archivoDeNormasPorEmisor="$MAEDIR/tab/nxe.tab"
+archivoMaestro="MAEDIR/gestiones.mae"
+archivoDeContadores="MAEDIR/tab/axg.tab"
+archivoDeEmisores="MAEDIR/emisores.mae"
+archivoDeNormasPorEmisor="MAEDIR/tab/nxe.tab"
 MAE_GEST=$archivoMaestro
 MAE_COUNT_FILE=$archivoDeContadores
 MAE_TRANSMITTER=$archivoDeEmisores
@@ -95,21 +95,22 @@ validateDateOnGest ()
 
 protocolize ()
 {
+	local currentLine="$1"
+	currentLine=$(echo $currentLine | sed 's/"\([a-zA-Z0-9;].*\)"//g')						#eliminamos la parte que esta escapeada
 	if [ ! -d $PROCDIR/$codeGestion ]; then
 		mkdir $PROCDIR/$codeGestion
 	fi
-	local currentLine="$1"
 	local Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
-	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);.*$@\2@')
-	Causante=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);.*$@\3@')
-	Extracto=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);.*$@\4@')
-	Cod_Tema=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);.*$@\5@')
-	local ExpedienteId=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\)$@\1@')
-	local ExpedienteAnio=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\);\([^;]*\)$@\1@')
-	local Cod_Firma=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\)$@\1@')
-	local Id_Registro=$(echo $currentLine | sed 's@.*;\([^;]*\)$@\1@')
+	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);.*$@\2@')
+	Causante=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\3@')
+	Extracto=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\4@')
+	Cod_Tema=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\5@')
+	local ExpedienteId=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\)$@\1@')
+	local ExpedienteAnio=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\);\([^;"]*\)$@\1@')
+	local Cod_Firma=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\)$@\1@')
+	local Id_Registro=$(echo $currentLine | sed 's@.*;\([^;"]*\)$@\1@')
 	local Fuente="$completeFileName"
-	local Anio_Norma=$(echo $Fecha_Norma | sed 's@.*/\([^/]*\)$@\1@')	
+	local Anio_Norma=$(echo $Fecha_Norma | sed 's@.*/\([^/"]*\)$@\1@')	
 	if [ $typeGest -eq 1 ]; then																#si vamos a protocolizar un registro corriente el numero de norma es distinto
 		Nro_Norma="$2"
 	fi
@@ -145,7 +146,7 @@ increaseCouter ()
 	numberNorm="$incrementCounter"																		#tomamos como numero de norma el contador incrementado
 	local Usuario=$(echo $completeLineWithNumberNorm | sed 's@.*;\([^;]*\);\([^;]*\)$@\1@')
 	completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"	
+	local fileNameToMove="MAEDIR/tab/ant/$completeTime-$completeFileName"	
 	mover.sh "$MAE_COUNT_FILE" "$fileNameToMove"
 	glog.sh "MOVER" "Tabla de contadores preservada antes de su modificación" "INFO"
 	cp "$fileNameToMove" "$MAE_COUNT_FILE"	
@@ -160,7 +161,7 @@ createCounter ()
 	local currentDate=`date +%d/%m/%Y`
 	local userName=`echo $USER`
 	completeTime=`date +"%H-%M-%S"`
-	local fileNameToMove="$MAEDIR/tab/ant/$completeTime-$completeFileName"
+	local fileNameToMove="MAEDIR/tab/ant/$completeTime-$completeFileName"
 	numberNorm="1"
 	mover.sh "$MAE_COUNT_FILE" "$fileNameToMove"
 	glog.sh "MOVER" "Tabla de contadores preservada antes de su modificación" "INFO"
@@ -201,6 +202,7 @@ rejectFile ()
 rejectRegister ()
 {
 	local currentLine="$1"
+	currentLine=$(echo $currentLine | sed 's/"\([a-zA-Z0-9;]\)"//g')						#eliminamos la parte que esta escapeada
 	local reasonForRejectRegister="$2"
 	local motivo="$2"
 	Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
@@ -214,7 +216,7 @@ rejectRegister ()
 	local Id_Registro=$(echo $currentLine | sed 's@.*;\([^;]*\)$@\1@')
 	local Fuente="$completeFileName"
 	glog.sh "PROPRO" "Se rechaza el registro: $reasonForRejectRegister" "INFO"
-	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> $PROCDIR/$codeGestion.rech
+	echo "$motivo;$Fecha_Norma;$Nro_Norma;$Causante;$Extracto;$Cod_Tema;$ExpedienteId;$ExpedienteAnio;$Cod_Firma;$Id_Registro;$Fuente" >> "$PROCDIR/$codeGestion.rech"
 }
 
 processRegister ()
@@ -249,8 +251,9 @@ processRegister ()
 #POST: procesa todos los registros del archivo que se esta protocolizando
 processRegisterFromCurrentFile ()
 {
+	local countFields
 	while read line; do 
-		local countFields=$(echo $line | grep -o ";" | wc -l) 
+		countFields=$(echo $line | grep -o ";" | wc -l) 
 		if [ $(echo $line | grep -o '"' | wc -l) -eq 2 ]; then						#si ocurre esto tenemos un subString que se debe escapear
 			countQuotesIntoSubString=$(echo $line | sed 's@.*"\([^"]*\)".*$@\1@' | grep -o ";" | wc -l)
 			countFields=`expr $countFields - $countQuotesIntoSubString`
@@ -261,24 +264,30 @@ processRegisterFromCurrentFile ()
 			rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
 		fi
 	done < $ACEPDIR/$codeGestion/$completeFileName;	
-
-	if [ -n "$line" ] && [ $(echo $line | grep -o ";" | wc -l) -eq 8 ]; then
-		processRegister "$line"
-	elif [ -n "$line" ]; then
-		rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
-	fi
+		if [ ! -z "$line" ]; then
+			countFields=$(echo $line | grep -o ";" | wc -l) 
+			if [ $(echo $line | grep -o '"' | wc -l) -eq 2 ]; then						#si ocurre esto tenemos un subString que se debe escapear
+				countQuotesIntoSubString=$(echo $line | sed 's@.*"\([^"]*\)".*$@\1@' | grep -o ";" | wc -l)
+				countFields=`expr $countFields - $countQuotesIntoSubString`
+			fi
+			if [ $countFields -eq 8 ]; then
+				processRegister "$line"
+			else
+				rejectRegister "$line" "la cantidad de campos en el registro es incorrecta"
+			fi
+		fi
 	mover.sh "$ACEPDIR/$codeGestion/$completeFileName" "$PROCDIR/proc"
 	glog.sh "MOVER" "Se movió el archivo $completeFileName con éxito" "INFO"	
 }
 
 
-codeCurrentGest=$(tail -n -1 $MAEDIR/gestiones.mae | cut -d ';' -f 1)
+codeCurrentGest=$(tail -n -1 MAEDIR/gestiones.mae | cut -d ';' -f 1)
 countFiles=$(find $ACEPDIR/ -type f | wc -l)
 glog.sh "PROPRO" "Inicio de propro. Cantidad de archivos a procesar: $countFiles" "INFO"
 countRejectFile=0
 countProcessFile=0
 createAllDirectories
-cat $MAEDIR/gestiones.mae | while read line || [ -n "$line" ]; do
+cat MAEDIR/gestiones.mae | while read line || [ -n "$line" ]; do
 	codeGestion=$(echo $line | sed 's@^\([^;]*\);.*$@\1@')
 	RESULT_GEST=$(grep ^$codeGestion\; $MAE_GEST)										#obtengo de gestiones.mae la linea correspondiente a la gestion a protocolizar	
 
