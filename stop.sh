@@ -19,5 +19,5 @@ fi
 
 #mato al demonio
 kill $DEAMONID
-echo "mate al demonio"
+echo "mate al demonio $1 con PID = $DEAMONID"
 exit 0

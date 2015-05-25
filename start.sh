@@ -50,8 +50,9 @@ PATH_DAEMON=$(find . -name *$1)
 if [ -z "$PATH_DAEMON" ]; then
 	darSalidaCorrespondiente START "Funcion inexistente" ERR 
 	exit 1
-else 	darSalidaCorrespondiente START "Arranco el demonio" INFO 
-	"$PATH_DAEMON" &
+else 	"$PATH_DAEMON" &
+	PID=$(pgrep $1)
+	darSalidaCorrespondiente START "Arranco el demonio $1 con PID = $PID" INFO 
 fi
 
 exit 0
