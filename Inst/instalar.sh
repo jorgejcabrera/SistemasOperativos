@@ -85,39 +85,43 @@ if [ $instalacionConfirmada = "Si" ] ; then
 	
 	fi	
 	
-	#20.02 MOVER LOS ARCHIVOS MAESTROS AA MAEDIR Y LAS TABLAS AL DIRECTORIO MAEDIR/tab
+	#20.02 MOVER LOS ARCHIVOS MAESTROS A MAEDIR Y LAS TABLAS AL DIRECTORIO MAEDIR/tab
 	echo "Instalando Archivos Maestros y tablas"
 	sh glog.sh InsPro "Instalando Archivos Maestros y tablas" INFO
 #SUPONGO QUE LOS QUE NO SON TABLAS NI MAESTROS SON ARCHIVOS DE NOVEDADES	
 
 	for archivoOrigen in $DATADIR/*.mae;
 	do
-		sh mover.sh $archivoOrigen $MAEDIR
+		if [ -f mover.sh ]; then
+			sh mover.sh $archivoOrigen $MAEDIR
+		fi
 	done
 
 	for archivoOrigen in $DATADIR/*.tab;
 	do
-		sh mover.sh $archivoOrigen $MAEDIR/tab
+		if [ -f mover.sh ]; then
+			sh mover.sh $archivoOrigen $MAEDIR/tab
+		fi
 	done
 
 	#FALTA 20.03 MOVER LOS EJECUTABLES Y FUNCIONES AL DIRECTORIO BINDIR (verificarlo cuando este todo)
 	echo "Instalando Archivos Programas y funciones"
 	sh glog.sh InsPro "Instalando Archivos Programas y funciones" INFO
-	echo $BINDIR	
-	sh mover.sh IniPro.sh $BINDIR
-	sh mover.sh RecPro.sh $BINDIR
-	sh mover.sh propro.sh $BINDIR
-	sh mover.sh InfPro.pl $BINDIR
-	sh mover.sh stop.sh $BINDIR
-	sh mover.sh start.sh $BINDIR
-	sh mover.sh verifInstalacion.sh $BINDIR	
 
-	cp glog.sh $BINDIR
-	cp InsPro.sh $BINDIR
-	cp instalar.sh $BINDIR
-	cp verificarInstalacion.sh $BINDIR
-	cp mover.sh $BINDIR
-	
+	if [ -f mover.sh ]; then	
+		sh mover.sh IniPro.sh $BINDIR
+		sh mover.sh RecPro.sh $BINDIR
+		sh mover.sh propro.sh $BINDIR
+		sh mover.sh InfPro.pl $BINDIR
+		sh mover.sh stop.sh $BINDIR
+		sh mover.sh start.sh $BINDIR
+	fi
+	if [ -f glog.sh ];then
+		cp glog.sh $BINDIR
+	fi
+	if [ -f mover.sh ];then
+		cp mover.sh $BINDIR
+	fi
 	
 	#20.04 ACTUALIZAR EL ARCHIVO DE CONFIGURACION InsPro.conf
 	#FORMATO DE ARCHIVO: VARIABLE=VALOR=USUARIO=FECHA
@@ -137,10 +141,9 @@ if [ $instalacionConfirmada = "Si" ] ; then
 		rm memoryFilee
 	fi
 	
-	rm InsPro.sh
-	rm instalar.sh
-	rm verificarInstalacion.sh
-	rm mover.sh
+	if [ -f mover.sh ];then
+		rm mover.sh
+	fi
 
 	#20.06 MOSTRAR MSJ DE FIN DE INSTALACION
 	echo "Instalacion CONCLUIDA"

@@ -16,57 +16,56 @@ LOGSIZE=$11
 
 #verificar internas
 completa=1
+
+BINDIR=$(grep "BINDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $BINDIR ]; then
 	binFaltante="BINDIR"
 	completa=0
 fi
 
-#PROBAR BIEN ESTO
+MAEDIR=$(grep "MAEDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $MAEDIR ]; then
 	maeFaltante="MAEDIR"
 	completa=0
 fi
-if ! [ -d $MAEDIR/tab ]; then
-	maeFaltante="MAEDIR"
-	completa=0
-fi
-if ! [ -d $MAEDIR/tab/ant ]; then
-	maeFaltante="MAEDIR"
-	completa=0
-fi
 
+NOVEDIR=$(grep "NOVEDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $NOVEDIR ]; then
 	noveFaltante="NOVEDIR"
 	completa=0
 fi
 
+ACEPDIR=$(grep "ACEPDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $ACEPDIR ]; then
 	acepFaltante="ACEPDIR"
 	completa=0
 fi
 
+RECHDIR=$(grep "RECHDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $RECHDIR ]; then
 	rechFaltante="RECHDIR"
 	completa=0
 fi
 
-#PROBAR BIEN ESTO
+PROCDIR=$(grep "PROCDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $PROCDIR ]; then
 	procFaltante="PROCDIR"
 	completa=0
 fi
 
-if ! [ -d $PROCDIR/proc ]; then
-	procFaltante="PROCDIR"
-	completa=0
-fi
-
+LOGDIR=$(grep "LOGDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
 if ! [ -d $LOGDIR ]; then
 	logFaltante="LOGDIR"
 	completa=0
 fi
 
-faltantes=$binFaltante" "$maeFaltante" "$noveFaltante" "$acepFaltante" "$rechFaltante" "$procFaltante" "$dupFaltante" "$logFaltante
+INFODIR=$(grep "INFORDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
+if ! [ -d $INFODIR ]; then
+	infoFaltante="INFODIR"
+	completa=0
+fi
+
+faltantes=$binFaltante" "$maeFaltante" "$noveFaltante" "$acepFaltante" "$rechFaltante" "$procFaltante" "$dupFaltante" "$logFaltante" "$infofaltante
 
 msgMostrar="TP SO7508 Primer Cuatrimestre 2015. Tema G Copyright © Grupo 05 \nDirectorio de Configuracion: $CONFDIR (mostrar path y listar archivos) \nDirectorio de Ejecutables: $BINDIR (mostrar path y listar archivos) \nDirectorio de Maestros y Tablas: $MAEDIR (mostrar path y listar archivos) \nDirectorio de recepción de documentos para protocolización: $NOVEDIR \nDirectorio de Archivos Aceptados: $ACEPDIR \nDirectorio de Archivos Rechazados: $RECHDIR \nDirectorio de Archivos Protocolizados: $PROCDIR \nDirectorio para informes y estadísticas: $INFODIR \nNombre para el repositorio de duplicados: $DUPDIR \nDirectorio para Archivos de Log: $LOGDIR (mostrar path y listar archivos)"
 
@@ -85,6 +84,15 @@ if [ $completa = 1 ]; then
 	sh glog.sh InsPro "Estado de la instalación: COMPLETA" WAR
 	echo "Proceso de instalacion Cancelado."
 	sh glog.sh InsPro "Proceso de instalacion Cancelado." WAR
+	if [ -f glog.sh ]; then
+		rm glog.sh
+	fi	
+	if [ -f memoryFile ]; then
+		rm memoryFile
+	fi	
+	if [ -f mover.sh ];then
+		rm mover.sh
+	fi
 	exit
 elif [ $completa = 0 ]; then
 	echo -e $msgMostrar;
@@ -92,5 +100,5 @@ elif [ $completa = 0 ]; then
 	sh glog.sh InsPro "Estado de la instalación: INCOMPLETA" WAR
 	echo "Componentes Faltantes: $faltantes"
 	sh glog.sh InsPro "Componentes Faltantes: $faltantes" WAR
-	sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
+	sh $PWD/Inst/instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
 fi

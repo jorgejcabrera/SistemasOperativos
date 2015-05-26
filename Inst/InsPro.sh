@@ -2,6 +2,14 @@
 GRUPO=$PWD
 CONFDIR=$PWD/conf
 
+#COMPRUEBO QUE EXISTE GLOG
+if [ -f $CONFDIR/InsPro.conf ]; then
+	directorioBin=$(grep "BINDIR" $CONFDIR/InsPro.conf | cut -d "=" -f 2)
+	if [ directorioBin ]; then	
+		cp $directorioBin/glog.sh $PWD
+	fi
+fi
+
 #1 LOGUEAMOS EL COMIENZO DE EJECUCION
 sh glog.sh InsPro "Inicio de ejecucion de InsPro" INFO
 echo "Inicio de ejecucion de InsPro"
@@ -111,7 +119,7 @@ instalacionConfirmada="No"
 CONFIGFILE="$CONFDIR/InsPro.conf"
 if [ -f $CONFIGFILE ]; then
 	sh glog.sh InsPro "existe el archivo InsPro.conf, asumimos que el paquete ya fue instalado" WAR
-	sh verificarInstalacion.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $DUPDIR $LOGDIR $DATASIZE $LOGSIZE
+	sh $PWD/Inst/verificarInstalacion.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $DUPDIR $LOGDIR $DATASIZE $LOGSIZE
 else
 	sh glog.sh InsPro "no existe el archivo InsPro.conf, asumimos que el paquete no fue instalado" INFO
 	
@@ -179,16 +187,25 @@ else
 		#9 DEFINIMOS EL ESPACIO MINIMO LIBRE PARA EL ARRIBO DE ARCHIVOS DE NOVEDADES
 		echo "Defina espacio minimo libre para el arribo de estas novedades en Mbytes ($DATASIZE): ";
 		read dataIngresada
-		dataDefault=$DATASIZE		
+		dataDefault=$DATASIZE	
+
+		es_numero='^[0-9]+$'
+
 		if ! [ -z $dataIngresada ] ; then
 			DATASIZE=$dataIngresada
+			if ! [[ $dataIngresada =~ $es_numero ]] ; then
+				echo "El valor ingresado no es un numero entero, se tomara el valor por sugerido defautl"
+				DATASIZE=$dataDefault
+			fi
 		fi
+
 		sed -i "s|DATASIZE=$dataDefault|DATASIZE=$DATASIZE|g" memoryFile
 		sh glog.sh InsPro "Defina espacio minimo libre para el arribo de estas novedades en Mbytes ($dataDefault): $DATASIZE" INFO
 		#10 VERIFICAR ESPACIO EN DISCO
 		DISCSIZE=$(df -B1024 "$GRUPO" | tail -n1 | sed -e"s/\s\{1,\}/;/g" | cut -f4 -d';');
 		milion=1000
 		DISCSIZE=$(expr $DISCSIZE / $milion)
+
 		while [ $DATASIZE -gt $DISCSIZE ]; do
 			echo "El espacio minimo definido para el arribo de novedades es mayor al espacio que hay en disco, por favor defina un espacio mas chico, espacio en disco: $DISCSIZE"
 			read dataIngresada
@@ -197,7 +214,7 @@ else
 				DATASIZE=$dataIngresada
 			fi
 		done
-
+		
 		#11 DEFINIR EL DIRECTORIO DE INPUT DEL PROCESO ProPro
 		acepdirImprimir=`echo $ACEPDIR | sed 's/.*\///'`
 		echo "Defina el directorio de grabacion de las Novedades aceptadas ($acepdirImprimir): ";
@@ -295,6 +312,10 @@ else
 		tamanoDefault=$LOGSIZE
 		if ! [ -z $tamanoMaximo ] ; then
 			LOGSIZE=$tamanoMaximo
+			if ! [[ $tamanoMaximo =~ $es_numero ]] ; then
+				echo "El valor ingresado no es un numero entero, se tomara el valor por sugerido defautl"
+				LOGSIZE=$tamanoDefault
+			fi
 		fi
 		sed -i "s|LOGSIZE=$tamanoDefault|LOGSIZE=$LOGSIZE|g" memoryFile
 		sh glog.sh InsPro "Defina el tamano maximo para cada archivo de log en Kbytes ($tamanoDefault): $LOGSIZE" INFO
@@ -302,7 +323,7 @@ else
 		#18 MOSTRAR ESTRUCTURA DE DIRECTORIOS RESULTANTE Y LOS VALORES DE LOS PARAMETROS CONFIGURADOS
 		#FALTA PARTE DE LISTAR ARCHIVOS, QUE ARCHIVOS????
 		clear
-		msgMostrar="TP SO7508 Primer Cuatrimestre 2015. Tema G Copyright © Grupo 05 \nDirectorio de Configuracion: $CONFDIR (mostrar path y listar archivos) \nDirectorio de Ejecutables: $BINDIR (mostrar path y listar archivos) \nDirectorio de Maestros y Tablas: $MAEDIR (mostrar path y listar archivos) \nDirectorio de recepción de documentos para protocolización: $NOVEDIR \nEspacio mínimo libre para arribos: $DATASIZE Mb \nDirectorio de Archivos Aceptados: $ACEPDIR \nDirectorio de Archivos Rechazados: $RECHDIR\nDirectorio de Archivos Protocolizados: $PROCDIR \nDirectorio para informes y estadísticas: $INFODIR \nNombre para el repositorio de duplicados: $DUPDIR \nDirectorio para Archivos de Log: $LOGDIR (mostrar path y listar archivos) \nTamaño máximo para los archivos de log del sistema: $LOGSIZE Kb \nEstado de la instalación: LISTA \nInicia la instalación? (Si – No)."
+		msgMostrar="TP SO7508 Primer Cuatrimestre 2015. Tema G Copyright © Grupo 05 \nDirectorio de Configuracion: $CONFDIR (mostrar path y listar archivos) \nDirectorio de Ejecutables: $BINDIR (mostrar path y listar archivos) \nDirectorio de Maestros y Tablas: $MAEDIR (mostrar path y listar archivos) \nDirectorio de recepción de documentos para protocolización: $NOVEDIR \nEspacio mínimo libre para arribos: $DATASIZE Mb \nDirectorio de Archivos Aceptados: $ACEPDIR \nDirectorio de Archivos Rechazados: $RECHDIR\nDirectorio de Archivos Protocolizados: $PROCDIR \nDirectorio para informes y estadísticas: $INFODIR \nNombre para el repositorio de duplicados: $DUPDIR \nDirectorio para Archivos de Log: $LOGDIR \nTamaño máximo para los archivos de log del sistema: $LOGSIZE Kb \nEstado de la instalación: LISTA \nInicia la instalación? (Si – No)."
 		echo -e $msgMostrar;
 		read instalacionConfirmada
 		valida=0
@@ -320,7 +341,7 @@ else
 		sh glog.sh InsPro "$msgMostrar" INFO	
 
 		if [ $instalacionConfirmada = "Si" ] ; then
-			sh instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
+			sh $PWD/Inst/instalar.sh $BINDIR $MAEDIR $NOVEDIR $ACEPDIR $RECHDIR $PROCDIR $INFODIR $LOGDIR $DATASIZE $DUPDIR $LOGSIZE
 		else
 			echo "Usted ha rechazado la instalacion, volveremos a definir todas las estructuras de directorio"
 			sh glog.sh InsPro "Usted ha rechazado la instalacion, volveremos a definir todas las estructuras de directorio" ERR
