@@ -101,16 +101,16 @@ protocolize ()
 		mkdir $PROCDIR/$codeGestion
 	fi
 	local Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
-	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);.*$@\2@')
-	Causante=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\3@')
-	Extracto=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\4@')
-	Cod_Tema=$(echo $currentLine | sed 's@^\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\);.*$@\5@')
-	local ExpedienteId=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\);\([^;"]*\);\([^;"]*\)$@\1@')
-	local ExpedienteAnio=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\);\([^;"]*\)$@\1@')
-	local Cod_Firma=$(echo $currentLine | sed 's@.*;\([^;"]*\);\([^;"]*\)$@\1@')
-	local Id_Registro=$(echo $currentLine | sed 's@.*;\([^;"]*\)$@\1@')
+	local Nro_Norma=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);.*$@\2@')
+	Causante=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);.*$@\3@')
+	Extracto=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);.*$@\4@')
+	Cod_Tema=$(echo $currentLine | sed 's@^\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\);.*$@\5@')
+	local ExpedienteId=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\)$@\1@')
+	local ExpedienteAnio=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\);\([^;]*\)$@\1@')
+	local Cod_Firma=$(echo $currentLine | sed 's@.*;\([^;]*\);\([^;]*\)$@\1@')
+	local Id_Registro=$(echo $currentLine | sed 's@.*;\([^;]*\)$@\1@')
 	local Fuente="$completeFileName"
-	local Anio_Norma=$(echo $Fecha_Norma | sed 's@.*/\([^/"]*\)$@\1@')	
+	local Anio_Norma=$(echo $Fecha_Norma | sed 's@.*/\([^/]*\)$@\1@')	
 	if [ $typeGest -eq 1 ]; then																#si vamos a protocolizar un registro corriente el numero de norma es distinto
 		Nro_Norma="$2"
 	fi
