@@ -96,7 +96,7 @@ validateDateOnGest ()
 protocolize ()
 {
 	local currentLine="$1"
-	currentLine=$(echo $currentLine | sed 's/^\(.*\)"\([^;]*\).*;\([^;]*\)"\(.*\)$/\1\2\3\4/g')						#eliminamos la parte que esta escapeada
+	currentLine=$(echo $currentLine | sed 's/^\(.*\)"\([^;]*\);\([^;]*\)"\(.*\)$/\1"\2\3\"4/g')						#eliminamos la parte que esta escapeada
 	if [ ! -d $PROCDIR/$codeGestion ]; then
 		mkdir $PROCDIR/$codeGestion
 	fi
@@ -202,7 +202,7 @@ rejectFile ()
 rejectRegister ()
 {
 	local currentLine="$1"
-	currentLine=$(echo $currentLine | sed 's/^\(.*\)"\([^;]*\).*;\([^;]*\)"\(.*\)$/\1\2\3\4/g')						#eliminamos la parte que esta escapeada
+	currentLine=$(echo $currentLine | sed 's/^\(.*\)"\([^;]*\);\([^;]*\)"\(.*\)$/\1"\2\3\"4/g')						#eliminamos la parte que esta escapeada
 	local reasonForRejectRegister="$2"
 	local motivo="$2"
 	Fecha_Norma=$(echo $currentLine | sed 's@^\([^;]*\);.*$@\1@')
