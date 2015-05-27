@@ -153,6 +153,5 @@ if [ $instalacionConfirmada = "Si" ] ; then
 else
 	echo "INSTALACION CANCELADA"
 	sh glog.sh InsPro "INSTALACION CANCELADA" WAR
-	rm glog.sh 
 	exit
 fi
